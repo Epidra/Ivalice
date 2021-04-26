@@ -1,0 +1,6 @@
+{
+    "parent": "ivalice:template/crop",
+    "textures": {
+        "crop": "ivalice:block/crop_gysahl_1"
+    }
+}

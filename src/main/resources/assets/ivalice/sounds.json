@@ -1,0 +1,62 @@
+{
+    "ivalice.chocobo.ambient": {
+        "category": "neutral",
+        "sounds": [
+            "mob/chicken/say1",
+            "mob/chicken/say2",
+            "mob/chicken/say3"
+        ],
+        "subtitle": "ivalice:subtitles.chocobo.ambient"
+    },
+    "ivalice.chocobo.death": {
+        "category": "neutral",
+        "sounds": [
+            "mob/chicken/hurt1",
+            "mob/chicken/hurt2"
+        ],
+        "subtitle": "ivalice:subtitles.chocobo.death"
+    },
+    "ivalice.chocobo.hurt": {
+        "category": "neutral",
+        "sounds": [
+            "mob/chicken/hurt1",
+            "mob/chicken/hurt2"
+        ],
+        "subtitle": "ivalice:subtitles.chocobo.hurt"
+    },
+    "ivalice.chocobo.angry": {
+        "category": "neutral",
+        "sounds": [
+            "mob/chicken/say1",
+            "mob/chicken/say2",
+            "mob/chicken/say3"
+        ],
+        "subtitle": "ivalice:subtitles.chocobo.angry"
+    },
+    "ivalice.chocobo.healthlow": {
+        "category": "neutral",
+        "sounds": [
+            "mob/chicken/say1",
+            "mob/chicken/say2",
+            "mob/chicken/say3"
+        ],
+        "subtitle": "ivalice:subtitles.chocobo.healthlow"
+    },
+    "ivalice.chocobo.healthhigh": {
+        "category": "neutral",
+        "sounds": [
+            "mob/chicken/say1",
+            "mob/chicken/say2",
+            "mob/chicken/say3"
+        ],
+        "subtitle": "ivalice:subtitles.chocobo.healthhigh"
+    },
+    "ivalice.chocobo.step": {
+        "category": "neutral",
+        "sounds": [
+            "mob/chicken/step1",
+            "mob/chicken/step2"
+        ],
+        "subtitle": "ivalice:subtitles.chocobo.step"
+    }
+}

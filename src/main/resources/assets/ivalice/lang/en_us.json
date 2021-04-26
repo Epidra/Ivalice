@@ -1,0 +1,34 @@
+{
+  "item.ivalice.stuff_feather": "Chocobo Feather",
+
+
+  "item.ivalice.food_gysahl": "Gysahl Greens",
+  "item.ivalice.food_krakka": "Krakka Root",
+  "item.ivalice.food_mimett": "Mimett Gourd",
+  "item.ivalice.food_sylkis": "Sylkis Bud",
+  "item.ivalice.food_tantal": "Tantal Fruit",
+  "item.ivalice.food_chocobo_raw": "Raw Chocobo",
+  "item.ivalice.food_chocobo_cooked": "Cooked Chocobo",
+
+  "block.ivalice.crop_gysahl": "Gysahl Plant",
+  "block.ivalice.crop_krakka": "Krakka Plant",
+  "block.ivalice.crop_mimett": "Mimett Plant",
+  "block.ivalice.crop_sylkis": "Sylkis Plant",
+  "block.ivalice.crop_tantal": "Tantal Plant",
+
+  "item.ivalice.seeds_gysahl": "Gysahl Seeds",
+  "item.ivalice.seeds_krakka": "Krakka Seeds",
+  "item.ivalice.seeds_mimett": "Mimett Seeds",
+  "item.ivalice.seeds_sylkis": "Sylkis Seeds",
+  "item.ivalice.seeds_tantal": "Tantal Seeds",
+
+  "item.ivalice.spawnegg_chocobo": "Chocobo Spawn Egg",
+
+  "ivalice:subtitles.chocobo.ambient": "Chocobo chirps",
+  "ivalice:subtitles.chocobo.hurt":    "Chocobo hurts",
+  "ivalice:subtitles.chocobo.death":   "Chocobo dies",
+  "ivalice:subtitles.chocobo.angry":   "Chocobo chirps",
+  "ivalice:subtitles.chocobo.healthlow":  "Chocobo chirps",
+  "ivalice:subtitles.chocobo.healthhigh": "Chocobo chirps",
+  "ivalice:subtitles.chocobo.step": "Chocobo walks"
+}
