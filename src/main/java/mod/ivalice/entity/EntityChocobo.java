@@ -178,11 +178,11 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
     }
 
     protected double generateRandomJumpStrength() {
-        return (double)0.4F + this.random.nextDouble() * 0.2D + this.random.nextDouble() * 0.2D + this.random.nextDouble() * 0.2D;
+        return (double)0.8F + this.random.nextDouble() * 0.2D + this.random.nextDouble() * 0.2D + this.random.nextDouble() * 0.2D;
     }
 
     protected double generateRandomSpeed() {
-        return ((double)0.45F + this.random.nextDouble() * 0.3D + this.random.nextDouble() * 0.3D + this.random.nextDouble() * 0.3D) * 0.25D;
+        return ((double)0.45F + this.random.nextDouble() * 0.3D + this.random.nextDouble() * 0.3D + this.random.nextDouble() * 0.3D) * 0.5D;
     }
 
     protected void setOffspringAttributes(AgeableEntity p_190681_1_, EntityChocobo p_190681_2_) {
@@ -257,7 +257,7 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
         this.flapping = (float)((double)this.flapping * 0.9D);
         Vector3d vector3d = this.getDeltaMovement();
         if (!this.onGround && vector3d.y < 0.0D) {
-            this.setDeltaMovement(vector3d.multiply(1.0D, 0.6D, 1.0D));
+            this.setDeltaMovement(vector3d.multiply(1.05D, 0.6D, 1.05D));
             isFlying = true;
         } else {
             isFlying = false;
@@ -533,12 +533,12 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
         //    }
         //}
 
-       // if (this.isBaby()) {
-       //     return super.mobInteract(player, hand);
-       // } else {
-       //     this.doPlayerRide(player);
-       //     return ActionResultType.sidedSuccess(this.level.isClientSide);
-       // }
+        // if (this.isBaby()) {
+        //     return super.mobInteract(player, hand);
+        // } else {
+        //     this.doPlayerRide(player);
+        //     return ActionResultType.sidedSuccess(this.level.isClientSide);
+        // }
 
         return super.mobInteract(player, hand);
     }
@@ -1893,4 +1893,13 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
         if(nat / 5 == 4) return ShopKeeper.FOOD_TANTAL.get();
         return Items.BEETROOT;
     }
+
+    //public double getMyRidingOffset() {
+    //    return 0.0D;
+    //}
+
+    public double getPassengersRidingOffset() {
+        return 1.5D;
+    }
+
 }
