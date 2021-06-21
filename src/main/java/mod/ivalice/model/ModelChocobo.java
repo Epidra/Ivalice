@@ -235,10 +235,11 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
             this.WingLeft.yRot  = 0f;
             this.WingRight.xRot =  1.5f;
             this.WingLeft.xRot  =  1.5f;
-            this.WingLeft.z = -1;
+            this.WingLeft.z  = -1;
             this.WingRight.z = -1;
-            this.WingLeft.y = 0;
-            this.WingRight.y = 0;
+            this.WingLeft.y  = 0;
+            this.WingRight.y = -11;
+            this.WingRight.x = -10;
         } else {
             this.WingRight.zRot = 0f;
             this.WingLeft.zRot =  0f;
@@ -250,6 +251,7 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
             this.WingRight.z = -7;
             this.WingLeft.y = 3;
             this.WingRight.y = 3;
+            this.WingRight.x = 6;
         }
         Saddle.visible = entity.isSaddled();
 
