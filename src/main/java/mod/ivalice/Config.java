@@ -17,7 +17,7 @@ public class Config {
 
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
-    public static final ConfigMob CHOCOBO = new ConfigMob(BUILDER, "chocobo", 1, 10, 16);
+    public static final ConfigMob CHOCOBO = new ConfigMob(BUILDER, "chocobo", 1, 1, 8);
 
     //----------------------------------------CONFIG_MOB----------------------------------------//
 

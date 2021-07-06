@@ -12,7 +12,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class RenderChocobo extends MobRenderer<EntityChocobo, ModelChocobo<EntityChocobo>> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Ivalice.MODID, "textures/entity/chocobo.png");
+    private static final ResourceLocation TEXTURE1 = new ResourceLocation(Ivalice.MODID, "textures/entity/chocobo.png");
+    private static final ResourceLocation TEXTURE2 = new ResourceLocation(Ivalice.MODID, "textures/entity/chick.png");
 
 
 
@@ -33,7 +34,7 @@ public class RenderChocobo extends MobRenderer<EntityChocobo, ModelChocobo<Entit
 
     @Override
     public ResourceLocation getTextureLocation(EntityChocobo entity) {
-        return TEXTURE;
+        return entity.AnimYoung() ? TEXTURE2 : TEXTURE1;
     }
 
 }

@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "age=0": { "model": "ivalice:block/block_nest_0" },
+        "age=1": { "model": "ivalice:block/block_nest_1" },
+        "age=2": { "model": "ivalice:block/block_nest_2" },
+        "age=3": { "model": "ivalice:block/block_nest_3" }
+    }
+}
