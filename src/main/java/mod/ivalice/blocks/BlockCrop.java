@@ -27,7 +27,6 @@ public class BlockCrop extends CropsBlock {
 
     //----------------------------------------HELPER----------------------------------------//
 
-    @OnlyIn(Dist.CLIENT)
     protected IItemProvider getBaseSeedId() {
         if(id.matches("gysahl")) return ShopKeeper.SEEDS_GYSAHL.get();
         if(id.matches("krakka")) return ShopKeeper.SEEDS_KRAKKA.get();

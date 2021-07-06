@@ -18,7 +18,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class RenderChocoboCollar extends LayerRenderer<EntityChocobo, ModelChocobo<EntityChocobo>> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Ivalice.MODID, "textures/entity/collar.png");
+    private static final ResourceLocation TEXTURE1 = new ResourceLocation(Ivalice.MODID, "textures/entity/collar.png");
+    private static final ResourceLocation TEXTURE2 = new ResourceLocation(Ivalice.MODID, "textures/entity/chick_collar.png");
 
     public RenderChocoboCollar(IEntityRenderer<EntityChocobo, ModelChocobo<EntityChocobo>> p_i232476_1_) {
         super(p_i232476_1_);
@@ -26,9 +27,13 @@ public class RenderChocoboCollar extends LayerRenderer<EntityChocobo, ModelChoco
 
     public void render(MatrixStack p_225628_1_, IRenderTypeBuffer p_225628_2_, int p_225628_3_, EntityChocobo p_225628_4_, float p_225628_5_, float p_225628_6_, float p_225628_7_, float p_225628_8_, float p_225628_9_, float p_225628_10_) {
         if (!p_225628_4_.isInvisible() && p_225628_4_.isTame()) {
-            IVertexBuilder ivertexbuilder = p_225628_2_.getBuffer(RenderType.entityTranslucent(TEXTURE));
+            IVertexBuilder ivertexbuilder = p_225628_2_.getBuffer(RenderType.entityTranslucent(getTexture(p_225628_4_)));
             float[] afloat = SheepEntity.getColorArray(p_225628_4_.getColorCollar());
-            renderColoredCutoutModel(this.getParentModel(), TEXTURE, p_225628_1_, p_225628_2_, p_225628_3_, p_225628_4_, afloat[0], afloat[1], afloat[2]);
+            renderColoredCutoutModel(this.getParentModel(), getTexture(p_225628_4_), p_225628_1_, p_225628_2_, p_225628_3_, p_225628_4_, afloat[0], afloat[1], afloat[2]);
         }
+    }
+
+    public ResourceLocation getTexture(EntityChocobo entity) {
+        return entity.AnimYoung() ? TEXTURE2 : TEXTURE1;
     }
 }

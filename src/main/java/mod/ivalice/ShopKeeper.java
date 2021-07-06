@@ -1,10 +1,14 @@
 package mod.ivalice;
 
 import mod.ivalice.blocks.BlockCrop;
+import mod.ivalice.blocks.BlockNest;
+import mod.ivalice.blocks.BlockStraw;
 import mod.ivalice.entity.EntityChocobo;
 import mod.ivalice.items.ItemSeed;
 import mod.ivalice.items.ItemSpawnEgg;
 import mod.ivalice.render.RenderChocobo;
+import mod.ivalice.tileentities.TileEntityNest;
+import mod.lucky77.blocks.BlockBlock;
 import mod.lucky77.items.ItemFood;
 import mod.lucky77.items.ItemItem;
 import net.minecraft.block.Block;
@@ -75,6 +79,10 @@ public class ShopKeeper {
     public static final RegistryObject<Item> FOOD_CHOCOBO_RAW    = register("food_chocobo_raw",    new ItemFood(1, 1, false));
     public static final RegistryObject<Item> FOOD_CHOCOBO_COOKED = register("food_chocobo_cooked", new ItemFood(1, 1, false));
 
+    // Straw
+    public static final RegistryObject<Block> BLOCK_STRAW = register("block_straw", new BlockStraw(), ItemGroup.TAB_DECORATIONS);
+    public static final RegistryObject<Block> BLOCK_NEST  = register("block_nest",  new BlockNest(), ItemGroup.TAB_DECORATIONS);
+
     // Crop
     public static final RegistryObject<Block> CROP_GYSAHL = register("crop_gysahl", new BlockCrop("gysahl", Blocks.WHEAT));
     public static final RegistryObject<Block> CROP_KRAKKA = register("crop_krakka", new BlockCrop("krakka", Blocks.WHEAT));
@@ -99,9 +107,11 @@ public class ShopKeeper {
     public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_STEP        = register("ivalice.chocobo.step",       new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.step")));
 
     // Entities
-    public static final RegistryObject<EntityType<EntityChocobo>>   ENTITY_CHOCOBO   = ENTITIES.register("chocobo",   () -> EntityType.Builder.of(EntityChocobo::new,                    EntityClassification.CREATURE).sized(0.9F, 2.5F).setTrackingRange(10).build(new ResourceLocation(MODID, "chocobo").toString()));
+    public static final RegistryObject<EntityType<EntityChocobo>>   ENTITY_CHOCOBO   = ENTITIES.register("chocobo",   () -> EntityType.Builder.of(EntityChocobo::new, EntityClassification.CREATURE).sized(0.9F, 2.5F).setTrackingRange(10).build(new ResourceLocation(MODID, "chocobo").toString()));
     // Spawn Eggs
     public static final RegistryObject<ItemSpawnEgg> SPAWNEGG_CHOCOBO = ITEMS.register("spawnegg_chocobo", () -> new ItemSpawnEgg(() -> ENTITY_CHOCOBO.get(), 16766720, 6908265, new Item.Properties().tab(ItemGroup.TAB_MISC)));
+
+    public static  final RegistryObject<TileEntityType<TileEntityNest>> TILE_NEST = TILES.register("nest", () -> TileEntityType.Builder.of(TileEntityNest::new, BLOCK_NEST.get() ).build(null));
 
 
 

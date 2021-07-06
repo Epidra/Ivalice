@@ -124,12 +124,7 @@ public class ModelChick<T extends EntityChocobo>  extends AgeableModel<T> {
 
     @Override
     public void setupAnim(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        //this.Head.xRot = this.headXRot;
-        //this.Head.yRot = netHeadYaw * ((float)Math.PI / 180F);
-        //this.LegBackRight.xRot  = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-        //this.LegBackLeft.xRot   = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
-        this.RightFootPart.xRot = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
-        this.LeftFootPart.xRot  = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+
     }
 
     public void prepareMobModel(T entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
@@ -144,12 +139,12 @@ public class ModelChick<T extends EntityChocobo>  extends AgeableModel<T> {
 
     @Override
     public void renderToBuffer(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
-        Body.render(matrixStack, buffer, packedLight, packedOverlay);
-        LeftFootPart.render(matrixStack, buffer, packedLight, packedOverlay);
-        RightFootPart.render(matrixStack, buffer, packedLight, packedOverlay);
-        WingLeft.render(matrixStack, buffer, packedLight, packedOverlay);
-        WingRight.render(matrixStack, buffer, packedLight, packedOverlay);
-        UpperPart.render(matrixStack, buffer, packedLight, packedOverlay);
+        Body.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        LeftFootPart.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        RightFootPart.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        WingLeft.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        WingRight.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        UpperPart.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
 
