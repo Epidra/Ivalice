@@ -1,14 +1,15 @@
 package mod.ivalice.crafting;
 
 import com.google.gson.JsonObject;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
+import net.minecraftforge.common.util.JsonUtils;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
@@ -21,7 +22,7 @@ public class ModifierAddItem extends LootModifier
     /**
      * This loot modifier adds an item to the loot table, given the conditions specified.
      */
-    public ModifierAddItem(ILootCondition[] conditionsIn, Item addedItemIn) {
+    public ModifierAddItem(LootItemCondition[] conditionsIn, Item addedItemIn) {
         super(conditionsIn);
         this.addedItem = addedItemIn;
     }
@@ -36,8 +37,8 @@ public class ModifierAddItem extends LootModifier
     public static class Serializer extends GlobalLootModifierSerializer<ModifierAddItem>
     {
         @Override
-        public ModifierAddItem read(ResourceLocation location, JsonObject object, ILootCondition[] ailootcondition) {
-            Item addedItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation((JSONUtils.getAsString(object, "item"))));
+        public ModifierAddItem read(ResourceLocation location, JsonObject object, LootItemCondition[] ailootcondition) {
+            Item addedItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation((GsonHelper.getAsString(object, "item"))));
             return new ModifierAddItem(ailootcondition, addedItem);
         }
 

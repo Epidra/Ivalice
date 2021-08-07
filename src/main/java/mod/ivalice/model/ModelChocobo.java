@@ -6,87 +6,94 @@ package mod.ivalice.model;
 
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.ivalice.entity.EntityChocobo;
-import net.minecraft.client.renderer.entity.model.AgeableModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.model.AgeableListModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
-public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
+import javax.annotation.Nonnull;
 
-    private final ModelRenderer BoneBase;
-    private final ModelRenderer BoneBody;
-    private final ModelRenderer BoneFront;
-    private final ModelRenderer BoneNeck;
-    private final ModelRenderer BoneHead;
-    private final ModelRenderer BoneBeak1;
-    private final ModelRenderer BoneBeak2;
-    private final ModelRenderer BoneHeadFeather;
-    private final ModelRenderer BoneHeadFeather1;
-    private final ModelRenderer BoneHeadFeather2;
-    private final ModelRenderer BoneHeadFeather3;
-    private final ModelRenderer BoneHeadFeather4;
-    private final ModelRenderer BoneHeadFeather5;
-    private final ModelRenderer BoneHeadFeather6;
-    private final ModelRenderer BoneHeadFeather7;
-    private final ModelRenderer BoneHeadFeather8;
-    private final ModelRenderer BoneHeadFeather9;
-    private final ModelRenderer BoneHeadFeather10;
-    private final ModelRenderer BoneHeadFeather11;
-    private final ModelRenderer BoneBack;
-    private final ModelRenderer BoneBackFeather1;
-    private final ModelRenderer BoneBackFeather2;
-    private final ModelRenderer BoneBackFeather3;
-    private final ModelRenderer BoneBackFeather4;
-    private final ModelRenderer BoneBackFeather5;
-    private final ModelRenderer BoneBackFeather6;
-    private final ModelRenderer BoneBackFeather7;
-    private final ModelRenderer BoneBackFeather8;
-    private final ModelRenderer BoneBackFeather9;
-    private final ModelRenderer BoneBackFeather10;
-    private final ModelRenderer BoneBackFeather11;
-    private final ModelRenderer BoneWingLeft1;
-    private final ModelRenderer BoneWingLeft2;
-    private final ModelRenderer BoneWingLeft3;
-    private final ModelRenderer BoneWingLeft4;
-    private final ModelRenderer BoneWingRight1;
-    private final ModelRenderer BoneWingRight2;
-    private final ModelRenderer BoneWingRight3;
-    private final ModelRenderer BoneWingRight4;
-    private final ModelRenderer BoneLegRight;
-    private final ModelRenderer BoneFootRight;
-    private final ModelRenderer BoneTalonRight;
-    private final ModelRenderer BoneFalonRight1;
-    private final ModelRenderer BoneFalonRight2;
-    private final ModelRenderer BoneFalonRight3;
-    private final ModelRenderer BoneLegLeft;
-    private final ModelRenderer BoneFootLeft;
-    private final ModelRenderer BoneTalonLeft;
-    private final ModelRenderer BoneFalonLeft1;
-    private final ModelRenderer BoneFalonLeft2;
-    private final ModelRenderer BoneFalonLeft3;
-    private final ModelRenderer BoneSaddle;
+@OnlyIn(Dist.CLIENT)
+public class ModelChocobo<T extends EntityChocobo>  extends AgeableListModel<T> {
+
+    private final ModelPart BoneBase;
+    private final ModelPart BoneBody;
+    private final ModelPart BoneFront;
+    private final ModelPart BoneNeck;
+    private final ModelPart BoneHead;
+    private final ModelPart BoneBeak1;
+    private final ModelPart BoneBeak2;
+    private final ModelPart BoneHeadFeather;
+    private final ModelPart BoneHeadFeather1;
+    private final ModelPart BoneHeadFeather2;
+    private final ModelPart BoneHeadFeather3;
+    private final ModelPart BoneHeadFeather4;
+    private final ModelPart BoneHeadFeather5;
+    private final ModelPart BoneHeadFeather6;
+    private final ModelPart BoneHeadFeather7;
+    private final ModelPart BoneHeadFeather8;
+    private final ModelPart BoneHeadFeather9;
+    private final ModelPart BoneHeadFeather10;
+    private final ModelPart BoneHeadFeather11;
+    private final ModelPart BoneBack;
+    private final ModelPart BoneBackFeather1;
+    private final ModelPart BoneBackFeather2;
+    private final ModelPart BoneBackFeather3;
+    private final ModelPart BoneBackFeather4;
+    private final ModelPart BoneBackFeather5;
+    private final ModelPart BoneBackFeather6;
+    private final ModelPart BoneBackFeather7;
+    private final ModelPart BoneBackFeather8;
+    private final ModelPart BoneBackFeather9;
+    private final ModelPart BoneBackFeather10;
+    private final ModelPart BoneBackFeather11;
+    private final ModelPart BoneWingLeft1;
+    private final ModelPart BoneWingLeft2;
+    private final ModelPart BoneWingLeft3;
+    private final ModelPart BoneWingLeft4;
+    private final ModelPart BoneWingRight1;
+    private final ModelPart BoneWingRight2;
+    private final ModelPart BoneWingRight3;
+    private final ModelPart BoneWingRight4;
+    private final ModelPart BoneLegRight;
+    private final ModelPart BoneFootRight;
+    private final ModelPart BoneTalonRight;
+    private final ModelPart BoneFalonRight1;
+    private final ModelPart BoneFalonRight2;
+    private final ModelPart BoneFalonRight3;
+    private final ModelPart BoneLegLeft;
+    private final ModelPart BoneFootLeft;
+    private final ModelPart BoneTalonLeft;
+    private final ModelPart BoneFalonLeft1;
+    private final ModelPart BoneFalonLeft2;
+    private final ModelPart BoneFalonLeft3;
+    private final ModelPart BoneSaddle;
 
     // --- Chicken ---
 
-    private final ModelRenderer ChickBody;
-    private final ModelRenderer ChickFront_r1;
-    private final ModelRenderer ChickLeftFootPart;
-    private final ModelRenderer ChickTalonLeftBack_r1;
-    private final ModelRenderer ChickTalonLeftLeft_r1;
-    private final ModelRenderer ChickTalonLeftRight_r1;
-    private final ModelRenderer ChickRightFootPart;
-    private final ModelRenderer ChickTalonRightBack_r1;
-    private final ModelRenderer ChickTalonRightLeft_r1;
-    private final ModelRenderer ChickTalonRightRight_r1;
-    private final ModelRenderer ChickWingLeft;
-    private final ModelRenderer ChickWingRight;
-    private final ModelRenderer ChickUpperPart;
-    private final ModelRenderer ChickHeadPart;
+    private final ModelPart ChickBody;
+    private final ModelPart ChickFront_r1;
+    private final ModelPart ChickLeftFootPart;
+    private final ModelPart ChickTalonLeftBack_r1;
+    private final ModelPart ChickTalonLeftLeft_r1;
+    private final ModelPart ChickTalonLeftRight_r1;
+    private final ModelPart ChickRightFootPart;
+    private final ModelPart ChickTalonRightBack_r1;
+    private final ModelPart ChickTalonRightLeft_r1;
+    private final ModelPart ChickTalonRightRight_r1;
+    private final ModelPart ChickWingLeft;
+    private final ModelPart ChickWingRight;
+    private final ModelPart ChickUpperPart;
+    private final ModelPart ChickHeadPart;
 
     // --- Variable ---
 
@@ -98,374 +105,274 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
     private float ROT = 0.0436F;
     private boolean baby = false;
 
-    public ModelChocobo() {
+    public ModelChocobo(ModelPart part) {
 
-        texWidth = 64;
-        texHeight = 64;
+        super(false, 6.0F, 0.0F);
 
-        BoneBase = new ModelRenderer(this);
-        BoneBase.setPos(0.0F, 6.5F, 1.0F);
+        //texWidth = 64;
+        //texHeight = 64;
 
+        this.BoneBase = part.getChild("base");
+        this.BoneBody = part.getChild("base").getChild("body");
+        this.BoneFront = part.getChild("base").getChild("front");
+        this.BoneNeck = part.getChild("base").getChild("neck");
+        this.BoneHead = part.getChild("base").getChild("neck").getChild("head");
+        this.BoneBeak1 = part.getChild("base").getChild("neck").getChild("head").getChild("beak1");
+        this.BoneBeak2 = part.getChild("base").getChild("neck").getChild("head").getChild("beak2");
+        this.BoneHeadFeather = part.getChild("base").getChild("neck").getChild("head").getChild("head_feather");
+        this.BoneHeadFeather1 = part.getChild("base").getChild("neck").getChild("head").getChild("head_feather").getChild("head_feather1");
+        this.BoneHeadFeather2 = part.getChild("base").getChild("neck").getChild("head").getChild("head_feather").getChild("head_feather2");
+        this.BoneHeadFeather3 = part.getChild("base").getChild("neck").getChild("head").getChild("head_feather").getChild("head_feather3");
+        this.BoneHeadFeather4 = part.getChild("base").getChild("neck").getChild("head").getChild("head_feather").getChild("head_feather4");
+        this.BoneHeadFeather5 = part.getChild("base").getChild("neck").getChild("head").getChild("head_feather").getChild("head_feather5");
+        this.BoneHeadFeather6 = part.getChild("base").getChild("neck").getChild("head").getChild("head_feather").getChild("head_feather6");
+        this.BoneHeadFeather7 = part.getChild("base").getChild("neck").getChild("head").getChild("head_feather").getChild("head_feather7");
+        this.BoneHeadFeather8 = part.getChild("base").getChild("neck").getChild("head").getChild("head_feather").getChild("head_feather8");
+        this.BoneHeadFeather9 = part.getChild("base").getChild("neck").getChild("head").getChild("head_feather").getChild("head_feather9");
+        this.BoneHeadFeather10 = part.getChild("base").getChild("neck").getChild("head").getChild("head_feather").getChild("head_feather10");
+        this.BoneHeadFeather11 = part.getChild("base").getChild("neck").getChild("head").getChild("head_feather").getChild("head_feather11");
+        this.BoneBack = part.getChild("base").getChild("back");
+        this.BoneBackFeather1 = part.getChild("base").getChild("back").getChild("back_feather1");
+        this.BoneBackFeather2 = part.getChild("base").getChild("back").getChild("back_feather2");
+        this.BoneBackFeather3 = part.getChild("base").getChild("back").getChild("back_feather3");
+        this.BoneBackFeather4 = part.getChild("base").getChild("back").getChild("back_feather4");
+        this.BoneBackFeather5 = part.getChild("base").getChild("back").getChild("back_feather5");
+        this.BoneBackFeather6 = part.getChild("base").getChild("back").getChild("back_feather6");
+        this.BoneBackFeather7 = part.getChild("base").getChild("back").getChild("back_feather7");
+        this.BoneBackFeather8 = part.getChild("base").getChild("back").getChild("back_feather8");
+        this.BoneBackFeather9 = part.getChild("base").getChild("back").getChild("back_feather9");
+        this.BoneBackFeather10 = part.getChild("base").getChild("back").getChild("back_feather10");
+        this.BoneBackFeather11 = part.getChild("base").getChild("back").getChild("back_feather11");
+        this.BoneWingLeft1 = part.getChild("base").getChild("wing_left1");
+        this.BoneWingLeft2 = part.getChild("base").getChild("wing_left1").getChild("wing_left2");
+        this.BoneWingLeft3 = part.getChild("base").getChild("wing_left1").getChild("wing_left2").getChild("wing_left3");
+        this.BoneWingLeft4 = part.getChild("base").getChild("wing_left1").getChild("wing_left2").getChild("wing_left3").getChild("wing_left4");
+        this.BoneWingRight1 = part.getChild("base").getChild("wing_right1");
+        this.BoneWingRight2 = part.getChild("base").getChild("wing_right1").getChild("wing_right2");
+        this.BoneWingRight3 = part.getChild("base").getChild("wing_right1").getChild("wing_right2").getChild("wing_right3");
+        this.BoneWingRight4 = part.getChild("base").getChild("wing_right1").getChild("wing_right2").getChild("wing_right3").getChild("wing_right4");
+        this.BoneLegRight = part.getChild("base").getChild("leg_right");
+        this.BoneFootRight = part.getChild("base").getChild("leg_right").getChild("foot_right");
+        this.BoneTalonRight = part.getChild("base").getChild("leg_right").getChild("foot_right").getChild("talon_right");
+        this.BoneFalonRight1 = part.getChild("base").getChild("leg_right").getChild("foot_right").getChild("talon_right").getChild("talon_right1");
+        this.BoneFalonRight2 = part.getChild("base").getChild("leg_right").getChild("foot_right").getChild("talon_right").getChild("talon_right2");
+        this.BoneFalonRight3 = part.getChild("base").getChild("leg_right").getChild("foot_right").getChild("talon_right").getChild("talon_right3");
+        this.BoneLegLeft = part.getChild("base").getChild("leg_left");
+        this.BoneFootLeft = part.getChild("base").getChild("leg_left").getChild("foot_left");
+        this.BoneTalonLeft = part.getChild("base").getChild("leg_left").getChild("foot_left").getChild("talon_left");
+        this.BoneFalonLeft1 = part.getChild("base").getChild("leg_left").getChild("foot_left").getChild("talon_left").getChild("talon_left1");
+        this.BoneFalonLeft2 = part.getChild("base").getChild("leg_left").getChild("foot_left").getChild("talon_left").getChild("talon_left2");
+        this.BoneFalonLeft3 = part.getChild("base").getChild("leg_left").getChild("foot_left").getChild("talon_left").getChild("talon_left3");
+        this.BoneSaddle = part.getChild("base").getChild("saddle");
 
-        BoneBody = new ModelRenderer(this);
-        BoneBody.setPos(0.0F, 3.0F, 0.0F);
-        BoneBase.addChild(BoneBody);
-        setRotationAngle(BoneBody, -0.0436F, 0.0F, 0.0F);
-        BoneBody.texOffs(12, 37).addBox(-5.0F, -9.25F, -7.0F, 10.0F, 11.0F, 16.0F, 0.0F, false);
+        // --- Chicken ---
 
-        BoneFront = new ModelRenderer(this);
-        BoneFront.setPos(0.0F, -5.5F, -7.0F);
-        BoneBase.addChild(BoneFront);
-        setRotationAngle(BoneFront, 0.5236F, 0.0F, 0.0F);
-        BoneFront.texOffs(0, 49).addBox(-4.5F, -0.5F, -5.0F, 9.0F, 9.0F, 6.0F, 0.0F, false);
+        ChickBody = part.getChild("chick_body");
+        ChickFront_r1 = part.getChild("chick_body").getChild("chick_front");
+        ChickLeftFootPart = part.getChild("chick_left_foot");
+        ChickTalonLeftBack_r1 = part.getChild("chick_left_foot").getChild("chick_talon_left_back");
+        ChickTalonLeftLeft_r1 = part.getChild("chick_left_foot").getChild("chick_talon_left_left");
+        ChickTalonLeftRight_r1 = part.getChild("chick_left_foot").getChild("chick_talon_left_right");
+        ChickRightFootPart = part.getChild("chick_right_foot");
+        ChickTalonRightBack_r1 = part.getChild("chick_right_foot").getChild("chick_talon_right_back");
+        ChickTalonRightLeft_r1 = part.getChild("chick_right_foot").getChild("chick_talon_right_left");
+        ChickTalonRightRight_r1 = part.getChild("chick_right_foot").getChild("chick_talon_right_right");
+        ChickWingLeft = part.getChild("chick_wing_left");
+        ChickWingRight = part.getChild("chick_wing_right");
+        ChickUpperPart = part.getChild("chick_upper");
+        ChickHeadPart = part.getChild("chick_upper").getChild("chick_head");
+    }
 
-        BoneNeck = new ModelRenderer(this);
-        BoneNeck.setPos(0.0F, -3.5F, -7.5F);
-        BoneBase.addChild(BoneNeck);
-        BoneNeck.texOffs(48, 12).addBox(-2.0F, -14.0F, -3.5F, 4.0F, 14.0F, 4.0F, 0.0F, false);
-
-        BoneHead = new ModelRenderer(this);
-        BoneHead.setPos(0.0F, -13.0F, -1.5F);
-        BoneNeck.addChild(BoneHead);
-        BoneHead.texOffs(40, 0).addBox(-3.0F, -4.0F, -3.0F, 6.0F, 6.0F, 6.0F, 0.0F, false);
-
-        BoneBeak1 = new ModelRenderer(this);
-        BoneBeak1.setPos(0.0F, 0.0F, -2.5F);
-        BoneHead.addChild(BoneBeak1);
-        setRotationAngle(BoneBeak1, 0.1745F, 0.0F, 0.0F);
-        BoneBeak1.texOffs(16, 2).addBox(-2.5F, -2.25F, -6.5F, 5.0F, 2.0F, 7.0F, 0.0F, false);
-
-        BoneBeak2 = new ModelRenderer(this);
-        BoneBeak2.setPos(0.0F, 0.0F, -2.5F);
-        BoneHead.addChild(BoneBeak2);
-        setRotationAngle(BoneBeak2, 0.1745F, 0.0F, 0.0F);
-        BoneBeak2.texOffs(17, 3).addBox(-2.0F, -0.25F, -6.5F, 4.0F, 2.0F, 7.0F, 0.0F, false);
-
-        BoneHeadFeather = new ModelRenderer(this);
-        BoneHeadFeather.setPos(0.0F, 0.0F, 2.5F);
-        BoneHead.addChild(BoneHeadFeather);
-
-
-        BoneHeadFeather1 = new ModelRenderer(this);
-        BoneHeadFeather1.setPos(2.0F, -3.5F, 0.5F);
-        BoneHeadFeather.addChild(BoneHeadFeather1);
-        BoneHeadFeather1.texOffs(23, 33).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 0.0F, 4.0F, 0.0F, false);
-
-        BoneHeadFeather2 = new ModelRenderer(this);
-        BoneHeadFeather2.setPos(1.0F, -3.5F, 0.5F);
-        BoneHeadFeather.addChild(BoneHeadFeather2);
-        BoneHeadFeather2.texOffs(52, 37).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 0.0F, 5.0F, 0.0F, false);
-
-        BoneHeadFeather3 = new ModelRenderer(this);
-        BoneHeadFeather3.setPos(0.0F, -3.5F, 0.5F);
-        BoneHeadFeather.addChild(BoneHeadFeather3);
-        BoneHeadFeather3.texOffs(0, 39).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 0.0F, 4.0F, 0.0F, false);
-
-        BoneHeadFeather4 = new ModelRenderer(this);
-        BoneHeadFeather4.setPos(-1.0F, -3.5F, 0.5F);
-        BoneHeadFeather.addChild(BoneHeadFeather4);
-        BoneHeadFeather4.texOffs(52, 52).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 0.0F, 5.0F, 0.0F, false);
-
-        BoneHeadFeather5 = new ModelRenderer(this);
-        BoneHeadFeather5.setPos(-2.0F, -3.5F, 0.5F);
-        BoneHeadFeather.addChild(BoneHeadFeather5);
-        BoneHeadFeather5.texOffs(54, 60).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 0.0F, 4.0F, 0.0F, false);
-
-        BoneHeadFeather6 = new ModelRenderer(this);
-        BoneHeadFeather6.setPos(2.5F, -3.0F, 0.5F);
-        BoneHeadFeather.addChild(BoneHeadFeather6);
-        BoneHeadFeather6.texOffs(32, 29).addBox(0.0F, -0.5F, 0.0F, 0.0F, 1.0F, 4.0F, 0.0F, false);
-
-        BoneHeadFeather7 = new ModelRenderer(this);
-        BoneHeadFeather7.setPos(2.5F, -2.0F, 0.5F);
-        BoneHeadFeather.addChild(BoneHeadFeather7);
-        BoneHeadFeather7.texOffs(49, 46).addBox(0.0F, -0.5F, 0.0F, 0.0F, 1.0F, 3.0F, 0.0F, false);
-
-        BoneHeadFeather8 = new ModelRenderer(this);
-        BoneHeadFeather8.setPos(2.5F, -1.0F, 0.5F);
-        BoneHeadFeather.addChild(BoneHeadFeather8);
-        BoneHeadFeather8.texOffs(4, 45).addBox(0.0F, -0.5F, 0.0F, 0.0F, 1.0F, 2.0F, 0.0F, false);
-
-        BoneHeadFeather9 = new ModelRenderer(this);
-        BoneHeadFeather9.setPos(-2.5F, -3.0F, 0.5F);
-        BoneHeadFeather.addChild(BoneHeadFeather9);
-        BoneHeadFeather9.texOffs(56, 29).addBox(0.0F, -0.5F, 0.0F, 0.0F, 1.0F, 4.0F, 0.0F, false);
-
-        BoneHeadFeather10 = new ModelRenderer(this);
-        BoneHeadFeather10.setPos(-2.5F, -2.0F, 0.5F);
-        BoneHeadFeather.addChild(BoneHeadFeather10);
-        BoneHeadFeather10.texOffs(22, 41).addBox(0.0F, -0.5F, 0.0F, 0.0F, 1.0F, 3.0F, 0.0F, false);
-
-        BoneHeadFeather11 = new ModelRenderer(this);
-        BoneHeadFeather11.setPos(-2.5F, -1.0F, 0.5F);
-        BoneHeadFeather.addChild(BoneHeadFeather11);
-        BoneHeadFeather11.texOffs(27, 48).addBox(0.0F, -0.5F, 0.0F, 0.0F, 1.0F, 2.0F, 0.0F, false);
-
-        BoneBack = new ModelRenderer(this);
-        BoneBack.setPos(0.0F, -4.75F, 9.5F);
-        BoneBase.addChild(BoneBack);
-        BoneBack.texOffs(2, 31).addBox(-4.5F, -1.0F, -0.25F, 9.0F, 2.0F, 1.0F, 0.0F, false);
-
-        BoneBackFeather1 = new ModelRenderer(this);
-        BoneBackFeather1.setPos(3.0F, -0.75F, 0.5F);
-        BoneBack.addChild(BoneBackFeather1);
-        setRotationAngle(BoneBackFeather1, 0.8727F, 0.1745F, 0.0F);
-        BoneBackFeather1.texOffs(9, 35).addBox(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 8.0F, 0.0F, false);
-
-        BoneBackFeather2 = new ModelRenderer(this);
-        BoneBackFeather2.setPos(1.0F, -0.75F, 0.5F);
-        BoneBack.addChild(BoneBackFeather2);
-        setRotationAngle(BoneBackFeather2, 0.8727F, 0.0436F, 0.0F);
-        BoneBackFeather2.texOffs(19, 38).addBox(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 9.0F, 0.0F, false);
-
-        BoneBackFeather3 = new ModelRenderer(this);
-        BoneBackFeather3.setPos(-1.0F, -0.75F, 0.5F);
-        BoneBack.addChild(BoneBackFeather3);
-        setRotationAngle(BoneBackFeather3, 0.9163F, -0.0436F, 0.0F);
-        BoneBackFeather3.texOffs(34, 33).addBox(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 9.0F, 0.0F, false);
-
-        BoneBackFeather4 = new ModelRenderer(this);
-        BoneBackFeather4.setPos(-3.0F, -0.75F, 0.5F);
-        BoneBack.addChild(BoneBackFeather4);
-        setRotationAngle(BoneBackFeather4, 0.8727F, -0.1309F, 0.0F);
-        BoneBackFeather4.texOffs(44, 47).addBox(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 8.0F, 0.0F, false);
-
-        BoneBackFeather5 = new ModelRenderer(this);
-        BoneBackFeather5.setPos(3.0F, 0.5F, 0.5F);
-        BoneBack.addChild(BoneBackFeather5);
-        setRotationAngle(BoneBackFeather5, 0.6981F, 0.0436F, -0.0436F);
-        BoneBackFeather5.texOffs(0, 33).addBox(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 11.0F, 0.0F, false);
-
-        BoneBackFeather6 = new ModelRenderer(this);
-        BoneBackFeather6.setPos(1.0F, 0.5F, 0.5F);
-        BoneBack.addChild(BoneBackFeather6);
-        setRotationAngle(BoneBackFeather6, 0.6545F, 0.0F, 0.0F);
-        BoneBackFeather6.texOffs(25, 44).addBox(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 10.0F, 0.0F, false);
-
-        BoneBackFeather7 = new ModelRenderer(this);
-        BoneBackFeather7.setPos(-1.0F, 0.5F, 0.5F);
-        BoneBack.addChild(BoneBackFeather7);
-        setRotationAngle(BoneBackFeather7, 0.6109F, 0.0F, 0.0F);
-        BoneBackFeather7.texOffs(20, 51).addBox(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 10.0F, 0.0F, false);
-
-        BoneBackFeather8 = new ModelRenderer(this);
-        BoneBackFeather8.setPos(-3.0F, 0.5F, 0.5F);
-        BoneBack.addChild(BoneBackFeather8);
-        setRotationAngle(BoneBackFeather8, 0.6545F, 0.0F, -0.0436F);
-        BoneBackFeather8.texOffs(6, 39).addBox(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 11.0F, 0.0F, false);
-
-        BoneBackFeather9 = new ModelRenderer(this);
-        BoneBackFeather9.setPos(2.0F, -0.25F, 0.5F);
-        BoneBack.addChild(BoneBackFeather9);
-        setRotationAngle(BoneBackFeather9, 0.6109F, 0.0F, -0.0873F);
-        BoneBackFeather9.texOffs(34, 44).addBox(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 8.0F, 0.0F, false);
-
-        BoneBackFeather10 = new ModelRenderer(this);
-        BoneBackFeather10.setPos(0.0F, -0.25F, 0.5F);
-        BoneBack.addChild(BoneBackFeather10);
-        setRotationAngle(BoneBackFeather10, 0.5672F, 0.0F, 0.0F);
-        BoneBackFeather10.texOffs(0, 29).addBox(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 7.0F, 0.0F, false);
-
-        BoneBackFeather11 = new ModelRenderer(this);
-        BoneBackFeather11.setPos(-2.0F, -0.25F, 0.5F);
-        BoneBack.addChild(BoneBackFeather11);
-        setRotationAngle(BoneBackFeather11, 0.6109F, 0.0F, 0.0873F);
-        BoneBackFeather11.texOffs(44, 56).addBox(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 8.0F, 0.0F, false);
-
-        BoneWingLeft1 = new ModelRenderer(this);
-        BoneWingLeft1.setPos(5.0F, -5.0F, -5.7F);
-        BoneBase.addChild(BoneWingLeft1);
-        BoneWingLeft1.texOffs(28, 30).addBox(0.0F, 0.0F, 0.0F, 1.0F, 2.0F, 7.0F, 0.0F, false);
-        BoneWingLeft1.texOffs(14, 39).addBox(-0.1F, 0.0F, 7.0F, 1.0F, 2.0F, 7.0F, 0.0F, false);
-
-        BoneWingLeft2 = new ModelRenderer(this);
-        BoneWingLeft2.setPos(0.0F, 2.0F, -0.1F);
-        BoneWingLeft1.addChild(BoneWingLeft2);
-        BoneWingLeft2.texOffs(48, 35).addBox(0.0F, 0.0F, 0.0F, 1.0F, 3.0F, 7.0F, 0.0F, false);
-        BoneWingLeft2.texOffs(40, 48).addBox(-0.1F, 0.0F, 7.0F, 1.0F, 3.0F, 7.0F, 0.0F, false);
-
-        BoneWingLeft3 = new ModelRenderer(this);
-        BoneWingLeft3.setPos(0.0F, 2.0F, 0.1F);
-        BoneWingLeft2.addChild(BoneWingLeft3);
-        BoneWingLeft3.texOffs(15, 30).addBox(0.0F, 1.0F, 0.0F, 1.0F, 3.0F, 7.0F, 0.0F, false);
-        BoneWingLeft3.texOffs(18, 53).addBox(-0.1F, 1.0F, 7.0F, 1.0F, 3.0F, 7.0F, 0.0F, false);
-
-        BoneWingLeft4 = new ModelRenderer(this);
-        BoneWingLeft4.setPos(0.0F, 4.0F, 0.2F);
-        BoneWingLeft3.addChild(BoneWingLeft4);
-        BoneWingLeft4.texOffs(32, 55).addBox(0.0F, 0.0F, 0.0F, 1.0F, 2.0F, 7.0F, 0.0F, false);
-        BoneWingLeft4.texOffs(1, 36).addBox(-0.1F, 0.0F, 7.0F, 1.0F, 2.0F, 7.0F, 0.0F, false);
-
-        BoneWingRight1 = new ModelRenderer(this);
-        BoneWingRight1.setPos(-5.0F, -5.0F, -5.7F);
-        BoneBase.addChild(BoneWingRight1);
-        BoneWingRight1.texOffs(30, 40).addBox(-1.0F, 0.0F, 0.0F, 1.0F, 2.0F, 7.0F, 0.0F, false);
-        BoneWingRight1.texOffs(18, 31).addBox(-0.9F, 0.0F, 7.0F, 1.0F, 2.0F, 7.0F, 0.0F, false);
-
-        BoneWingRight2 = new ModelRenderer(this);
-        BoneWingRight2.setPos(0.0F, 2.0F, -0.1F);
-        BoneWingRight1.addChild(BoneWingRight2);
-        BoneWingRight2.texOffs(4, 42).addBox(-1.0F, 0.0F, 0.0F, 1.0F, 3.0F, 7.0F, 0.0F, false);
-        BoneWingRight2.texOffs(40, 40).addBox(-0.9F, 0.0F, 7.0F, 1.0F, 3.0F, 7.0F, 0.0F, false);
-
-        BoneWingRight3 = new ModelRenderer(this);
-        BoneWingRight3.setPos(0.0F, 3.0F, 0.1F);
-        BoneWingRight2.addChild(BoneWingRight3);
-        BoneWingRight3.texOffs(17, 46).addBox(-1.0F, 0.0F, 0.0F, 1.0F, 3.0F, 7.0F, 0.0F, false);
-        BoneWingRight3.texOffs(33, 50).addBox(-0.9F, 0.0F, 7.0F, 1.0F, 3.0F, 7.0F, 0.0F, false);
-
-        BoneWingRight4 = new ModelRenderer(this);
-        BoneWingRight4.setPos(0.0F, 3.0F, 0.2F);
-        BoneWingRight3.addChild(BoneWingRight4);
-        BoneWingRight4.texOffs(8, 36).addBox(-1.0F, 0.0F, 0.0F, 1.0F, 2.0F, 7.0F, 0.0F, false);
-        BoneWingRight4.texOffs(33, 29).addBox(-0.9F, 0.0F, 7.0F, 1.0F, 2.0F, 7.0F, 0.0F, false);
-
-        BoneLegRight = new ModelRenderer(this);
-        BoneLegRight.setPos(-3.0F, 4.0F, 0.5F);
-        BoneBase.addChild(BoneLegRight);
-        BoneLegRight.texOffs(52, 43).addBox(-1.5F, -0.5F, -1.5F, 3.0F, 7.0F, 3.0F, 0.0F, false);
-
-        BoneFootRight = new ModelRenderer(this);
-        BoneFootRight.setPos(0.0F, 6.25F, 0.0F);
-        BoneLegRight.addChild(BoneFootRight);
-        BoneFootRight.texOffs(0, 0).addBox(-1.0F, -0.25F, -1.0F, 2.0F, 7.0F, 2.0F, 0.0F, false);
-
-        BoneTalonRight = new ModelRenderer(this);
-        BoneTalonRight.setPos(0.0F, 6.25F, 0.0F);
-        BoneFootRight.addChild(BoneTalonRight);
+    public static LayerDefinition createBodyLayer() {
+        MeshDefinition modelDefinition = new MeshDefinition();
+        PartDefinition def = modelDefinition.getRoot();
 
 
-        BoneFalonRight1 = new ModelRenderer(this);
-        BoneFalonRight1.setPos(0.0F, 0.0F, 0.0F);
-        BoneTalonRight.addChild(BoneFalonRight1);
-        setRotationAngle(BoneFalonRight1, 0.2618F, 0.1309F, 0.0F);
-        BoneFalonRight1.texOffs(2, 3).addBox(-1.0F, -0.25F, -6.5F, 1.0F, 1.0F, 6.0F, 0.0F, false);
 
-        BoneFalonRight2 = new ModelRenderer(this);
-        BoneFalonRight2.setPos(0.0F, 0.0F, 0.0F);
-        BoneTalonRight.addChild(BoneFalonRight2);
-        setRotationAngle(BoneFalonRight2, 0.2618F, -0.1309F, 0.0F);
-        BoneFalonRight2.texOffs(2, 3).addBox(0.0F, -0.25F, -6.5F, 1.0F, 1.0F, 6.0F, 0.0F, false);
-
-        BoneFalonRight3 = new ModelRenderer(this);
-        BoneFalonRight3.setPos(0.0F, 0.0F, 0.0F);
-        BoneTalonRight.addChild(BoneFalonRight3);
-        setRotationAngle(BoneFalonRight3, -0.2618F, 0.0F, 0.0F);
-        BoneFalonRight3.texOffs(10, 3).addBox(-0.5F, -0.25F, 0.25F, 1.0F, 1.0F, 5.0F, 0.0F, false);
-
-        BoneLegLeft = new ModelRenderer(this);
-        BoneLegLeft.setPos(3.0F, 4.0F, 0.5F);
-        BoneBase.addChild(BoneLegLeft);
-        BoneLegLeft.texOffs(0, 28).addBox(-1.5F, -0.5F, -1.5F, 3.0F, 7.0F, 3.0F, 0.0F, false);
-
-        BoneFootLeft = new ModelRenderer(this);
-        BoneFootLeft.setPos(0.0F, 6.25F, 0.0F);
-        BoneLegLeft.addChild(BoneFootLeft);
-        BoneFootLeft.texOffs(0, 0).addBox(-1.0F, -0.25F, -1.0F, 2.0F, 7.0F, 2.0F, 0.0F, false);
-
-        BoneTalonLeft = new ModelRenderer(this);
-        BoneTalonLeft.setPos(0.0F, 6.25F, 0.0F);
-        BoneFootLeft.addChild(BoneTalonLeft);
+        def.addOrReplaceChild("base",CubeListBuilder.create(), PartPose.offset(0.0F, 6.5F, 1.0F));
 
 
-        BoneFalonLeft1 = new ModelRenderer(this);
-        BoneFalonLeft1.setPos(0.0F, 0.0F, 0.0F);
-        BoneTalonLeft.addChild(BoneFalonLeft1);
-        setRotationAngle(BoneFalonLeft1, 0.2618F, -0.1309F, 0.0F);
-        BoneFalonLeft1.texOffs(2, 3).addBox(0.0F, -0.25F, -6.5F, 1.0F, 1.0F, 6.0F, 0.0F, false);
+        def.getChild("base").addOrReplaceChild("body", CubeListBuilder.create().texOffs(12, 37).addBox(-5.0F, -9.25F, -7.0F, 10.0F, 11.0F, 16.0F), PartPose.offsetAndRotation(0.0F, 3.0F, 0.0F, -0.0436F, 0.0F, 0.0F));
 
-        BoneFalonLeft2 = new ModelRenderer(this);
-        BoneFalonLeft2.setPos(0.0F, 0.0F, 0.0F);
-        BoneTalonLeft.addChild(BoneFalonLeft2);
-        setRotationAngle(BoneFalonLeft2, 0.2618F, 0.1309F, 0.0F);
-        BoneFalonLeft2.texOffs(2, 3).addBox(-1.0F, -0.25F, -6.5F, 1.0F, 1.0F, 6.0F, 0.0F, false);
+        def.getChild("base").addOrReplaceChild("front", CubeListBuilder.create().texOffs(0, 49).addBox(-4.5F, -0.5F, -5.0F, 9.0F, 9.0F, 6.0F), PartPose.offsetAndRotation(0.0F, -5.5F, -7.0F, 0.5236F, 0.0F, 0.0F));
 
-        BoneFalonLeft3 = new ModelRenderer(this);
-        BoneFalonLeft3.setPos(0.0F, 0.0F, 0.0F);
-        BoneTalonLeft.addChild(BoneFalonLeft3);
-        setRotationAngle(BoneFalonLeft3, -0.2618F, 0.0F, 0.0F);
-        BoneFalonLeft3.texOffs(10, 3).addBox(-0.5F, -0.25F, 0.5F, 1.0F, 1.0F, 5.0F, 0.0F, false);
+        def.getChild("base").addOrReplaceChild("neck", CubeListBuilder.create().texOffs(48, 12).addBox(-2.0F, -14.0F, -3.5F, 4.0F, 14.0F, 4.0F), PartPose.offsetAndRotation(0.0F, -3.5F, -7.5F, 0f, 0f, 0f));
 
-        BoneSaddle = new ModelRenderer(this);
-        BoneSaddle.setPos(0.0F, 3.0F, 0.0F);
-        BoneBase.addChild(BoneSaddle);
-        BoneSaddle.texOffs(0, 19).addBox(-4.5F, -9.75F, -3.0F, 9.0F, 1.0F, 8.0F, 0.0F, false);
+        def.getChild("base").getChild("neck").addOrReplaceChild("head", CubeListBuilder.create().texOffs(40, 0).addBox(-3.0F, -4.0F, -3.0F, 6.0F, 6.0F, 6.0F), PartPose.offsetAndRotation(0.0F, -13.0F, -1.5F, 0f, 0f, 0f));
+
+        def.getChild("base").getChild("neck").getChild("head").addOrReplaceChild("beak1", CubeListBuilder.create().texOffs(16, 2).addBox(-2.5F, -2.25F, -6.5F, 5.0F, 2.0F, 7.0F), PartPose.offsetAndRotation(0.0F, 0.0F, -2.5F, 0.1745F, 0.0F, 0.0F));
+
+        def.getChild("base").getChild("neck").getChild("head").addOrReplaceChild("beak2", CubeListBuilder.create().texOffs(17, 3).addBox(-2.0F, -0.25F, -6.5F, 4.0F, 2.0F, 7.0F), PartPose.offsetAndRotation(0.0F, 0.0F, -2.5F, 0.1745F, 0.0F, 0.0F));
+
+        def.getChild("base").getChild("neck").getChild("head").addOrReplaceChild("head_feather", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 2.5F));
+
+        def.getChild("base").getChild("neck").getChild("head").getChild("head_feather").addOrReplaceChild("head_feather1", CubeListBuilder.create().texOffs(23, 33).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 0.0F, 4.0F), PartPose.offset(2.0F, -3.5F, 0.5F));
+
+        def.getChild("base").getChild("neck").getChild("head").getChild("head_feather").addOrReplaceChild("head_feather2", CubeListBuilder.create().texOffs(52, 37).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 0.0F, 5.0F), PartPose.offset(1.0F, -3.5F, 0.5F));
+
+        def.getChild("base").getChild("neck").getChild("head").getChild("head_feather").addOrReplaceChild("head_feather3", CubeListBuilder.create().texOffs(0, 39).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 0.0F, 4.0F), PartPose.offset(0.0F, -3.5F, 0.5F));
+
+        def.getChild("base").getChild("neck").getChild("head").getChild("head_feather").addOrReplaceChild("head_feather4", CubeListBuilder.create().texOffs(52, 52).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 0.0F, 5.0F), PartPose.offset(-1.0F, -3.5F, 0.5F));
+
+        def.getChild("base").getChild("neck").getChild("head").getChild("head_feather").addOrReplaceChild("head_feather5", CubeListBuilder.create().texOffs(54, 60).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 0.0F, 4.0F), PartPose.offset(-2.0F, -3.5F, 0.5F));
+
+        def.getChild("base").getChild("neck").getChild("head").getChild("head_feather").addOrReplaceChild("head_feather6", CubeListBuilder.create().texOffs(32, 29).addBox(0.0F, -0.5F, 0.0F, 0.0F, 1.0F, 4.0F), PartPose.offset(2.5F, -3.0F, 0.5F));
+
+        def.getChild("base").getChild("neck").getChild("head").getChild("head_feather").addOrReplaceChild("head_feather7", CubeListBuilder.create().texOffs(49, 46).addBox(0.0F, -0.5F, 0.0F, 0.0F, 1.0F, 3.0F), PartPose.offset(2.5F, -2.0F, 0.5F));
+
+        def.getChild("base").getChild("neck").getChild("head").getChild("head_feather").addOrReplaceChild("head_feather8", CubeListBuilder.create().texOffs(4, 45).addBox(0.0F, -0.5F, 0.0F, 0.0F, 1.0F, 2.0F), PartPose.offset(2.5F, -1.0F, 0.5F));
+
+        def.getChild("base").getChild("neck").getChild("head").getChild("head_feather").addOrReplaceChild("head_feather9", CubeListBuilder.create().texOffs(56, 29).addBox(0.0F, -0.5F, 0.0F, 0.0F, 1.0F, 4.0F), PartPose.offset(-2.5F, -3.0F, 0.5F));
+
+        def.getChild("base").getChild("neck").getChild("head").getChild("head_feather").addOrReplaceChild("head_feather10", CubeListBuilder.create().texOffs(22, 41).addBox(0.0F, -0.5F, 0.0F, 0.0F, 1.0F, 3.0F), PartPose.offset(-2.5F, -2.0F, 0.5F));
+
+        def.getChild("base").getChild("neck").getChild("head").getChild("head_feather").addOrReplaceChild("head_feather11", CubeListBuilder.create().texOffs(27, 48).addBox(0.0F, -0.5F, 0.0F, 0.0F, 1.0F, 2.0F), PartPose.offset(-2.5F, -1.0F, 0.5F));
+
+        def.getChild("base").addOrReplaceChild("back", CubeListBuilder.create().texOffs(2, 31).addBox(-4.5F, -1.0F, -0.25F, 9.0F, 2.0F, 1.0F), PartPose.offset(0.0F, -4.75F, 9.5F));
+
+        def.getChild("base").getChild("back").addOrReplaceChild("back_feather1", CubeListBuilder.create().texOffs(9, 35).addBox(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 8.0F), PartPose.offsetAndRotation(3.0F, -0.75F, 0.5F, 0.8727F, 0.1745F, 0.0F));
+
+        def.getChild("base").getChild("back").addOrReplaceChild("back_feather2", CubeListBuilder.create().texOffs(19, 38).addBox(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 9.0F), PartPose.offsetAndRotation(1.0F, -0.75F, 0.5F, 0.8727F, 0.0436F, 0.0F));
+
+        def.getChild("base").getChild("back").addOrReplaceChild("back_feather3", CubeListBuilder.create().texOffs(34, 33).addBox(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 9.0F), PartPose.offsetAndRotation(-1.0F, -0.75F, 0.5F, 0.9163F, -0.0436F, 0.0F));
+
+        def.getChild("base").getChild("back").addOrReplaceChild("back_feather4", CubeListBuilder.create().texOffs(44, 47).addBox(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 8.0F), PartPose.offsetAndRotation(-3.0F, -0.75F, 0.5F, 0.8727F, -0.1309F, 0.0F));
+
+        def.getChild("base").getChild("back").addOrReplaceChild("back_feather5", CubeListBuilder.create().texOffs(0, 33).addBox(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 11.0F), PartPose.offsetAndRotation(3.0F, 0.5F, 0.5F, 0.6981F, 0.0436F, -0.0436F));
+
+        def.getChild("base").getChild("back").addOrReplaceChild("back_feather6", CubeListBuilder.create().texOffs(25, 44).addBox(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 10.0F), PartPose.offsetAndRotation(1.0F, 0.5F, 0.5F, 0.6545F, 0.0F, 0.0F));
+
+        def.getChild("base").getChild("back").addOrReplaceChild("back_feather7", CubeListBuilder.create().texOffs(20, 51).addBox(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 10.0F), PartPose.offsetAndRotation(-1.0F, 0.5F, 0.5F, 0.6109F, 0.0F, 0.0F));
+
+        def.getChild("base").getChild("back").addOrReplaceChild("back_feather8", CubeListBuilder.create().texOffs(6, 39).addBox(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 11.0F), PartPose.offsetAndRotation(-3.0F, 0.5F, 0.5F, 0.6545F, 0.0F, -0.0436F));
+
+        def.getChild("base").getChild("back").addOrReplaceChild("back_feather9", CubeListBuilder.create().texOffs(9, 35).addBox(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 8.0F), PartPose.offsetAndRotation(2.0F, -0.25F, 0.5F, 0.8727F, 0.1745F, 0.0F));
+
+        def.getChild("base").getChild("back").addOrReplaceChild("back_feather10", CubeListBuilder.create().texOffs(0, 29).addBox(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 7.0F), PartPose.offsetAndRotation(0.0F, -0.25F, 0.5F, 0.5672F, 0.0F, 0.0F));
+
+        def.getChild("base").getChild("back").addOrReplaceChild("back_feather11", CubeListBuilder.create().texOffs(44, 56).addBox(-1.0F, 0.0F, -0.75F, 2.0F, 0.0F, 8.0F), PartPose.offsetAndRotation(-2.0F, -0.25F, 0.5F, 0.6109F, 0.0F, 0.0873F));
+
+
+        def.getChild("base").addOrReplaceChild("wing_left1", CubeListBuilder.create().texOffs(28, 30).addBox(0.0F, 0.0F, 0.0F, 1.0F, 2.0F, 7.0F).texOffs(14, 39).addBox(-0.1F, 0.0F, 7.0F, 1.0F, 2.0F, 7.0F), PartPose.offset(5.0F, -5.0F, -5.7F));
+
+        def.getChild("base").getChild("wing_left1").addOrReplaceChild("wing_left2", CubeListBuilder.create().texOffs(48, 35).addBox(0.0F, 0.0F, 0.0F, 1.0F, 3.0F, 7.0F).texOffs(40, 48).addBox(-0.1F, 0.0F, 7.0F, 1.0F, 3.0F, 7.0F), PartPose.offset(0.0F, 2.0F, -0.1F));
+
+        def.getChild("base").getChild("wing_left1").getChild("wing_left2").addOrReplaceChild("wing_left3", CubeListBuilder.create().texOffs(15, 30).addBox(0.0F, 1.0F, 0.0F, 1.0F, 3.0F, 7.0F).texOffs(18, 53).addBox(-0.1F, 1.0F, 7.0F, 1.0F, 3.0F, 7.0F), PartPose.offset(0.0F, 2.0F, 0.1F));
+
+        def.getChild("base").getChild("wing_left1").getChild("wing_left2").getChild("wing_left3").addOrReplaceChild("wing_left4", CubeListBuilder.create().texOffs(32, 55).addBox(0.0F, 0.0F, 0.0F, 1.0F, 2.0F, 7.0F).texOffs(1, 36).addBox(-0.1F, 0.0F, 7.0F, 1.0F, 2.0F, 7.0F), PartPose.offset(0.0F, 4.0F, 0.2F));
+
+
+        def.getChild("base").addOrReplaceChild("wing_right1", CubeListBuilder.create().texOffs(30, 40).addBox(-1.0F, 0.0F, 0.0F, 1.0F, 2.0F, 7.0F).texOffs(18, 31).addBox(-0.9F, 0.0F, 7.0F, 1.0F, 2.0F, 7.0F), PartPose.offset(-5.0F, -5.0F, -5.7F));
+
+        def.getChild("base").getChild("wing_right1").addOrReplaceChild("wing_right2", CubeListBuilder.create().texOffs(4, 42).addBox(-1.0F, 0.0F, 0.0F, 1.0F, 3.0F, 7.0F).texOffs(40, 40).addBox(-0.9F, 0.0F, 7.0F, 1.0F, 3.0F, 7.0F), PartPose.offset(0.0F, 2.0F, -0.1F));
+
+        def.getChild("base").getChild("wing_right1").getChild("wing_right2").addOrReplaceChild("wing_right3", CubeListBuilder.create().texOffs(17, 46).addBox(-1.0F, 0.0F, 0.0F, 1.0F, 3.0F, 7.0F).texOffs(33, 50).addBox(-0.9F, 0.0F, 7.0F, 1.0F, 3.0F, 7.0F), PartPose.offset(0.0F, 3.0F, 0.1F));
+
+        def.getChild("base").getChild("wing_right1").getChild("wing_right2").getChild("wing_right3").addOrReplaceChild("wing_right4", CubeListBuilder.create().texOffs(8, 36).addBox(-1.0F, 0.0F, 0.0F, 1.0F, 2.0F, 7.0F).texOffs(33, 29).addBox(-0.9F, 0.0F, 7.0F, 1.0F, 2.0F, 7.0F), PartPose.offset(0.0F, 3.0F, 0.2F));
+
+
+        def.getChild("base").addOrReplaceChild("leg_right", CubeListBuilder.create().texOffs(52, 43).addBox(-1.5F, -0.5F, -1.5F, 3.0F, 7.0F, 3.0F), PartPose.offset(-3.0F, 4.0F, 0.5F));
+
+        def.getChild("base").getChild("leg_right").addOrReplaceChild("foot_right", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, -0.25F, -1.0F, 2.0F, 7.0F, 2.0F), PartPose.offset(0.0F, 6.25F, 0.0F));
+
+        def.getChild("base").getChild("leg_right").getChild("foot_right").addOrReplaceChild("talon_right", CubeListBuilder.create(), PartPose.offset(0.0F, 6.25F, 0.0F));
+
+        def.getChild("base").getChild("leg_right").getChild("foot_right").getChild("talon_right").addOrReplaceChild("talon_right1", CubeListBuilder.create().texOffs(2, 3).addBox(-1.0F, -0.25F, -6.5F, 1.0F, 1.0F, 6.0F), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2618F, 0.1309F, 0.0F));
+
+        def.getChild("base").getChild("leg_right").getChild("foot_right").getChild("talon_right").addOrReplaceChild("talon_right2", CubeListBuilder.create().texOffs(2, 3).addBox(0.0F, -0.25F, -6.5F, 1.0F, 1.0F, 6.0F), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2618F, -0.1309F, 0.0F));
+
+        def.getChild("base").getChild("leg_right").getChild("foot_right").getChild("talon_right").addOrReplaceChild("talon_right3", CubeListBuilder.create().texOffs(10, 3).addBox(-0.5F, -0.25F, 0.25F, 1.0F, 1.0F, 5.0F), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.2618F, 0.0F, 0.0F));
+
+
+        def.getChild("base").addOrReplaceChild("leg_left", CubeListBuilder.create().texOffs(0, 28).addBox(-1.5F, -0.5F, -1.5F, 3.0F, 7.0F, 3.0F), PartPose.offset(3.0F, 4.0F, 0.5F));
+
+        def.getChild("base").getChild("leg_left").addOrReplaceChild("foot_left", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, -0.25F, -1.0F, 2.0F, 7.0F, 2.0F), PartPose.offset(0.0F, 6.25F, 0.0F));
+
+        def.getChild("base").getChild("leg_left").getChild("foot_left").addOrReplaceChild("talon_left", CubeListBuilder.create(), PartPose.offset(0.0F, 6.25F, 0.0F));
+
+        def.getChild("base").getChild("leg_left").getChild("foot_left").getChild("talon_left").addOrReplaceChild("talon_left1", CubeListBuilder.create().texOffs(2, 3).addBox(0.0F, -0.25F, -6.5F, 1.0F, 1.0F, 6.0F), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2618F, -0.1309F, 0.0F));
+
+        def.getChild("base").getChild("leg_left").getChild("foot_left").getChild("talon_left").addOrReplaceChild("talon_left2", CubeListBuilder.create().texOffs(2, 3).addBox(-1.0F, -0.25F, -6.5F, 1.0F, 1.0F, 6.0F), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2618F, 0.1309F, 0.0F));
+
+        def.getChild("base").getChild("leg_left").getChild("foot_left").getChild("talon_left").addOrReplaceChild("talon_left3", CubeListBuilder.create().texOffs(10, 3).addBox(-0.5F, -0.25F, 0.5F, 1.0F, 1.0F, 5.0F), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.2618F, 0.0F, 0.0F));
+
+
+        def.getChild("base").addOrReplaceChild("saddle", CubeListBuilder.create().texOffs(0, 19).addBox(-4.5F, -9.75F, -3.0F, 9.0F, 1.0F, 8.0F), PartPose.offset(0.0F, 3.0F, 0.0F));
 
 
         // --- Chicken ---
 
-        ChickBody = new ModelRenderer(this);
-        ChickBody.setPos(0.0F, 18.75F, 0.0F);
-        ChickBody.texOffs(0, 0).addBox(-2.5F, -2.5F, -3.0F, 5.0F, 5.0F, 6.0F, 0.0F, false);
 
-        ChickFront_r1 = new ModelRenderer(this);
-        ChickFront_r1.setPos(0.0F, -0.3415F, -2.9085F);
-        ChickBody.addChild(ChickFront_r1);
-        setRotationAngle(ChickFront_r1, 0.5236F, 0.0F, 0.0F);
-        ChickFront_r1.texOffs(17, 0).addBox(-1.0F, -1.5F, -0.5F, 2.0F, 3.0F, 1.0F, 0.0F, false);
+        def.addOrReplaceChild("chick_body", CubeListBuilder.create().texOffs(0, 0).addBox(-2.5F, -2.5F, -3.0F, 5.0F, 5.0F, 6.0F), PartPose.offset(0.0F, 18.75F, 0.0F));
 
-        ChickLeftFootPart = new ModelRenderer(this);
-        ChickLeftFootPart.setPos(1.5F, 19.75F, 0.0F);
-        ChickLeftFootPart.texOffs(0, 0).addBox(-0.5F, 1.0F, -0.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+        def.getChild("chick_body").addOrReplaceChild("chick_front", CubeListBuilder.create().texOffs(17, 0).addBox(-1.0F, -1.5F, -0.5F, 2.0F, 3.0F, 1.0F), PartPose.offsetAndRotation(0.0F, -0.3415F, -2.9085F, 0.5236F, 0.0F, 0.0F));
 
-        ChickTalonLeftBack_r1 = new ModelRenderer(this);
-        ChickTalonLeftBack_r1.setPos(0.0F, 1.25F, 0.0F);
-        ChickLeftFootPart.addChild(ChickTalonLeftBack_r1);
-        setRotationAngle(ChickTalonLeftBack_r1, -0.2618F, 0.0F, 0.0F);
-        ChickTalonLeftBack_r1.texOffs(20, 12).addBox(-0.5F, 1.5F, 0.25F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+        def.addOrReplaceChild("chick_left_foot", CubeListBuilder.create().texOffs(0, 0).addBox(-0.5F, 1.0F, -0.5F, 1.0F, 2.0F, 1.0F), PartPose.offset(1.5F, 19.75F, 0.0F));
 
-        ChickTalonLeftLeft_r1 = new ModelRenderer(this);
-        ChickTalonLeftLeft_r1.setPos(0.0F, 1.25F, 0.0F);
-        ChickLeftFootPart.addChild(ChickTalonLeftLeft_r1);
-        setRotationAngle(ChickTalonLeftLeft_r1, 0.2618F, -0.3491F, 0.0F);
-        ChickTalonLeftLeft_r1.texOffs(21, 20).addBox(-0.5F, 1.5F, -2.75F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+        def.getChild("chick_left_foot").addOrReplaceChild("chick_talon_left_back", CubeListBuilder.create().texOffs(20, 12).addBox(-0.5F, 1.5F, 0.25F, 1.0F, 1.0F, 2.0F), PartPose.offsetAndRotation(0.0F, 1.25F, 0.0F, -0.2618F, 0.0F, 0.0F));
 
-        ChickTalonLeftRight_r1 = new ModelRenderer(this);
-        ChickTalonLeftRight_r1.setPos(0.0F, 1.25F, 0.0F);
-        ChickLeftFootPart.addChild(ChickTalonLeftRight_r1);
-        setRotationAngle(ChickTalonLeftRight_r1, 0.2618F, 0.3491F, 0.0F);
-        ChickTalonLeftRight_r1.texOffs(14, 20).addBox(-0.5F, 1.25F, -2.75F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+        def.getChild("chick_left_foot").addOrReplaceChild("chick_talon_left_left", CubeListBuilder.create().texOffs(21, 20).addBox(-0.5F, 1.5F, -2.75F, 1.0F, 1.0F, 2.0F), PartPose.offsetAndRotation(0.0F, 1.25F, 0.0F, 0.2618F, -0.3491F, 0.0F));
 
-        ChickRightFootPart = new ModelRenderer(this);
-        ChickRightFootPart.setPos(-1.5F, 19.75F, 0.0F);
-        ChickRightFootPart.texOffs(24, 16).addBox(-0.5F, 1.0F, -0.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+        def.getChild("chick_left_foot").addOrReplaceChild("chick_talon_left_right", CubeListBuilder.create().texOffs(14, 20).addBox(-0.5F, 1.25F, -2.75F, 1.0F, 1.0F, 2.0F), PartPose.offsetAndRotation(0.0F, 1.25F, 0.0F, 0.2618F, 0.3491F, 0.0F));
 
-        ChickTalonRightBack_r1 = new ModelRenderer(this);
-        ChickTalonRightBack_r1.setPos(0.0F, 1.25F, 0.0F);
-        ChickRightFootPart.addChild(ChickTalonRightBack_r1);
-        setRotationAngle(ChickTalonRightBack_r1, -0.2618F, 0.0F, 0.0F);
-        ChickTalonRightBack_r1.texOffs(23, 3).addBox(-0.5F, 1.5F, 0.25F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+        def.addOrReplaceChild("chick_right_foot", CubeListBuilder.create().texOffs(24, 16).addBox(-0.5F, 1.0F, -0.5F, 1.0F, 2.0F, 1.0F), PartPose.offset(-1.5F, 19.75F, 0.0F));
 
-        ChickTalonRightLeft_r1 = new ModelRenderer(this);
-        ChickTalonRightLeft_r1.setPos(0.0F, 1.25F, 0.0F);
-        ChickRightFootPart.addChild(ChickTalonRightLeft_r1);
-        setRotationAngle(ChickTalonRightLeft_r1, 0.2618F, -0.3491F, 0.0F);
-        ChickTalonRightLeft_r1.texOffs(11, 24).addBox(-0.5F, 1.25F, -2.75F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+        def.getChild("chick_right_foot").addOrReplaceChild("chick_talon_right_back", CubeListBuilder.create().texOffs(23, 3).addBox(-0.5F, 1.5F, 0.25F, 1.0F, 1.0F, 2.0F), PartPose.offsetAndRotation(0.0F, 1.25F, 0.0F, -0.2618F, 0.0F, 0.0F));
 
-        ChickTalonRightRight_r1 = new ModelRenderer(this);
-        ChickTalonRightRight_r1.setPos(0.0F, 1.25F, 0.0F);
-        ChickRightFootPart.addChild(ChickTalonRightRight_r1);
-        setRotationAngle(ChickTalonRightRight_r1, 0.2618F, 0.3491F, 0.0F);
-        ChickTalonRightRight_r1.texOffs(23, 7).addBox(-0.5F, 1.5F, -2.75F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+        def.getChild("chick_right_foot").addOrReplaceChild("chick_talon_right_left", CubeListBuilder.create().texOffs(11, 24).addBox(-0.5F, 1.25F, -2.75F, 1.0F, 1.0F, 2.0F), PartPose.offsetAndRotation(0.0F, 1.25F, 0.0F, 0.2618F, -0.3491F, 0.0F));
 
-        ChickWingLeft = new ModelRenderer(this);
-        ChickWingLeft.setPos(2.5F, 18.5F, -2.0F);
-        ChickWingLeft.texOffs(0, 19).addBox(-0.25F, -1.5F, 0.0F, 1.0F, 3.0F, 4.0F, 0.0F, false);
-
-        ChickWingRight = new ModelRenderer(this);
-        ChickWingRight.setPos(2.5F, 18.5F, -2.0F);
-        ChickWingRight.texOffs(13, 12).addBox(-5.75F, -1.5F, 0.0F, 1.0F, 3.0F, 4.0F, 0.0F, false);
-
-        ChickUpperPart = new ModelRenderer(this);
-        ChickUpperPart.setPos(0.0F, 17.5F, -2.5F);
+        def.getChild("chick_right_foot").addOrReplaceChild("chick_talon_right_right", CubeListBuilder.create().texOffs(23, 7).addBox(-0.5F, 1.5F, -2.75F, 1.0F, 1.0F, 2.0F), PartPose.offsetAndRotation(0.0F, 1.25F, 0.0F, 0.2618F, 0.3491F, 0.0F));
 
 
-        ChickHeadPart = new ModelRenderer(this);
-        ChickHeadPart.setPos(0.0F, 0.0F, -0.5F);
-        ChickUpperPart.addChild(ChickHeadPart);
-        ChickHeadPart.texOffs(0, 12).addBox(-1.5F, -2.5F, -2.25F, 3.0F, 3.0F, 3.0F, 0.0F, false);
-        ChickHeadPart.texOffs(7, 19).addBox(-1.0F, -1.75F, -3.0F, 2.0F, 2.0F, 1.0F, 0.0F, false);
+        def.addOrReplaceChild("chick_wing_left", CubeListBuilder.create().texOffs(0, 19).addBox(-0.25F, -1.5F, 0.0F, 1.0F, 3.0F, 4.0F), PartPose.offset(2.5F, 18.5F, -2.0F));
+
+        def.addOrReplaceChild("chick_wing_right", CubeListBuilder.create().texOffs(13, 12).addBox(-5.75F, -1.5F, 0.0F, 1.0F, 3.0F, 4.0F), PartPose.offset(2.5F, 18.5F, -2.0F));
+
+        def.addOrReplaceChild("chick_upper", CubeListBuilder.create(), PartPose.offset(0.0F, 17.5F, -2.5F));
+
+        def.getChild("chick_upper").addOrReplaceChild("chick_head", CubeListBuilder.create().texOffs(0, 12).addBox(-1.5F, -2.5F, -2.25F, 3.0F, 3.0F, 3.0F).texOffs(7, 19).addBox(-1.0F, -1.75F, -3.0F, 2.0F, 2.0F, 1.0F), PartPose.offset(0.0F, 0.0F, -0.5F));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //def.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-2.0F, -4.0F, -2.0F, 4, 4, 5), PartPose.offset(0.0F, 12.0F, 0.0F));
+        //def.addOrReplaceChild("beak", CubeListBuilder.create().texOffs(18, 0).addBox(-0.5F, -3.0F, -4.0F, 1, 2, 3), PartPose.offset(0.0F, 12.0F, 0.0F));
+        //def.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 9).addBox(-2.5F, 0.0F, -2.0F, 5, 11, 5), PartPose.offset(0.0F, 12.0F, 1.0F));
+        //def.addOrReplaceChild("flipper_left", CubeListBuilder.create().texOffs(20, 10).mirror().addBox(0.0F, 0.0F, -1.0F, 1, 7, 3), PartPose.offsetAndRotation(2.5F, 12.0F, 0.0F, 0.0F, 0.0F, -0.08726646259971647F));
+        //def.addOrReplaceChild("flipper_right", CubeListBuilder.create().texOffs(20, 10).addBox(-1.0F, 0.0F, -1.0F, 1, 7, 3), PartPose.offsetAndRotation(-2.5F, 12.0F, 0.0F, 0.0F, 0.0F, 0.08726646259971647F));
+        //def.addOrReplaceChild("feet_left", CubeListBuilder.create().texOffs(0, 25).mirror().addBox(0.0F, 0.0F, -3.0F, 2, 1, 3), PartPose.offsetAndRotation(1.0F, 23.0F, 0.0F, 0.0F, -0.2617993877991494F, 0.0F));
+        //def.addOrReplaceChild("feet_right", CubeListBuilder.create().texOffs(0, 25).addBox(-2.0F, 0.0F, -3.0F, 2, 1, 3), PartPose.offsetAndRotation(-1.0F, 23.0F, 0.0F, 0.0F, 0.2617993877991494F, 0.0F));
+        //def.addOrReplaceChild("tail", CubeListBuilder.create().texOffs(20, 20).addBox(-1.5F, -1.0F, 0.0F, 3, 3, 1), PartPose.offsetAndRotation(0.0F, 23.0F, 3.0F, 1.2566370614359172F, 0.0F, 0.0F));
+        return LayerDefinition.create(modelDefinition, 64, 64);
     }
+
+   // @Override
+   // @Nonnull
+   // protected Iterable<ModelPart> headParts() {
+   //     return ImmutableList.of(this.head, this.beak);
+   // }
+//
+   // @Override
+   // @Nonnull
+   // protected Iterable<ModelPart> bodyParts() {
+   //     return ImmutableList.of(this.body, this.flipperLeft, this.flipperRight, this.feetLeft, this.feetRight, this.tail);
+   // }
 
     //----------------------------------------ANIMATION----------------------------------------//
 
@@ -475,16 +382,16 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
         ResetRotations();
         this.BoneHead.xRot = this.headXRot;
         this.BoneHead.yRot = netHeadYaw * ((float)Math.PI / 180F);
-        float rotSIN = MathHelper.sin(ageInTicks * 0.6662F) * 0.04F;
-        float rotCOS = MathHelper.cos(ageInTicks * 0.6662F) * 0.04F;
+        float rotSIN = Mth.sin(ageInTicks * 0.6662F) * 0.04F;
+        float rotCOS = Mth.cos(ageInTicks * 0.6662F) * 0.04F;
         SetLegRotation(entity);
         if(!entity.AnimFly()){
-            this.BoneLegRight.xRot += MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
-            this.BoneLegLeft.xRot  += MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-            this.BoneTalonRight.xRot -= MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
-            this.BoneTalonLeft.xRot  -= MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-            this.ChickLeftFootPart.xRot += MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 0.05F * limbSwingAmount;
-            this.ChickRightFootPart.xRot  += MathHelper.cos(limbSwing * 0.6662F) * 0.05F * limbSwingAmount;
+            this.BoneLegRight.xRot += Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
+            this.BoneLegLeft.xRot  += Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+            this.BoneTalonRight.xRot -= Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
+            this.BoneTalonLeft.xRot  -= Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+            this.ChickLeftFootPart.xRot += Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 0.05F * limbSwingAmount;
+            this.ChickRightFootPart.xRot  += Mth.cos(limbSwing * 0.6662F) * 0.05F * limbSwingAmount;
         }
         BoneBeak2.xRot = entity.AnimKweh() ? 3 * beakXrot : beakXrot;
 
@@ -602,7 +509,7 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
     //----------------------------------------RENDER----------------------------------------//
 
     @Override
-    public void renderToBuffer(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
+    public void renderToBuffer(PoseStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
         if(baby){
             ChickBody.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
             //ChickFront_r1.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
@@ -704,19 +611,19 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
 
     }
 
-    public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
+    public void setRotationAngle(ModelPart modelRenderer, float x, float y, float z) {
         modelRenderer.xRot = x;
         modelRenderer.yRot = y;
         modelRenderer.zRot = z;
     }
 
     @Override
-    protected Iterable<ModelRenderer> headParts() {
+    protected Iterable<ModelPart> headParts() {
         return ImmutableList.of(this.BoneNeck);
     }
 
     @Override
-    protected Iterable<ModelRenderer> bodyParts() {
+    protected Iterable<ModelPart> bodyParts() {
         return ImmutableList.of(this.BoneBody);
     }
 }

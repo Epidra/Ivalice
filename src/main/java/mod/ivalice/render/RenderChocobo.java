@@ -1,11 +1,17 @@
 package mod.ivalice.render;
 
 import mod.ivalice.Ivalice;
+import mod.ivalice.ModelHandler;
+import mod.ivalice.Subscriber;
 import mod.ivalice.entity.EntityChocobo;
 import mod.ivalice.model.ModelChocobo;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.model.SheepModel;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.entity.SheepRenderer;
+import net.minecraft.client.renderer.entity.layers.SheepFurLayer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -20,8 +26,8 @@ public class RenderChocobo extends MobRenderer<EntityChocobo, ModelChocobo<Entit
 
     //----------------------------------------CONSTRUCTOR----------------------------------------//
 
-    public RenderChocobo(EntityRendererManager renderManager) {
-        super(renderManager, new ModelChocobo<>(), 0.5F);
+    public RenderChocobo(EntityRendererProvider.Context renderManager) {
+        super(renderManager, new ModelChocobo<>(renderManager.bakeLayer(ModelHandler.CHOCOBO_LAYER)), 0.5F);
         this.addLayer(new RenderChocoboFeather(this));
         this.addLayer(new RenderChocoboEyes(this));
         this.addLayer(new RenderChocoboCollar(this));

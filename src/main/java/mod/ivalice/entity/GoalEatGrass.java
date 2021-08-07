@@ -1,23 +1,23 @@
 package mod.ivalice.entity;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.pattern.BlockStateMatcher;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
 
 import java.util.EnumSet;
 import java.util.function.Predicate;
 
 public class GoalEatGrass extends Goal {
-    private static final Predicate<BlockState> IS_TALL_GRASS = BlockStateMatcher.forBlock(Blocks.GRASS);
-    private final MobEntity mob;
-    private final World level;
+    private static final Predicate<BlockState> IS_TALL_GRASS = BlockStatePredicate.forBlock(Blocks.GRASS);
+    private final Mob mob;
+    private final Level level;
     private int eatAnimationTick;
 
-    public GoalEatGrass(MobEntity p_i45314_1_) {
+    public GoalEatGrass(Mob p_i45314_1_) {
         this.mob = p_i45314_1_;
         this.level = p_i45314_1_.level;
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.JUMP));

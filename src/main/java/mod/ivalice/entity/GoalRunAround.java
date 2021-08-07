@@ -1,9 +1,11 @@
 package mod.ivalice.entity;
 
-import net.minecraft.entity.ai.RandomPositionGenerator;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import com.mojang.math.Vector3d;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.util.DefaultRandomPos;
+import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
 
@@ -14,7 +16,7 @@ public class GoalRunAround extends Goal {
     private double posY;
     private double posZ;
     private boolean isRunning = false;
-    private final World level;
+    private final Level level;
     private int cooldown = 0;
 
     public GoalRunAround(EntityChocobo p_i1653_1_, double p_i1653_2_) {
@@ -26,7 +28,7 @@ public class GoalRunAround extends Goal {
 
     public boolean canUse() {
         if (!this.horse.isTamed() && !this.horse.AnimYoung() && --cooldown <= 0) {
-            Vector3d vector3d = RandomPositionGenerator.getPos(this.horse, 100, 100);
+            Vec3 vector3d = DefaultRandomPos.getPos(this.horse, 100, 100);
             if (vector3d == null) {
                 return false;
             } else {

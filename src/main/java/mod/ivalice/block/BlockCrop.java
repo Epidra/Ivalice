@@ -1,13 +1,11 @@
-package mod.ivalice.blocks;
+package mod.ivalice.block;
 
 import mod.ivalice.ShopKeeper;
-import net.minecraft.block.Block;
-import net.minecraft.block.CropsBlock;
-import net.minecraft.util.IItemProvider;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CropBlock;
 
-public class BlockCrop extends CropsBlock {
+public class BlockCrop extends CropBlock {
 
     private final String id;
 
@@ -27,7 +25,7 @@ public class BlockCrop extends CropsBlock {
 
     //----------------------------------------HELPER----------------------------------------//
 
-    protected IItemProvider getBaseSeedId() {
+    protected ItemLike getBaseSeedId() {
         if(id.matches("gysahl")) return ShopKeeper.SEEDS_GYSAHL.get();
         if(id.matches("krakka")) return ShopKeeper.SEEDS_KRAKKA.get();
         if(id.matches("mimett")) return ShopKeeper.SEEDS_MIMETT.get();

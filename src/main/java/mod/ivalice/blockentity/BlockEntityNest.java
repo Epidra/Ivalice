@@ -1,23 +1,23 @@
-package mod.ivalice.tileentities;
+package mod.ivalice.blockentity;
 
 import mod.ivalice.ShopKeeper;
-import mod.ivalice.blocks.BlockNest;
+import mod.ivalice.block.BlockNest;
 import mod.ivalice.entity.EntityChocobo;
-import mod.lucky77.tileentities.TileBase;
-import mod.lucky77.util.LogicBase;
-import net.minecraft.block.BlockState;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.IIntArray;
-import net.minecraft.util.IntArray;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import mod.lucky77.blockentity.BlockEntityBase;
+import mod.lucky77.logic.LogicBase;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
-public class TileEntityNest extends TileBase<LogicBase> {
+public class BlockEntityNest extends BlockEntityBase<LogicBase> {
 
     public int colorA = 0;
     public int colorB = 0;
@@ -32,13 +32,13 @@ public class TileEntityNest extends TileBase<LogicBase> {
 
     //----------------------------------------CONSTRUCTOR----------------------------------------//
 
-    public TileEntityNest() {
-        this(ShopKeeper.TILE_NEST.get());
+    public BlockEntityNest(BlockPos blockpos, BlockState blockstate) {
+        this(ShopKeeper.TILE_NEST.get(), blockpos, blockstate);
     }
 
     /** 0 - KEY, 1 - MODULE, 2 - TOKEN, 3 - STORAGE-TOKEN, 4 - STORAGE_PRIZE **/
-    public TileEntityNest(TileEntityType<?> tileEntityTypeIn) {
-        super(tileEntityTypeIn, 1, new LogicBase());
+    public BlockEntityNest(BlockEntityType<?> tileEntityTypeIn, BlockPos blockpos, BlockState blockstate) {
+        super(tileEntityTypeIn, blockpos, blockstate, 1, new LogicBase());
     }
 
 
@@ -46,22 +46,34 @@ public class TileEntityNest extends TileBase<LogicBase> {
 
     //----------------------------------------UPDATE----------------------------------------//
 
-    @Override
-    public void tick(){
+    public static void serverTick(Level level, BlockPos pos, BlockState state, BlockEntityNest BE){
         boolean isDirty = false;
-
-        if(isHatching && age < ageMAX){
-            age++;
-            if(age >= ageMAX){
-                hatch();
+        if(BE.isHatching && BE.age < BE.ageMAX){
+            BE.age++;
+            if(BE.age >= BE.ageMAX){
+                BE.hatch();
                 isDirty = true;
             }
         }
-
         if (isDirty){
-            this.setChanged();
+            BE.setChanged();
         }
     }
+
+    //@Override
+    //public void tick(){
+    //    boolean isDirty = false;
+    //    if(isHatching && age < ageMAX){
+    //        age++;
+    //        if(age >= ageMAX){
+    //            hatch();
+    //            isDirty = true;
+    //        }
+    //    }
+    //    if (isDirty){
+    //        this.setChanged();
+    //    }
+    //}
 
 
 
@@ -75,25 +87,25 @@ public class TileEntityNest extends TileBase<LogicBase> {
 
     //----------------------------------------SAVE/LOAD----------------------------------------//
 
-    public void load(BlockState state, CompoundNBT nbt){
-        super.load(state, nbt);
+    public void load(CompoundTag nbt){
+        super.load(nbt);
 
         colorA = nbt.getInt("ColorA");
         colorB = nbt.getInt("ColorB");
         age = nbt.getInt("Age");
 
         this.inventory = NonNullList.withSize(1, ItemStack.EMPTY);
-        ItemStackHelper.loadAllItems(nbt, this.inventory);
+        ContainerHelper.loadAllItems(nbt, this.inventory);
     }
 
-    public CompoundNBT save(CompoundNBT compound){
+    public CompoundTag save(CompoundTag compound){
         super.save(compound);
 
         compound.putInt("ColorA", colorA);
         compound.putInt("ColorB", colorB);
         compound.putInt("Age", age);
 
-        ItemStackHelper.saveAllItems(compound, this.inventory);
+        ContainerHelper.saveAllItems(compound, this.inventory);
         return compound;
     }
 
@@ -114,7 +126,7 @@ public class TileEntityNest extends TileBase<LogicBase> {
         if(!level.isClientSide){
             EntityChocobo parent = ShopKeeper.ENTITY_CHOCOBO.get().create(level);
             EntityChocobo child;
-            ServerWorld SW = (ServerWorld) this.getLevel();
+            ServerLevel SW = (ServerLevel) this.getLevel();
             if (parent != null) {
                 child = parent.getBreedOffspring(SW, colorA, colorB);
             } else {
@@ -139,13 +151,28 @@ public class TileEntityNest extends TileBase<LogicBase> {
     //----------------------------------------GET/SET----------------------------------------//
 
     @Override
-    public IIntArray getIntArray() {
-        return new IntArray(0);
+    public ContainerData getIntArray() {
+        return new ContainerData() {
+            @Override
+            public int get(int p_39284_) {
+                return 0;
+            }
+
+            @Override
+            public void set(int p_39285_, int p_39286_) {
+
+            }
+
+            @Override
+            public int getCount() {
+                return 0;
+            }
+        };
     }
 
     @Override
-    public ITextComponent getName() {
-        return new TranslationTextComponent("nest");
+    public TextComponent getName() {
+        return new TextComponent("nest");
     }
 
     protected NonNullList<ItemStack> getItems() {
