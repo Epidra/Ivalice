@@ -24,9 +24,21 @@ public class RenderChocoboFeather extends RenderLayer<EntityChocobo, ModelChocob
     private static final ResourceLocation TEXTURE1 = new ResourceLocation(Ivalice.MODID, "textures/entity/feather.png");
     private static final ResourceLocation TEXTURE2 = new ResourceLocation(Ivalice.MODID, "textures/entity/chick_feather.png");
 
+
+
+
+
+    //----------------------------------------CONSTRUCTOR----------------------------------------//
+
     public RenderChocoboFeather(RenderLayerParent<EntityChocobo, ModelChocobo<EntityChocobo>> p_i232476_1_) {
         super(p_i232476_1_);
     }
+
+
+
+
+
+    //----------------------------------------RENDER----------------------------------------//
 
     public void render(PoseStack p_117421_, MultiBufferSource p_117422_, int p_117423_, EntityChocobo p_117424_, float p_117425_, float p_117426_, float p_117427_, float p_117428_, float p_117429_, float p_117430_) {
         if (p_117424_.isInvisible()) {
@@ -39,7 +51,6 @@ public class RenderChocoboFeather extends RenderLayer<EntityChocobo, ModelChocob
                 VertexConsumer vertexconsumer = p_117422_.getBuffer(RenderType.outline(getTexture(p_117424_)));
                 this.getParentModel().renderToBuffer(p_117421_, vertexconsumer, p_117423_, LivingEntityRenderer.getOverlayCoords(p_117424_, 0.0F), 0.0F, 0.0F, 0.0F, 1.0F);
             }
-
         } else {
             float f;
             float f1;
@@ -67,7 +78,16 @@ public class RenderChocoboFeather extends RenderLayer<EntityChocobo, ModelChocob
         }
     }
 
+
+
+
+
+    //----------------------------------------SUPPORT----------------------------------------//
+
     public ResourceLocation getTexture(EntityChocobo entity) {
         return entity.AnimYoung() ? TEXTURE2 : TEXTURE1;
     }
+
+
+
 }

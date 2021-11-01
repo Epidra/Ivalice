@@ -6,7 +6,6 @@ import mod.ivalice.block.BlockStraw;
 import mod.ivalice.entity.EntityChocobo;
 import mod.ivalice.item.ItemSeed;
 import mod.ivalice.item.ItemSpawnEgg;
-import mod.ivalice.render.RenderChocobo;
 import mod.ivalice.blockentity.BlockEntityNest;
 import mod.lucky77.item.ItemFood;
 import mod.lucky77.item.ItemItem;
@@ -16,8 +15,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.SpawnPlacements;
-import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -29,13 +26,6 @@ import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.RangeDecoratorConfiguration;
-import net.minecraft.world.level.levelgen.heightproviders.ConstantHeight;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.BiomeDictionary;
@@ -50,22 +40,22 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.Set;
 
 import static mod.ivalice.Ivalice.MODID;
-import static net.minecraft.data.BuiltinRegistries.CONFIGURED_FEATURE;
 import static net.minecraft.world.entity.MobCategory.CREATURE;
-import static net.minecraft.world.entity.SpawnPlacements.Type.ON_GROUND;
-import static net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration.Predicates.NATURAL_STONE;
-import static net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration.Predicates.NETHER_ORE_REPLACEABLES;
 
 @SuppressWarnings({"unused", "deprecation"})
 public class ShopKeeper {
 
-    private static final DeferredRegister<Block> BLOCKS     = DeferredRegister.create(ForgeRegistries.BLOCKS,             MODID);
-    private static final DeferredRegister<Item>                 ITEMS      = DeferredRegister.create(ForgeRegistries.ITEMS,              MODID);
-    private static final DeferredRegister<MenuType<?>>     CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS,         MODID);
-    private static final DeferredRegister<BlockEntityType<?>>    TILES      = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES,      MODID);
-    private static final DeferredRegister<SoundEvent>           SOUNDS     = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS,       MODID);
-    private static final DeferredRegister<EntityType<?>>        ENTITIES   = DeferredRegister.create(ForgeRegistries.ENTITIES,           MODID);
+    private static final DeferredRegister<Block>               BLOCKS     = DeferredRegister.create(ForgeRegistries.BLOCKS,             MODID);
+    private static final DeferredRegister<Item>                ITEMS      = DeferredRegister.create(ForgeRegistries.ITEMS,              MODID);
+    private static final DeferredRegister<MenuType<?>>         CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS,         MODID);
+    private static final DeferredRegister<BlockEntityType<?>>  TILES      = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES,     MODID);
+    private static final DeferredRegister<SoundEvent>          SOUNDS     = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS,       MODID);
+    private static final DeferredRegister<EntityType<?>>       ENTITIES   = DeferredRegister.create(ForgeRegistries.ENTITIES,           MODID);
     private static final DeferredRegister<RecipeSerializer<?>> RECIPES    = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, MODID);
+
+
+
+
 
     // Stuff
     public static final RegistryObject<Item> STUFF_FEATHER = register("stuff_feather", new ItemItem(CreativeModeTab.TAB_MISC));
@@ -109,11 +99,14 @@ public class ShopKeeper {
 
     // Entities
     public static final RegistryObject<EntityType<EntityChocobo>>   ENTITY_CHOCOBO   = ENTITIES.register("chocobo",   () -> EntityType.Builder.of(EntityChocobo::new, CREATURE).sized(0.9F, 2.5F).setTrackingRange(10).build(new ResourceLocation(MODID, "chocobo").toString()));
-    //public static final RegistryObject<EntityType<AdeliePenguinEntity>> ADELIE_PENGUIN = createEntity("adelie_penguin", AdeliePenguinEntity::new, 0.4F, 0.95F, 0x000000, 0xFFFFFF);
+
     // Spawn Eggs
     public static final RegistryObject<ItemSpawnEgg> SPAWNEGG_CHOCOBO = ITEMS.register("spawnegg_chocobo", () -> new ItemSpawnEgg(() -> ENTITY_CHOCOBO.get(), 16766720, 6908265, new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
 
+    // Block Entities
     public static  final RegistryObject<BlockEntityType<BlockEntityNest>> TILE_NEST = TILES.register("nest", () -> BlockEntityType.Builder.of(BlockEntityNest::new, BLOCK_NEST.get() ).build(null));
+
+
 
 
 
@@ -129,8 +122,7 @@ public class ShopKeeper {
         RECIPES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    static <T extends Recipe<?>> RecipeType<T> register(final String key)
-    {
+    static <T extends Recipe<?>> RecipeType<T> register(final String key) {
         return Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(key), new RecipeType<T>()
         {
             @Override
@@ -142,15 +134,9 @@ public class ShopKeeper {
     }
 
     public static void registerEntity(BiomeLoadingEvent event, Set<BiomeDictionary.Type> types) {
-        //if (event.getCategory() == Biome.Category.PLAINS) {
         event.getSpawns().getSpawner(CREATURE).add(new MobSpawnSettings.SpawnerData(ENTITY_CHOCOBO.get(), Config.CHOCOBO.weight.get(), Config.CHOCOBO.min.get(), Config.CHOCOBO.max.get()));
-        //}
     }
 
-    //public static void registerEntities() {
-    //    SpawnPlacements.register(ENTITY_CHOCOBO.get(), ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
-    //    GlobalEntityTypeAttributes.put(ENTITY_CHOCOBO.get(), EntityChocobo.registerAttributes().build());
-    //}
     private static RegistryObject<Block> register(String name, Block block){
         return register(name, block, null);
     }
@@ -172,15 +158,6 @@ public class ShopKeeper {
         return ENTITIES.register(name, () -> entity);
     }
 
-    //public static ConfiguredFeature<?, ?> buildOreSpawn(String name, BlockState state, int veinSize, int maxHeight, int spawnRate, boolean isNether) {
-    //    OreConfiguration config = new OreConfiguration(isNether ? NETHER_ORE_REPLACEABLES : NATURAL_STONE, state, veinSize);
-    //    ConfiguredFeature<?, ?> feature = Feature.ORE.configured(config)
-    //            .range(new RangeDecoratorConfiguration(new ConstantHeight(1)))
-    //            .squared()
-    //            .chance(spawnRate);
-    //    Registry.register(CONFIGURED_FEATURE, new ResourceLocation(Ivalice.MODID, name), feature  );
-    //    return feature;
-    //}
 
 
 
@@ -188,7 +165,7 @@ public class ShopKeeper {
     //----------------------------------------SETUP----------------------------------------//
 
     static void setup(FMLCommonSetupEvent event){
-        //registerEntities();
+
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -198,8 +175,8 @@ public class ShopKeeper {
         ItemBlockRenderTypes.setRenderLayer(CROP_MIMETT.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(CROP_SYLKIS.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(CROP_TANTAL.get(), RenderType.cutout());
-
-        //RenderingRegistry.registerEntityRenderingHandler(ENTITY_CHOCOBO.get(), RenderChocobo::new);
     }
+
+
 
 }

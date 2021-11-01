@@ -13,7 +13,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -35,6 +34,7 @@ public class ItemSeed extends Item {
 
 
 
+
     //----------------------------------------CONSTRUCTOR----------------------------------------//
 
     /** Default Constructor */
@@ -46,6 +46,7 @@ public class ItemSeed extends Item {
 
 
 
+
     //----------------------------------------INTERACTION----------------------------------------//
 
     /** Called when this item is used when targetting a Block */
@@ -53,6 +54,7 @@ public class ItemSeed extends Item {
         InteractionResult actionresulttype = this.place(new BlockPlaceContext(context));
         return !actionresulttype.consumesAction() && this.isEdible() ? this.use(context.getLevel(), context.getPlayer(), context.getHand()).getResult() : actionresulttype;
     }
+
 
 
 
@@ -86,14 +88,12 @@ public class ItemSeed extends Item {
                             CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer)player, blockpos, itemstack);
                         }
                     }
-
                     level.gameEvent(player, GameEvent.BLOCK_PLACE, blockpos);
                     SoundType soundtype = blockstate1.getSoundType(level, blockpos, p_40577_.getPlayer());
                     level.playSound(player, blockpos, this.getPlaceSound(blockstate1, level, blockpos, p_40577_.getPlayer()), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                     if (player == null || !player.getAbilities().instabuild) {
                         itemstack.shrink(1);
                     }
-
                     return InteractionResult.sidedSuccess(level.isClientSide);
                 }
             }
@@ -150,11 +150,9 @@ public class ItemSeed extends Item {
                 }
             }
         }
-
         if (blockstate != p_40606_) {
             p_40604_.setBlock(p_40603_, blockstate, 2);
         }
-
         return blockstate;
     }
 
@@ -180,7 +178,6 @@ public class ItemSeed extends Item {
                     if (!p_40583_.isClientSide && blockentity.onlyOpCanSetNbt() && (p_40584_ == null || !p_40584_.canUseGameMasterBlocks())) {
                         return false;
                     }
-
                     CompoundTag compoundtag1 = blockentity.save(new CompoundTag());
                     CompoundTag compoundtag2 = compoundtag1.copy();
                     compoundtag1.merge(compoundtag);
@@ -194,15 +191,8 @@ public class ItemSeed extends Item {
                     }
                 }
             }
-
             return false;
         }
-    }
-
-    private static <T extends Comparable<T>> BlockState func_219988_a(BlockState p_219988_0_, Property<T> p_219988_1_, String p_219988_2_) {
-        return p_219988_1_.getValue(p_219988_2_).map((p_219986_2_) -> {
-            return p_219988_0_.setValue(p_219988_1_, p_219986_2_);
-        }).orElse(p_219988_0_);
     }
 
     public Block getBlock() {
@@ -217,4 +207,7 @@ public class ItemSeed extends Item {
         if(id.matches("tantal")) return ShopKeeper.CROP_TANTAL.get();
         return ShopKeeper.CROP_GYSAHL.get();
     }
+
+
+
 }

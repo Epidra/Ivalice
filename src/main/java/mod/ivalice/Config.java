@@ -16,8 +16,11 @@ import static net.minecraftforge.common.BiomeDictionary.Type.*;
 public class Config {
 
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
-
     public static final ConfigMob CHOCOBO = new ConfigMob(BUILDER, "chocobo", 1, 1, 8);
+
+
+
+
 
     //----------------------------------------CONFIG_MOB----------------------------------------//
 
@@ -44,9 +47,14 @@ public class Config {
         }
     }
 
+
+
+
+
     //----------------------------------------BUILDER----------------------------------------//
 
-
-
     public static final ForgeConfigSpec spec = BUILDER.build();
+
+
+
 }

@@ -19,6 +19,7 @@ public class BlockStraw extends BlockBase {
 
 
 
+
     //----------------------------------------CONSTRUCTOR----------------------------------------//
 
     /** Contructor with predefined BlockProperty */
@@ -26,16 +27,27 @@ public class BlockStraw extends BlockBase {
         super(Properties.copy(Blocks.WHEAT));
     }
 
+
+
+
+
+    //----------------------------------------INTERACTION----------------------------------------//
+
     @Override
     public void interact(Level world, BlockPos pos, Player player, BlockEntityBase tile) {
 
     }
 
 
-    //----------------------------------------HELPER----------------------------------------//
+
+
+
+    //----------------------------------------SUPPORT----------------------------------------//
 
     public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
         return AABB0;
     }
+
+
 
 }

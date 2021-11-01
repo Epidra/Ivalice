@@ -21,11 +21,10 @@ public class BlockEntityNest extends BlockEntityBase<LogicBase> {
 
     public int colorA = 0;
     public int colorB = 0;
-
     boolean isHatching = false;
-
     public int age = 0;
     public int ageMAX = 400;
+
 
 
 
@@ -44,7 +43,8 @@ public class BlockEntityNest extends BlockEntityBase<LogicBase> {
 
 
 
-    //----------------------------------------UPDATE----------------------------------------//
+
+    //----------------------------------------SERVER_TICK----------------------------------------//
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, BlockEntityNest BE){
         boolean isDirty = false;
@@ -60,20 +60,6 @@ public class BlockEntityNest extends BlockEntityBase<LogicBase> {
         }
     }
 
-    //@Override
-    //public void tick(){
-    //    boolean isDirty = false;
-    //    if(isHatching && age < ageMAX){
-    //        age++;
-    //        if(age >= ageMAX){
-    //            hatch();
-    //            isDirty = true;
-    //        }
-    //    }
-    //    if (isDirty){
-    //        this.setChanged();
-    //    }
-    //}
 
 
 
@@ -85,29 +71,27 @@ public class BlockEntityNest extends BlockEntityBase<LogicBase> {
 
 
 
+
     //----------------------------------------SAVE/LOAD----------------------------------------//
 
     public void load(CompoundTag nbt){
         super.load(nbt);
-
         colorA = nbt.getInt("ColorA");
         colorB = nbt.getInt("ColorB");
         age = nbt.getInt("Age");
-
         this.inventory = NonNullList.withSize(1, ItemStack.EMPTY);
         ContainerHelper.loadAllItems(nbt, this.inventory);
     }
 
     public CompoundTag save(CompoundTag compound){
         super.save(compound);
-
         compound.putInt("ColorA", colorA);
         compound.putInt("ColorB", colorB);
         compound.putInt("Age", age);
-
         ContainerHelper.saveAllItems(compound, this.inventory);
         return compound;
     }
+
 
 
 
@@ -132,18 +116,17 @@ public class BlockEntityNest extends BlockEntityBase<LogicBase> {
             } else {
                 child = ShopKeeper.ENTITY_CHOCOBO.get().create(level);
             }
-
             if (child != null) {
                 child.setBaby(true);
                 child.moveTo(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 0.0F, 0.0F);
                 SW.addFreshEntityWithPassengers(child);
-
                 isHatching = false;
                 age = 0;
                 level.setBlockAndUpdate(getBlockPos(), level.getBlockState(getBlockPos()).setValue(BlockNest.AGE, 3));
             }
         }
     }
+
 
 
 
@@ -180,13 +163,13 @@ public class BlockEntityNest extends BlockEntityBase<LogicBase> {
     }
 
     public void setItem(int p_70299_1_, ItemStack p_70299_2_) {
-        //this.unpackLootTable((PlayerEntity)null);
         this.getItems().set(p_70299_1_, p_70299_2_);
         if (p_70299_2_.getCount() > this.getMaxStackSize()) {
             p_70299_2_.setCount(this.getMaxStackSize());
         }
-
         this.setChanged();
     }
+
+
 
 }

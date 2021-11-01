@@ -37,10 +37,6 @@ public class BlockNest extends BlockBase implements EntityBlock {
 
 
 
-
-
-
-
     //----------------------------------------CONSTRUCTOR----------------------------------------//
 
     /** Contructor with predefined BlockProperty */
@@ -52,7 +48,8 @@ public class BlockNest extends BlockBase implements EntityBlock {
 
 
 
-    //----------------------------------------HELPER----------------------------------------//
+
+    //----------------------------------------INTERACTION----------------------------------------//
 
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
@@ -67,8 +64,28 @@ public class BlockNest extends BlockBase implements EntityBlock {
         if(world.getBlockState(pos).getValue(AGE) == 3){
             world.setBlockAndUpdate(pos, world.getBlockState(pos).setValue(AGE, 0));
         }
-        // Take Egg
     }
+
+
+
+
+
+    //----------------------------------------BLOCKENTITY----------------------------------------//
+
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new BlockEntityNest(pos, state);
+    }
+
+    @Nullable
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return createTicker(level, type, ShopKeeper.TILE_NEST.get());
+    }
+
+    @Nullable
+    protected static <T extends BlockEntity> BlockEntityTicker<T> createTicker(Level level, BlockEntityType<T> type, BlockEntityType<? extends BlockEntityNest> typeCustom) {
+        return createTickerHelper(type, typeCustom, BlockEntityNest::serverTick);
+    }
+
 
 
 
@@ -91,46 +108,6 @@ public class BlockNest extends BlockBase implements EntityBlock {
         builder.add(AGE);
     }
 
-    //public BlockEntity newBlockEntity(BlockPos p_153277_, BlockState p_153278_) {
-    //    return new FurnaceBlockEntity(p_153277_, p_153278_);
-    //}
-//
-    //@Nullable
-    //public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153273_, BlockState p_153274_, BlockEntityType<T> p_153275_) {
-    //    return createFurnaceTicker(p_153273_, p_153275_, BlockEntityType.FURNACE);
-    //}
-//
-    //@Nullable
-    //protected static <T extends BlockEntity> BlockEntityTicker<T> createFurnaceTicker(Level p_151988_, BlockEntityType<T> p_151989_, BlockEntityType<? extends AbstractFurnaceBlockEntity> p_151990_) {
-    //    return p_151988_.isClientSide ? null : createTickerHelper(p_151989_, p_151990_, AbstractFurnaceBlockEntity::serverTick);
-    //}
-
-    //@Override
-    //public boolean hasTileEntity(BlockState state) {
-    //    return true;
-    //}
-
-    //@Nullable
-    //@Override
-    //public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-    //    return new TileEntityNest(ShopKeeper.TILE_NEST.get());
-    //}
 
 
-    //----------------------------------------BLOCKENTITY----------------------------------------//
-
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new BlockEntityNest(pos, state);
-    }
-
-    @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createTicker(level, type, ShopKeeper.TILE_NEST.get());
-    }
-
-    @Nullable
-    protected static <T extends BlockEntity> BlockEntityTicker<T> createTicker(Level level, BlockEntityType<T> type, BlockEntityType<? extends BlockEntityNest> typeCustom) {
-        //return level.isClientSide ? null : createTickerHelper(type, typeCustom, BlockEntityArcade::serverTick);
-        return createTickerHelper(type, typeCustom, BlockEntityNest::serverTick);
-    }
 }

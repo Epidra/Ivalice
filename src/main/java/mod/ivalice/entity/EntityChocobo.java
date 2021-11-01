@@ -1,9 +1,7 @@
 package mod.ivalice.entity;
 
-import com.mojang.math.Vector3d;
 import mod.ivalice.ShopKeeper;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
@@ -60,7 +58,6 @@ import java.util.UUID;
 import java.util.function.Predicate;
 
 import static net.minecraft.sounds.SoundSource.AMBIENT;
-import static net.minecraft.world.effect.MobEffects.JUMP;
 
 public class EntityChocobo extends TamableAnimal implements NeutralMob, ContainerListener, PlayerRideableJumping, Saddleable {
 
@@ -97,11 +94,6 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
     protected boolean canGallop = true;
     protected int gallopSoundCounter;
 
-    public static final Predicate<LivingEntity> PREY_SELECTOR = (p_213440_0_) -> {
-        EntityType<?> entitytype = p_213440_0_.getType();
-        return entitytype == EntityType.SHEEP || entitytype == EntityType.RABBIT || entitytype == EntityType.FOX;
-    };
-
     private int eatAnimationTick;
 
     private GoalEatGrass eatBlockGoal;
@@ -129,6 +121,7 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
 
 
 
+
     //----------------------------------------CONSTRUCTOR----------------------------------------//
 
     public EntityChocobo(EntityType<? extends EntityChocobo> entity, Level world) {
@@ -141,6 +134,7 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
 
 
 
+
     //----------------------------------------REGISTER----------------------------------------//
 
     protected void registerGoals() {
@@ -148,30 +142,23 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         this.eatBlockGoal = new GoalEatGrass(this);
         this.goalRunAround = new GoalRunAround(this, 1.1f);
 
-
-        // From Wolf
         this.goalSelector.addGoal( 0, new FloatGoal(this));
         this.goalSelector.addGoal( 1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal( 1, new PanicGoal(this, 1.2D));
-        //this.goalSelector.addGoal( 2, new AvoidEntityGoal(this, CreeperEntity.class, 24.0F, 1.5D, 1.5D));
         this.goalSelector.addGoal( 3, new LeapAtTargetGoal(this, 0.4F));
         this.goalSelector.addGoal( 4, new MeleeAttackGoal(this, 1.0D, true));
-        //this.goalSelector.addGoal( 5, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
         this.goalSelector.addGoal( 6, this.goalRunAround);
         this.goalSelector.addGoal( 7, new GoalBreed(this, 1.0D));
         this.goalSelector.addGoal( 8, new TemptGoal(this, 1.1D, FOOD_ITEMS, false));
         this.goalSelector.addGoal( 9, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(10, this.eatBlockGoal);
         this.goalSelector.addGoal(11, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        //this.goalSelector.addGoal(12, new BegGoal(this, 8.0F));
         this.goalSelector.addGoal(13, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(14, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(3, (new HurtByTargetGoal(this)).setAlertOthers());
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::isAngryAt));
-        //this.targetSelector.addGoal(5, new NonTamedTargetGoal<>(this, AnimalEntity.class, false, PREY_SELECTOR));
-        //this.targetSelector.addGoal(6, new NonTamedTargetGoal<>(this, TurtleEntity.class, false, TurtleEntity.BABY_ON_LAND_SELECTOR));
         this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, AbstractSkeleton.class, false));
         this.targetSelector.addGoal(8, new ResetUniversalAngerTargetGoal<>(this, true));
     }
@@ -202,15 +189,6 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         return ((double)0.45F + this.random.nextDouble() * 0.3D + this.random.nextDouble() * 0.3D + this.random.nextDouble() * 0.3D) * 0.5D;
     }
 
-    protected void setOffspringAttributes(AgeableMob p_190681_1_, EntityChocobo p_190681_2_) {
-        double d0 = this.getAttributeBaseValue(Attributes.MAX_HEALTH) + p_190681_1_.getAttributeBaseValue(Attributes.MAX_HEALTH) + (double)this.generateRandomMaxHealth();
-        p_190681_2_.getAttribute(Attributes.MAX_HEALTH).setBaseValue(d0 / 3.0D);
-        double d1 = this.getAttributeBaseValue(Attributes.JUMP_STRENGTH) + p_190681_1_.getAttributeBaseValue(Attributes.JUMP_STRENGTH) + this.generateRandomJumpStrength();
-        p_190681_2_.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(d1 / 3.0D);
-        double d2 = this.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) + p_190681_1_.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) + this.generateRandomSpeed();
-        p_190681_2_.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(d2 / 3.0D);
-    }
-
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_COLOR_FEATHER, DyeColor.GRAY.getTextColor());
@@ -225,6 +203,7 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
 
 
 
+
     //----------------------------------------AI----------------------------------------//
 
     public void aiStep() {
@@ -234,9 +213,7 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         if (this.random.nextInt(200) == 0) {
             this.moveWings();
         }
-
         super.aiStep();
-
         if (!this.level.isClientSide && this.isWet && !this.isShaking && !this.isPathFinding() && this.onGround) {
             this.isShaking = true;
             this.shakeAnim = 0.0F;
@@ -261,7 +238,6 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
             }
             this.followMommy();
         }
-
         this.oFlap = this.flap;
         this.oFlapSpeed = this.flapSpeed;
         this.flapSpeed = (float)((double)this.flapSpeed + (double)(this.onGround ? -1 : 4) * 0.3D);
@@ -269,19 +245,15 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         if (!this.onGround && this.flapping < 1.0F) {
             this.flapping = 1.0F;
         }
-
-
         this.flapping = (float)((double)this.flapping * 0.9D);
         Vec3 vector3d = this.getDeltaMovement();
         isMoving = vector3d.x != 0 || vector3d.z != 0;
-
         if (!this.onGround && vector3d.y < 0.0D) {
             this.setDeltaMovement(vector3d.multiply(1.05D, 0.6D, 1.05D));
             isFlying = true;
         } else {
             isFlying = false;
         }
-
         this.flap += this.flapping * 2.0F;
         if (!this.level.isClientSide && this.isAlive() && !this.isBaby() && --this.eggTime <= 0) {
             this.playSound(SoundEvents.CHICKEN_EGG, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
@@ -293,9 +265,9 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
     protected void customServerAiStep() {
         this.eatAnimationTick = this.eatBlockGoal.getEatAnimationTick();
         this.isRunning = this.goalRunAround.isRunning();
-
         super.customServerAiStep();
     }
+
 
 
 
@@ -317,6 +289,9 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
     }
 
 
+
+
+
     //----------------------------------------UPDATE----------------------------------------//
 
     public void tick() {
@@ -328,7 +303,6 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
             } else {
                 this.interestedAngle += (0.0F - this.interestedAngle) * 0.4F;
             }
-
             if (this.isInWaterRainOrBubble()) {
                 this.isWet = true;
                 if (this.isShaking && !this.level.isClientSide) {
@@ -339,7 +313,6 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
                 if (this.shakeAnim == 0.0F) {
                     this.playSound(SoundEvents.WOLF_SHAKE, this.getSoundVolume(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
                 }
-
                 this.shakeAnimO = this.shakeAnim;
                 this.shakeAnim += 0.05F;
                 if (this.shakeAnimO >= 2.0F) {
@@ -348,12 +321,10 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
                     this.shakeAnimO = 0.0F;
                     this.shakeAnim = 0.0F;
                 }
-
                 if (this.shakeAnim > 0.4F) {
                     float f = (float)this.getY();
                     int i = (int)(Mth.sin((this.shakeAnim - 0.4F) * (float)Math.PI) * 7.0F);
                     Vec3 vector3d = this.getDeltaMovement();
-
                     for(int j = 0; j < i; ++j) {
                         float f1 = (this.random.nextFloat() * 2.0F - 1.0F) * this.getBbWidth() * 0.5F;
                         float f2 = (this.random.nextFloat() * 2.0F - 1.0F) * this.getBbWidth() * 0.5F;
@@ -361,29 +332,24 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
                     }
                 }
             }
-
         }
         if (this.mouthCounter > 0 && ++this.mouthCounter > 30) {
             this.mouthCounter = 0;
             this.setFlag(64, false);
         }
-
         if ((this.isControlledByLocalInstance() || this.isEffectiveAi()) && this.standCounter > 0 && ++this.standCounter > 20) {
             this.standCounter = 0;
             this.setStanding(false);
         }
-
         if (this.wingCounter > 0 && ++this.wingCounter > 8) {
             this.wingCounter = 0;
         }
-
         if (this.sprintCounter > 0) {
             ++this.sprintCounter;
             if (this.sprintCounter > 300) {
                 this.sprintCounter = 0;
             }
         }
-
         this.eatAnimO = this.eatAnim;
         if (this.isEating()) {
             this.eatAnim += (1.0F - this.eatAnim) * 0.4F + 0.05F;
@@ -396,7 +362,6 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
                 this.eatAnim = 0.0F;
             }
         }
-
         this.standAnimO = this.standAnim;
         if (this.isStanding()) {
             this.eatAnim = 0.0F;
@@ -412,7 +377,6 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
                 this.standAnim = 0.0F;
             }
         }
-
         this.mouthAnimO = this.mouthAnim;
         if (this.getFlag(64)) {
             this.mouthAnim += (1.0F - this.mouthAnim) * 0.7F + 0.05F;
@@ -430,6 +394,7 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
 
 
 
+
     //----------------------------------------INTERACTION----------------------------------------//
 
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
@@ -439,7 +404,6 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
             boolean flag = this.isOwnedBy(player) || this.isTame() || item == Items.BONE && !this.isTame() && !this.isAngry();
             return flag ? InteractionResult.CONSUME : InteractionResult.PASS;
         } else {
-
             if(this.isFood(itemstack)){
                 if(this.isTame()){
                     if (this.getHealth() < this.getMaxHealth()) {
@@ -476,10 +440,7 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
                         this.level.broadcastEntityEvent(this, (byte)6);
                     }
                 }
-
-            } else
-
-            if(item == Items.SADDLE){
+            } else if(item == Items.SADDLE){
                 if(this.isTame()){
                     if(!isSaddled() && isSaddleable()){
                         if (!player.getAbilities().instabuild) {
@@ -489,9 +450,7 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
                         return InteractionResult.SUCCESS;
                     }
                 }
-            } else
-
-            if(item instanceof DyeItem){
+            } else if(item instanceof DyeItem){
                 DyeColor dyecolor = ((DyeItem) item).getDyeColor();
                 if(player.isCreative()){
                     if(player.isCrouching()){
@@ -509,94 +468,23 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
                         return InteractionResult.SUCCESS;
                     }
                 }
-            } else
-
-            if(player.isCrouching()){
-                //if(item == ShopKeeper.STUFF_FEATHER.get()){
-
+            } else if(player.isCrouching()){
                 this.setOrderedToSit(!this.isOrderedToSit());
                 this.jumping = false;
                 this.navigation.stop();
                 this.setTarget((LivingEntity) null);
-
-
-
             } else {
-
                 InteractionResult actionresulttype = super.mobInteract(player, hand);
                 if (!this.isBaby() && !actionresulttype.consumesAction() && this.isOwnedBy(player)) {
-
                     this.doPlayerRide(player);
                     return InteractionResult.SUCCESS;
                 }
-
                 return actionresulttype;
-
             }
-
-
-
-            if (this.isTame()) {
-
-
-
-
-                if (!(item instanceof DyeItem)) {
-
-                }
-
-
-
-            } else if(isFood(itemstack) && !this.isAngry()){
-
-            }
-
-
         }
-
-
-        //if (!this.isBaby()) {
-        //    //if (this.isTamed() && player.isSecondaryUseActive()) {
-        //    //    this.openInventory(player);
-        //    //    return ActionResultType.sidedSuccess(this.level.isClientSide);
-        //    //}
-//
-        //    if (this.isVehicle()) {
-        //        return super.mobInteract(player, hand);
-        //    }
-        //}
-
-        //if (!itemstack.isEmpty()) {
-        //    if (this.isFood(itemstack)) {
-        //        return this.fedFood(player, itemstack);
-        //    }
-//
-        //    ActionResultType actionresulttype = itemstack.interactLivingEntity(player, this, hand);
-        //    if (actionresulttype.consumesAction()) {
-        //        return actionresulttype;
-        //    }
-//
-        //    if (!this.isTamed()) {
-        //        this.makeMad();
-        //        return ActionResultType.sidedSuccess(this.level.isClientSide);
-        //    }
-//
-        //    boolean flag = !this.isBaby() && !this.isSaddled() && itemstack.getItem() == Items.SADDLE;
-        //    if (this.isArmor(itemstack) || flag) {
-        //        this.openInventory(player);
-        //        return ActionResultType.sidedSuccess(this.level.isClientSide);
-        //    }
-        //}
-
-        // if (this.isBaby()) {
-        //     return super.mobInteract(player, hand);
-        // } else {
-        //     this.doPlayerRide(player);
-        //     return ActionResultType.sidedSuccess(this.level.isClientSide);
-        // }
-
         return super.mobInteract(player, hand);
     }
+
 
 
 
@@ -616,7 +504,6 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         compound.putBoolean("Tame", this.isTamed());
         if (this.getOwnerUUID() != null) { compound.putUUID("Owner", this.getOwnerUUID()); }
         if (!this.inventory.getItem(0).isEmpty()) { compound.put("SaddleItem", this.inventory.getItem(0).save(new CompoundTag())); }
-
     }
 
     public void readAdditionalSaveData(CompoundTag compound) {
@@ -646,11 +533,9 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
             String s = compound.getString("Owner");
             uuid = OldUsersConverter.convertMobOwnerIfNecessary(this.getServer(), s);
         }
-
         if (uuid != null) {
             this.setOwnerUUID(uuid);
         }
-
         if (compound.contains("SaddleItem", 10)) {
             ItemStack itemstack = ItemStack.of(compound.getCompound("SaddleItem"));
             if (itemstack.getItem() == Items.SADDLE) {
@@ -663,68 +548,14 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
 
 
 
-    //----------------------------------------ANIMATION_HELPER----------------------------------------//
 
-    @OnlyIn(Dist.CLIENT)
-    public float getHeadEatPositionScale(float p_70894_1_) {
-        if (this.eatAnimationTick <= 0) {
-            return 0.0F;
-        } else if (this.eatAnimationTick >= 4 && this.eatAnimationTick <= 36) {
-            return 1.0F;
-        } else {
-            return this.eatAnimationTick < 4 ? ((float)this.eatAnimationTick - p_70894_1_) / 4.0F : -((float)(this.eatAnimationTick - 40) - p_70894_1_) / 4.0F;
-        }
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public float getHeadEatAngleScale(float p_70890_1_) {
-        if (this.eatAnimationTick > 4 && this.eatAnimationTick <= 36) {
-            float f = ((float)(this.eatAnimationTick - 4) - p_70890_1_) / 32.0F;
-            return ((float)Math.PI / 5F) + 0.21991149F * Mth.sin(f * 28.7F);
-        } else {
-            return this.eatAnimationTick > 0 ? ((float)Math.PI / 5F) : this.getXRot() * ((float)Math.PI / 180F);
-        }
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public boolean isWet() {
-        return this.isWet;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public float getWetShade(float p_70915_1_) {
-        return Math.min(0.5F + Mth.lerp(p_70915_1_, this.shakeAnimO, this.shakeAnim) / 2.0F * 0.5F, 1.0F);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public float getBodyRollAngle(float p_70923_1_, float p_70923_2_) {
-        float f = (Mth.lerp(p_70923_1_, this.shakeAnimO, this.shakeAnim) + p_70923_2_) / 1.8F;
-        if (f < 0.0F) {
-            f = 0.0F;
-        } else if (f > 1.0F) {
-            f = 1.0F;
-        }
-
-        return Mth.sin(f * (float)Math.PI) * Mth.sin(f * (float)Math.PI * 11.0F) * 0.15F * (float)Math.PI;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public float getHeadRollAngle(float p_70917_1_) {
-        return Mth.lerp(p_70917_1_, this.interestedAngleO, this.interestedAngle) * 0.15F * (float)Math.PI;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public float getTailAngle() {
-        if (this.isAngry()) {
-            return 1.5393804F;
-        } else {
-            return this.isTame() ? (0.55F - (this.getMaxHealth() - this.getHealth()) * 0.02F) * (float)Math.PI : ((float)Math.PI / 5F);
-        }
-    }
+    //----------------------------------------ANIMATION_EXTRA----------------------------------------//
 
     public int getMaxHeadXRot() {
         return this.isInSittingPose() ? 20 : super.getMaxHeadXRot();
     }
+
+
 
 
 
@@ -755,12 +586,9 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
             if (blockstate.is(Blocks.SNOW)) {
                 soundtype = blockstate.getSoundType(level, pos, this);
             }
-
             if (this.isVehicle() && this.canGallop) {
                 ++this.gallopSoundCounter;
-                if (this.gallopSoundCounter > 5 && this.gallopSoundCounter % 3 == 0) {
-                    this.playGallopSound(soundtype);
-                } else if (this.gallopSoundCounter <= 5) {
+                if (this.gallopSoundCounter <= 5) {
                     this.playSound(ShopKeeper.SOUND_CHOCOBO_STEP.get(), soundtype.getVolume() * 0.15F, soundtype.getPitch());
                 }
             } else if (soundtype == SoundType.WOOD) {
@@ -768,19 +596,7 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
             } else {
                 this.playSound(ShopKeeper.SOUND_CHOCOBO_STEP.get(), soundtype.getVolume() * 0.15F, soundtype.getPitch());
             }
-
         }
-    }
-
-    protected void playGallopSound(SoundType sound) {
-        //this.playSound(SoundEvents.HORSE_GALLOP, p_190680_1_.getVolume() * 0.15F, p_190680_1_.getPitch());
-        ////---------------------
-        //super.playGallopSound(p_190680_1_);
-        //if (this.random.nextInt(10) == 0) {
-        //    this.playSound(SoundEvents.HORSE_BREATHE, p_190680_1_.getVolume() * 0.6F, p_190680_1_.getPitch());
-        //}
-        //ItemStack stack = this.inventory.getItem(1);
-        //if (isArmor(stack)) stack.onHorseArmorTick(level, this);
     }
 
     protected SoundEvent getEatingSound() {
@@ -804,30 +620,11 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         this.playSound(SoundEvents.HORSE_JUMP, 0.4F, 1.0F);
     }
 
-    //----------------------------------------INVENTORY----------------------------------------//
 
-    public boolean setSlot(int p_174820_1_, ItemStack p_174820_2_) {
-        int i = p_174820_1_ - 400;
-        if (i >= 0 && i < 2 && i < this.inventory.getContainerSize()) {
-            if (i == 0 && p_174820_2_.getItem() != Items.SADDLE) {
-                return false;
-            } else if (i != 1 || this.canWearArmor() && this.isArmor(p_174820_2_)) {
-                this.inventory.setItem(i, p_174820_2_);
-                this.updateContainerEquipment();
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            int j = p_174820_1_ - 500 + 2;
-            if (j >= 2 && j < this.inventory.getContainerSize()) {
-                this.inventory.setItem(j, p_174820_2_);
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
+
+
+
+    //----------------------------------------INVENTORY----------------------------------------//
 
     public ItemStack getArmor() {
         return this.getItemBySlot(EquipmentSlot.CHEST);
@@ -840,7 +637,6 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
 
     protected void updateContainerEquipment() {
         if (!this.level.isClientSide) {
-            //super.updateContainerEquipment();
             this.setArmorEquipment(this.inventory.getItem(1));
             this.setDropChance(EquipmentSlot.CHEST, 0.0F);
             this.setFlag(4, !this.inventory.getItem(0).isEmpty());
@@ -858,7 +654,6 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
                 }
             }
         }
-
     }
 
     public void containerChanged(Container p_76316_1_) {
@@ -868,16 +663,10 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
             this.playSound(SoundEvents.HORSE_SADDLE, 0.5F, 1.0F);
         }
         ItemStack itemstack = this.getArmor();
-        //super.containerChanged(p_76316_1_);
         ItemStack itemstack1 = this.getArmor();
         if (this.tickCount > 20 && this.isArmor(itemstack1) && itemstack != itemstack1) {
             this.playSound(SoundEvents.HORSE_ARMOR, 0.5F, 1.0F);
         }
-
-    }
-
-    public boolean canWearArmor() {
-        return true;
     }
 
     public boolean isArmor(ItemStack stack) {
@@ -893,7 +682,6 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         if (p_230266_1_ != null) {
             this.level.playSound((Player) null, this, SoundEvents.HORSE_SADDLE, p_230266_1_, 0.5F, 1.0F);
         }
-
     }
 
     protected int getInventorySize() {
@@ -906,7 +694,6 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         if (simplecontainer != null) {
             simplecontainer.removeListener(this);
             int i = Math.min(simplecontainer.getContainerSize(), this.inventory.getContainerSize());
-
             for(int j = 0; j < i; ++j) {
                 ItemStack itemstack = simplecontainer.getItem(j);
                 if (!itemstack.isEmpty()) {
@@ -914,25 +701,9 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
                 }
             }
         }
-
         this.inventory.addListener(this);
         this.updateContainerEquipment();
         this.itemHandler = net.minecraftforge.common.util.LazyOptional.of(() -> new net.minecraftforge.items.wrapper.InvWrapper(this.inventory));
-    }
-
-
-
-
-
-
-
-
-
-    public void openInventory(Player p_110199_1_) {
-        if (!this.level.isClientSide && (!this.isVehicle() || this.hasPassenger(p_110199_1_)) && this.isTamed()) {
-            //p_110199_1_.openHorseInventory(this, this.inventory);
-        }
-
     }
 
     protected void dropEquipment() {
@@ -944,9 +715,12 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
                     this.spawnAtLocation(itemstack);
                 }
             }
-
         }
     }
+
+
+
+
 
     //----------------------------------------TAMING----------------------------------------//
 
@@ -958,10 +732,8 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         } else {
             this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(8.0D);
         }
-
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(4.0D);
     }
-
 
 
 
@@ -1027,37 +799,17 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         this.entityData.set(DATA_COLOR_COLLAR, dyeColor.getId());
     }
 
-    private int getOffspringColor(int color1, int color2, /*AnimalEntity Choco1, AnimalEntity Choco2,*/ Random random) {
-
-        // int color1 = ((EntityChocobo)Choco1).getColorFeatherData();
-        // int color2 = ((EntityChocobo)Choco2).getColorFeatherData();
-
+    private int getOffspringColor(int color1, int color2, Random random) {
         return getMixedColor(color1, color2);
-
-        //DyeColor dyecolor1 = ((EntityChocobo)Choco1).getColorFeatherData();
-        //DyeColor dyecolor2 = ((EntityChocobo)Choco2).getColorFeather();
-
-        //this.setColorFeather(getMixedColor(dyecolor1.getColorValue(), getColorFeatherData()));
-        //if(dyecolor1 == dyecolor2) return dyecolor1;
-        //int r = random.nextInt(10);
-        //if(r < 4) return dyecolor1;
-        //if(r < 8) return dyecolor2;
-        //if(isColor(dyecolor1, dyecolor2, DyeColor.YELLOW) && isColor(dyecolor1, dyecolor2, DyeColor.RED))  return DyeColor.ORANGE;
-        //if(isColor(dyecolor1, dyecolor2, DyeColor.YELLOW) && isColor(dyecolor1, dyecolor2, DyeColor.BLUE)) return DyeColor.GREEN;
-        //if(isColor(dyecolor1, dyecolor2, DyeColor.BLUE) && isColor(dyecolor1, dyecolor2, DyeColor.RED))    return DyeColor.PURPLE;
-        //return random.nextBoolean() ? dyecolor1 : dyecolor2;
-        //return DyeColor.GRAY;
     }
 
-    private boolean isColor(DyeColor value1, DyeColor value2, DyeColor test){
-        return value1 == test || value2 == test;
-    }
+
+
 
 
     //----------------------------------------OFFSPRING----------------------------------------//
 
     public EntityChocobo getBreedOffspring(ServerLevel world, AgeableMob entity) {
-
         EntityChocobo parent = (EntityChocobo)entity;
         EntityChocobo child = ShopKeeper.ENTITY_CHOCOBO.get().create(world);
         child.setColorFeather(this.getOffspringColor(this.getColorFeatherData(), parent.getColorFeatherData(), getRandom()));
@@ -1071,7 +823,6 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
     }
 
     public EntityChocobo getBreedOffspring(ServerLevel world, int colorA, int colorB) {
-
         EntityChocobo child = ShopKeeper.ENTITY_CHOCOBO.get().create(world);
         child.setColorFeather(this.getOffspringColor(colorA, colorB, getRandom()));
         child.setNature(random.nextInt(25));
@@ -1095,16 +846,57 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         }
     }
 
-    protected boolean canParent() {
-        return !this.isVehicle() && !this.isPassenger() && this.isTamed() && !this.isBaby() && this.getHealth() >= this.getMaxHealth() && this.isInLove();
-    }
-    public void setIsInterested(boolean p_70918_1_) {
-        this.entityData.set(DATA_INTERESTED_ID, p_70918_1_);
-    }
-
     public boolean isInterested() {
         return this.entityData.get(DATA_INTERESTED_ID);
     }
+
+
+
+
+
+    //----------------------------------------FLAG----------------------------------------//
+
+    protected boolean getFlag(int p_110233_1_) {
+        return (this.entityData.get(DATA_ID_FLAGS) & p_110233_1_) != 0;
+    }
+
+    protected void setFlag(int p_110208_1_, boolean p_110208_2_) {
+        byte b0 = this.entityData.get(DATA_ID_FLAGS);
+        if (p_110208_2_) {
+            this.entityData.set(DATA_ID_FLAGS, (byte)(b0 | p_110208_1_));
+        } else {
+            this.entityData.set(DATA_ID_FLAGS, (byte)(b0 & ~p_110208_1_));
+        }
+    }
+
+    public void setTamed(boolean p_110234_1_) {
+        this.setFlag(2, p_110234_1_);
+    }
+    public boolean isTamed() {
+        return this.getFlag(2);
+    }
+
+    public boolean isEating() {
+        return this.getFlag(16);
+    }
+
+    public boolean isStanding() {
+        return this.getFlag(32);
+    }
+
+    public boolean isBred() {
+        return this.getFlag(8);
+    }
+
+    public void setBred(boolean p_110242_1_) {
+        this.setFlag(8, p_110242_1_);
+    }
+    public boolean isSaddled() {
+        return this.getFlag(4);
+    }
+
+
+
 
 
     //----------------------------------------SUPPORT----------------------------------------//
@@ -1121,17 +913,11 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         } else {
             super.handleEntityEvent(p_70103_1_);
         }
-
-
-        if (p_70103_1_ == 7) {
-            //this.spawnTamingParticles(true);
-        } else if (p_70103_1_ == 6) {
+        if (p_70103_1_ == 6) {
             this.spawnTamingParticles(false);
         } else {
             super.handleEntityEvent(p_70103_1_);
         }
-
-
         if (p_70103_1_ == 8) {
             this.isShaking = true;
             this.shakeAnim = 0.0F;
@@ -1141,15 +927,12 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         } else {
             super.handleEntityEvent(p_70103_1_);
         }
-
     }
 
     public void ate() {
-        //this.setSheared(false);
         if (this.isBaby()) {
             this.ageUp(60);
         }
-
     }
 
     private void cancelShake() {
@@ -1175,7 +958,6 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
             if (entity != null && !(entity instanceof Player) && !(entity instanceof AbstractArrow)) {
                 p_70097_2_ = (p_70097_2_ + 1.0F) / 2.0F;
             }
-
             return super.hurt(p_70097_1_, p_70097_2_);
         }
     }
@@ -1185,116 +967,12 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         if (flag) {
             this.doEnchantDamageEffects(this, p_70652_1_);
         }
-
         return flag;
     }
-
-
-
-    //----------------------------------------FLAG----------------------------------------//
-
-    protected boolean getFlag(int p_110233_1_) {
-        return (this.entityData.get(DATA_ID_FLAGS) & p_110233_1_) != 0;
-    }
-
-    protected void setFlag(int p_110208_1_, boolean p_110208_2_) {
-        byte b0 = this.entityData.get(DATA_ID_FLAGS);
-        if (p_110208_2_) {
-            this.entityData.set(DATA_ID_FLAGS, (byte)(b0 | p_110208_1_));
-        } else {
-            this.entityData.set(DATA_ID_FLAGS, (byte)(b0 & ~p_110208_1_));
-        }
-
-    }
-    public void setTamed(boolean p_110234_1_) {
-        this.setFlag(2, p_110234_1_);
-    }
-    public boolean isTamed() {
-        return this.getFlag(2);
-    }
-
-
-
-    public boolean isEating() {
-        return this.getFlag(16);
-    }
-
-    public boolean isStanding() {
-        return this.getFlag(32);
-    }
-
-    public boolean isBred() {
-        return this.getFlag(8);
-    }
-
-    public void setBred(boolean p_110242_1_) {
-        this.setFlag(8, p_110242_1_);
-    }
-    public boolean isSaddled() {
-        return this.getFlag(4);
-    }
-
-
-    //----------------------------------------GETTER/SETTER----------------------------------------//
 
     protected float getStandingEyeHeight(Pose p_30578_, EntityDimensions p_30579_) {
         return p_30579_.height * 0.95F;
     }
-
-    public boolean causeFallDamage(float p_225503_1_, float p_225503_2_) {
-        return false;
-        //if (p_225503_1_ > 1.0F) {
-        //    this.playSound(SoundEvents.HORSE_LAND, 0.4F, 1.0F);
-        //}
-        //int i = this.calculateFallDamage(p_225503_1_, p_225503_2_);
-        //if (i <= 0) {
-        //    return false;
-        //} else {
-        //    this.hurt(DamageSource.FALL, (float)i);
-        //    if (this.isVehicle()) {
-        //        for(Entity entity : this.getIndirectPassengers()) {
-        //            entity.hurt(DamageSource.FALL, (float)i);
-        //        }
-        //    }
-        //    this.playBlockFallSound();
-        //    return true;
-        //}
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public boolean isFood(ItemStack stack) {
         return FOOD_ITEMS.test(stack);
@@ -1325,8 +1003,6 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         this.persistentAngerTarget = p_230259_1_;
     }
 
-
-
     public boolean wantsToAttack(LivingEntity p_30389_, LivingEntity p_30390_) {
         if (!(p_30389_ instanceof Creeper) && !(p_30389_ instanceof Ghast)) {
             if (p_30389_ instanceof Wolf) {
@@ -1353,24 +1029,6 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         return new Vec3(0.0D, (double)(0.6F * this.getEyeHeight()), (double)(this.getBbWidth() * 0.4F));
     }
 
-
-
-
-
-
-
-
-
-
-
-    // Horse Entity
-
-
-
-
-
-
-
     private void setNature(int id) {
         this.entityData.set(DATA_ID_NATURE, id);
     }
@@ -1378,42 +1036,6 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
     private int getNature() {
         return this.entityData.get(DATA_ID_NATURE);
     }
-
-    //public CoatColors getVariant() {
-    //    return CoatColors.byId(this.getNature() & 255);
-    //}
-
-    //public CoatTypes getMarkings() {
-    //    return CoatTypes.byId((this.getNature() & '\uff00') >> 8);
-    //}
-
-
-
-
-
-    //public static class HorseData extends AgeableEntity.AgeableData {
-    //    public final CoatColors variant;
-//
-    //    public HorseData(CoatColors p_i231557_1_) {
-    //        super(true);
-    //        this.variant = p_i231557_1_;
-    //    }
-    //}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     @Nullable
     public UUID getOwnerUUID() {
@@ -1436,12 +1058,7 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         if (p_142017_1_ > 6.0F && this.isEating()) {
             this.setEating(false);
         }
-
     }
-
-
-
-
 
     public int getTemper() {
         return this.temper;
@@ -1469,16 +1086,11 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
                 this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), soundevent, this.getSoundSource(), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
             }
         }
-
     }
-
-
 
     protected int calculateFallDamage(float p_225508_1_, float p_225508_2_) {
         return Mth.ceil((p_225508_1_ * 0.5F - 3.0F) * p_225508_2_);
     }
-
-
 
     public double getCustomJump() {
         return this.getAttributeValue(Attributes.JUMP_STRENGTH);
@@ -1486,86 +1098,6 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
 
     public int getMaxTemper() {
         return 100;
-    }
-
-    public InteractionResult fedFood(Player p_241395_1_, ItemStack p_241395_2_) {
-        boolean flag = this.handleEating(p_241395_1_, p_241395_2_);
-        if (!p_241395_1_.getAbilities().instabuild) {
-            p_241395_2_.shrink(1);
-        }
-
-        if (this.level.isClientSide) {
-            return InteractionResult.CONSUME;
-        } else {
-            return flag ? InteractionResult.SUCCESS : InteractionResult.PASS;
-        }
-    }
-
-    protected boolean handleEating(Player p_190678_1_, ItemStack p_190678_2_) {
-        boolean flag = false;
-        float f = 0.0F;
-        int i = 0;
-        int j = 0;
-        Item item = p_190678_2_.getItem();
-        if (item == Items.WHEAT) {
-            f = 2.0F;
-            i = 20;
-            j = 3;
-        } else if (item == Items.SUGAR) {
-            f = 1.0F;
-            i = 30;
-            j = 3;
-        } else if (item == Blocks.HAY_BLOCK.asItem()) {
-            f = 20.0F;
-            i = 180;
-        } else if (item == Items.APPLE) {
-            f = 3.0F;
-            i = 60;
-            j = 3;
-        } else if (item == Items.GOLDEN_CARROT) {
-            f = 4.0F;
-            i = 60;
-            j = 5;
-            if (!this.level.isClientSide && this.isTamed() && this.getAge() == 0 && !this.isInLove()) {
-                flag = true;
-                this.setInLove(p_190678_1_);
-            }
-        } else if (item == Items.GOLDEN_APPLE || item == Items.ENCHANTED_GOLDEN_APPLE) {
-            f = 10.0F;
-            i = 240;
-            j = 10;
-            if (!this.level.isClientSide && this.isTamed() && this.getAge() == 0 && !this.isInLove()) {
-                flag = true;
-                this.setInLove(p_190678_1_);
-            }
-        }
-
-        if (this.getHealth() < this.getMaxHealth() && f > 0.0F) {
-            this.heal(f);
-            flag = true;
-        }
-
-        if (this.isBaby() && i > 0) {
-            this.level.addParticle(ParticleTypes.HAPPY_VILLAGER, this.getRandomX(1.0D), this.getRandomY() + 0.5D, this.getRandomZ(1.0D), 0.0D, 0.0D, 0.0D);
-            if (!this.level.isClientSide) {
-                this.ageUp(i);
-            }
-
-            flag = true;
-        }
-
-        if (j > 0 && (flag || !this.isTamed()) && this.getTemper() < this.getMaxTemper()) {
-            flag = true;
-            if (!this.level.isClientSide) {
-                this.modifyTemper(j);
-            }
-        }
-
-        if (flag) {
-            this.eating();
-        }
-
-        return flag;
     }
 
     protected void doPlayerRide(Player p_30634_) {
@@ -1576,22 +1108,15 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
             p_30634_.setXRot(this.getXRot());
             p_30634_.startRiding(this);
         }
-
     }
 
     protected boolean isImmobile() {
         return super.isImmobile() && this.isVehicle() && this.isSaddled() || this.isEating() || this.isStanding();
     }
 
-
-
     private void moveWings() {
         this.wingCounter = 1;
     }
-
-
-
-
 
     protected void followMommy() {
         if (this.isBred() && this.isBaby() && !this.isEating()) {
@@ -1600,21 +1125,17 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
                 this.navigation.createPath(livingentity, 0);
             }
         }
-
     }
 
     public boolean canEatGrass() {
         return true;
     }
 
-
-
     private void openMouth() {
         if (!this.level.isClientSide) {
             this.mouthCounter = 1;
             this.setFlag(64, true);
         }
-
     }
 
     public void setEating(boolean p_110227_1_) {
@@ -1625,7 +1146,6 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         if (p_110219_1_) {
             this.setEating(false);
         }
-
         this.setFlag(32, p_110219_1_);
     }
 
@@ -1634,29 +1154,6 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
             this.standCounter = 1;
             this.setStanding(true);
         }
-
-    }
-
-    public void makeMad() {
-        if (!this.isStanding()) {
-            this.stand();
-            SoundEvent soundevent = this.getAngrySound();
-            if (soundevent != null) {
-                this.playSound(soundevent, this.getSoundVolume(), this.getVoicePitch());
-            }
-        }
-
-    }
-
-    public boolean tameWithName(Player p_110263_1_) {
-        this.setOwnerUUID(p_110263_1_.getUUID());
-        this.setTamed(true);
-        if (p_110263_1_ instanceof ServerPlayer) {
-            CriteriaTriggers.TAME_ANIMAL.trigger((ServerPlayer) p_110263_1_, this);
-        }
-
-        this.level.broadcastEntityEvent(this, (byte)7);
-        return true;
     }
 
     public void travel(Vec3 p_30633_) {
@@ -1675,12 +1172,10 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
                     f1 *= 0.25F;
                     this.gallopSoundCounter = 0;
                 }
-
                 if (this.onGround && this.playerJumpPendingScale == 0.0F && this.isStanding() && !this.allowStandSliding) {
                     f = 0.0F;
                     f1 = 0.0F;
                 }
-
                 if (this.playerJumpPendingScale > 0.0F && !this.isJumping() && this.onGround) {
                     double d0 = this.getCustomJump() * (double)this.playerJumpPendingScale * (double)this.getBlockJumpFactor();
                     double d1 = d0 + this.getJumpBoostPower();
@@ -1694,10 +1189,8 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
                         float f3 = Mth.cos(this.getYRot() * ((float)Math.PI / 180F));
                         this.setDeltaMovement(this.getDeltaMovement().add((double)(-0.4F * f2 * this.playerJumpPendingScale), 0.0D, (double)(0.4F * f3 * this.playerJumpPendingScale)));
                     }
-
                     this.playerJumpPendingScale = 0.0F;
                 }
-
                 this.flyingSpeed = this.getSpeed() * 0.1F;
                 if (this.isControlledByLocalInstance()) {
                     this.setSpeed((float)this.getAttributeValue(Attributes.MOVEMENT_SPEED));
@@ -1705,12 +1198,10 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
                 } else if (livingentity instanceof Player) {
                     this.setDeltaMovement(Vec3.ZERO);
                 }
-
                 if (this.onGround) {
                     this.playerJumpPendingScale = 0.0F;
                     this.setIsJumping(false);
                 }
-
                 this.calculateEntityAnimation(this, false);
                 this.tryCheckInsideBlocks();
             } else {
@@ -1720,33 +1211,8 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         }
     }
 
-
-
-
-
-
-
-
-
-
-
     public boolean canBeControlledByRider() {
         return this.getControllingPassenger() instanceof LivingEntity;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public float getEatAnim(float p_110258_1_) {
-        return Mth.lerp(p_110258_1_, this.eatAnimO, this.eatAnim);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public float getStandAnim(float p_110223_1_) {
-        return Mth.lerp(p_110223_1_, this.standAnimO, this.standAnim);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public float getMouthAnim(float p_110201_1_) {
-        return Mth.lerp(p_110201_1_, this.mouthAnimO, this.mouthAnim);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -1758,13 +1224,11 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
                 this.allowStandSliding = true;
                 this.stand();
             }
-
             if (p_110206_1_ >= 90) {
                 this.playerJumpPendingScale = 1.0F;
             } else {
                 this.playerJumpPendingScale = 0.4F + 0.4F * (float)p_110206_1_ / 90.0F;
             }
-
         }
     }
 
@@ -1779,58 +1243,27 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
     }
 
     public void handleStopJump() {
+
     }
 
     @OnlyIn(Dist.CLIENT)
     protected void spawnTamingParticles(boolean p_110216_1_) {
         ParticleOptions iparticledata = p_110216_1_ ? ParticleTypes.HEART : ParticleTypes.SMOKE;
-
         for(int i = 0; i < 7; ++i) {
             double d0 = this.random.nextGaussian() * 0.02D;
             double d1 = this.random.nextGaussian() * 0.02D;
             double d2 = this.random.nextGaussian() * 0.02D;
             this.level.addParticle(iparticledata, this.getRandomX(1.0D), this.getRandomY() + 0.5D, this.getRandomZ(1.0D), d0, d1, d2);
         }
-
     }
-
-
 
     public void positionRider(Entity p_184232_1_) {
         super.positionRider(p_184232_1_);
-        //if (p_184232_1_ instanceof MobEntity) {
-        //    MobEntity mobentity = (MobEntity)p_184232_1_;
-        //    this.yBodyRot = mobentity.yBodyRot;
-        //}
-//
-        //if (this.standAnimO > 0.0F) {
-        //    float f3 = MathHelper.sin(this.yBodyRot * ((float)Math.PI / 180F));
-        //    float f = MathHelper.cos(this.yBodyRot * ((float)Math.PI / 180F));
-        //    float f1 = 0.7F * this.standAnimO;
-        //    float f2 = 0.15F * this.standAnimO;
-        //    p_184232_1_.setPos(this.getX() + (double)(f1 * f3), this.getY() + this.getPassengersRidingOffset() + -4d + (double)f2, this.getZ() - (double)(f1 * f));
-        //    if (p_184232_1_ instanceof LivingEntity) {
-        //        ((LivingEntity)p_184232_1_).yBodyRot = this.yBodyRot;
-        //    }
-        //}
-
     }
-
-
-
-
 
     public boolean onClimbable() {
         return false;
     }
-
-    public boolean isWearingArmor() {
-        return !this.getItemBySlot(EquipmentSlot.CHEST).isEmpty();
-    }
-
-
-
-
 
     @Nullable
     public Entity getControllingPassenger() {
@@ -1843,17 +1276,14 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         double d1 = this.getBoundingBox().minY;
         double d2 = this.getZ() + p_30562_.z;
         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
-
         for(Pose pose : p_30563_.getDismountPoses()) {
             blockpos$mutableblockpos.set(d0, d1, d2);
             double d3 = this.getBoundingBox().maxY + 0.75D;
-
             while(true) {
                 double d4 = this.level.getBlockFloorHeight(blockpos$mutableblockpos);
                 if ((double)blockpos$mutableblockpos.getY() + d4 > d3) {
                     break;
                 }
-
                 if (DismountHelper.isBlockFloorValid(d4)) {
                     AABB aabb = p_30563_.getLocalBoundsForPose(pose);
                     Vec3 vec3 = new Vec3(d0, (double)blockpos$mutableblockpos.getY() + d4, d2);
@@ -1862,14 +1292,12 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
                         return vec3;
                     }
                 }
-
                 blockpos$mutableblockpos.move(Direction.UP);
                 if (!((double)blockpos$mutableblockpos.getY() < d3)) {
                     break;
                 }
             }
         }
-
         return null;
     }
 
@@ -1884,8 +1312,6 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
             return vec33 != null ? vec33 : this.position();
         }
     }
-
-
 
     private net.minecraftforge.common.util.LazyOptional<?> itemHandler = null;
 
@@ -1908,7 +1334,7 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
 
 
 
-    //-------------------------------------------NEW_STUFF------------------------------------------------------
+
 
     private float isFavouriteFood(Item food){
         float effect = 2;
@@ -1941,25 +1367,13 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         return Items.BEETROOT;
     }
 
-    //public double getMyRidingOffset() {
-    //    return 0.0D;
-    //}
-
     public double getPassengersRidingOffset() {
         return 1.25D;
     }
 
-
-
-
-
     public static boolean canSpawnHere(EntityType<? extends EntityChocobo> animal, LevelAccessor levelAccessor, MobSpawnType spawnType, BlockPos pos, Random random) {
         return levelAccessor.getBlockState(pos.below()).is(Blocks.GRASS_BLOCK) && levelAccessor.getRawBrightness(pos, 0) > 8 && levelAccessor.canSeeSky(pos);
     }
-
-
-
-    //   ----------------------------------- Getter for Model Animation ---------------------------------------------
 
     public boolean AnimSaddle(){
         return isSaddled();
@@ -1977,16 +1391,8 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         return eatAnimationTick > 0;
     }
 
-    public boolean AnimTame(){
-        return isTame();
-    }
-
     public boolean AnimFly(){
         return isFlying;
-    }
-
-    public boolean AnimWalk(){
-        return false;
     }
 
     public boolean AnimKweh(){
@@ -2004,5 +1410,7 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
     public boolean AnimRun(){
         return isRunning && isMoving;
     }
+
+
 
 }

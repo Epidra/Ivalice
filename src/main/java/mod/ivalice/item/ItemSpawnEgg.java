@@ -41,6 +41,7 @@ public class ItemSpawnEgg extends SpawnEggItem {
 
 
 
+
     //----------------------------------------CONSTRUCTOR----------------------------------------//
 
     public ItemSpawnEgg(Supplier<EntityType<?>> typeIn, int primaryColorIn, int secondaryColorIn,
@@ -50,6 +51,7 @@ public class ItemSpawnEgg extends SpawnEggItem {
         DispenserBlock.registerBehavior(this, SPAWN_EGG_BEHAVIOR);
         MOD_EGGS.put(typeIn, this);
     }
+
 
 
 
@@ -81,4 +83,7 @@ public class ItemSpawnEgg extends SpawnEggItem {
             }
         });
     }
+
+
+
 }
