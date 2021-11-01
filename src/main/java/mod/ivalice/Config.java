@@ -16,8 +16,29 @@ import static net.minecraftforge.common.BiomeDictionary.Type.*;
 public class Config {
 
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    public static final ConfigGeneral GENERAL = new ConfigGeneral(BUILDER, false);
+    public static final ConfigMob CHOCOBO = new ConfigMob(BUILDER, "chocobo", 1, 1, 8);
 
-    public static final ConfigMob CHOCOBO = new ConfigMob(BUILDER, "chocobo", 1, 10, 16);
+
+
+
+
+    //----------------------------------------CONFIG_MOB----------------------------------------//
+
+    public static class ConfigGeneral {
+        public final ForgeConfigSpec.BooleanValue breeding;
+        ConfigGeneral(ForgeConfigSpec.Builder builder, boolean _breeding) {
+            builder.push("Breeding Mechanics");
+            builder.comment("Set TRUE  for FF7-style    breeding mechanic");
+            builder.comment("Set FALSE for RGB-Spectrum breeding mechanic");
+            breeding = builder.define("breeding", false);
+            builder.pop();
+        }
+    }
+
+
+
+
 
     //----------------------------------------CONFIG_MOB----------------------------------------//
 
@@ -44,9 +65,14 @@ public class Config {
         }
     }
 
+
+
+
+
     //----------------------------------------BUILDER----------------------------------------//
 
-
-
     public static final ForgeConfigSpec spec = BUILDER.build();
+
+
+
 }

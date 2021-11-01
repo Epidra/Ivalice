@@ -10,6 +10,9 @@
   "item.ivalice.food_chocobo_raw": "Raw Chocobo",
   "item.ivalice.food_chocobo_cooked": "Cooked Chocobo",
 
+  "block.ivalice.block_straw": "Straw Mat",
+  "block.ivalice.block_nest":  "Nest",
+
   "block.ivalice.crop_gysahl": "Gysahl Plant",
   "block.ivalice.crop_krakka": "Krakka Plant",
   "block.ivalice.crop_mimett": "Mimett Plant",

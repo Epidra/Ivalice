@@ -21,7 +21,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.*;
 import net.minecraft.item.*;
-import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
@@ -61,7 +60,7 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
     private static final DataParameter<Byte>           DATA_ID_FLAGS             = EntityDataManager.defineId(EntityChocobo.class, DataSerializers.BYTE);
     private static final DataParameter<Optional<UUID>> DATA_ID_OWNER_UUID        = EntityDataManager.defineId(EntityChocobo.class, DataSerializers.OPTIONAL_UUID);
 
-    private static final Predicate<LivingEntity> PARENT_SELECTOR = (p_213617_0_) -> { return p_213617_0_ instanceof EntityChocobo && ((EntityChocobo)p_213617_0_).isBred(); };
+    private static final Predicate<LivingEntity> PARENT_SELECTOR = (parent) -> parent instanceof EntityChocobo && ((EntityChocobo)parent).isBred();
     private static final EntityPredicate MOMMY_TARGETING = (new EntityPredicate()).range(16.0D).allowInvulnerable().allowSameTeam().allowUnseeable().selector(PARENT_SELECTOR);
     private static final Ingredient FOOD_ITEMS = Ingredient.of(ShopKeeper.FOOD_GYSAHL.get(), ShopKeeper.FOOD_KRAKKA.get(), ShopKeeper.FOOD_MIMETT.get(), ShopKeeper.FOOD_SYLKIS.get(), ShopKeeper.FOOD_TANTAL.get());
 
@@ -91,9 +90,12 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
 
     private int eatAnimationTick;
 
-    private EatGrassGoal eatBlockGoal;
+    private GoalEatGrass eatBlockGoal;
+    private GoalRunAround goalRunAround;
 
     public boolean isFlying = false;
+    public boolean isRunning = false;
+    public boolean isMoving = false;
     public float flap;
     public float flapSpeed;
     public float oFlapSpeed;
@@ -113,14 +115,16 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
 
 
 
+
     //----------------------------------------CONSTRUCTOR----------------------------------------//
 
     public EntityChocobo(EntityType<? extends EntityChocobo> entity, World world) {
         super(entity, world);
         this.setTame(false);
-        this.maxUpStep = 1.0F;
+        this.maxUpStep = 2.0F;
         this.createInventory();
     }
+
 
 
 
@@ -129,32 +133,26 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
 
     protected void registerGoals() {
 
-        this.eatBlockGoal = new EatGrassGoal(this);
+        this.eatBlockGoal = new GoalEatGrass(this);
+        this.goalRunAround = new GoalRunAround(this, 1.1f);
 
-        // From Wolf
         this.goalSelector.addGoal( 0, new SwimGoal(this));
         this.goalSelector.addGoal( 1, new SitGoal(this));
         this.goalSelector.addGoal( 1, new PanicGoal(this, 1.2D));
-        this.goalSelector.addGoal( 2, new AvoidEntityGoal(this, LlamaEntity.class, 24.0F, 1.5D, 1.5D));
         this.goalSelector.addGoal( 3, new LeapAtTargetGoal(this, 0.4F));
         this.goalSelector.addGoal( 4, new MeleeAttackGoal(this, 1.0D, true));
-        this.goalSelector.addGoal( 5, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
-        this.goalSelector.addGoal( 7, new BreedGoal(this, 1.0D, EntityChocobo.class));
+        this.goalSelector.addGoal( 6, this.goalRunAround);
+        this.goalSelector.addGoal( 7, new GoalBreed(this));
         this.goalSelector.addGoal( 8, new TemptGoal(this, 1.1D, FOOD_ITEMS, false));
         this.goalSelector.addGoal( 9, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(10, this.eatBlockGoal);
         this.goalSelector.addGoal(11, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        //this.goalSelector.addGoal(12, new BegGoal(this, 8.0F));
-        //this.goalSelector.addGoal(6, new RunAroundLikeCrazyGoal(this, 1.2D));
         this.goalSelector.addGoal(13, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(14, new LookRandomlyGoal(this));
-
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(3, (new HurtByTargetGoal(this)).setAlertOthers());
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, this::isAngryAt));
-        this.targetSelector.addGoal(5, new NonTamedTargetGoal<>(this, AnimalEntity.class, false, PREY_SELECTOR));
-        this.targetSelector.addGoal(6, new NonTamedTargetGoal<>(this, TurtleEntity.class, false, TurtleEntity.BABY_ON_LAND_SELECTOR));
         this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, AbstractSkeletonEntity.class, false));
         this.targetSelector.addGoal(8, new ResetAngerGoal<>(this, true));
     }
@@ -178,11 +176,11 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
     }
 
     protected double generateRandomJumpStrength() {
-        return (double)0.4F + this.random.nextDouble() * 0.2D + this.random.nextDouble() * 0.2D + this.random.nextDouble() * 0.2D;
+        return (double)0.8F + this.random.nextDouble() * 0.2D + this.random.nextDouble() * 0.2D + this.random.nextDouble() * 0.2D;
     }
 
     protected double generateRandomSpeed() {
-        return ((double)0.45F + this.random.nextDouble() * 0.3D + this.random.nextDouble() * 0.3D + this.random.nextDouble() * 0.3D) * 0.25D;
+        return ((double)0.45F + this.random.nextDouble() * 0.3D + this.random.nextDouble() * 0.3D + this.random.nextDouble() * 0.3D) * 0.5D;
     }
 
     protected void setOffspringAttributes(AgeableEntity p_190681_1_, EntityChocobo p_190681_2_) {
@@ -204,6 +202,7 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
         this.entityData.define(DATA_ID_FLAGS, (byte)0);
         this.entityData.define(DATA_ID_OWNER_UUID, Optional.empty());
     }
+
 
 
 
@@ -256,8 +255,10 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
 
         this.flapping = (float)((double)this.flapping * 0.9D);
         Vector3d vector3d = this.getDeltaMovement();
+        isMoving = vector3d.x != 0 || vector3d.z != 0;
+
         if (!this.onGround && vector3d.y < 0.0D) {
-            this.setDeltaMovement(vector3d.multiply(1.0D, 0.6D, 1.0D));
+            this.setDeltaMovement(vector3d.multiply(1.05D, 0.6D, 1.05D));
             isFlying = true;
         } else {
             isFlying = false;
@@ -273,8 +274,11 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
 
     protected void customServerAiStep() {
         this.eatAnimationTick = this.eatBlockGoal.getEatAnimationTick();
+        this.isRunning = this.goalRunAround.isRunning();
+
         super.customServerAiStep();
     }
+
 
 
 
@@ -285,12 +289,16 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
     public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficulty, SpawnReason spawnreason, @Nullable ILivingEntityData entity, @Nullable CompoundNBT compound) {
         if(spawnreason == SpawnReason.SPAWN_EGG){
             this.setColorFeather(DyeColor.GRAY.getColorValue());
+            this.randomizeAttributes();
+        }else if(spawnreason == SpawnReason.BREEDING){
+            this.randomizeAttributes();
         } else {
             this.randomizeAttributes();
             this.setColorFeather(getColorRandomized(world.getRandom()).getColorValue());
         }
         return super.finalizeSpawn(world, difficulty, spawnreason, entity, compound);
     }
+
 
 
 
@@ -408,6 +416,7 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
 
 
 
+
     //----------------------------------------INTERACTION----------------------------------------//
 
     public ActionResultType mobInteract(PlayerEntity player, Hand hand) {
@@ -417,17 +426,45 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
             boolean flag = this.isOwnedBy(player) || this.isTame() || item == Items.BONE && !this.isTame() && !this.isAngry();
             return flag ? ActionResultType.CONSUME : ActionResultType.PASS;
         } else {
-            if (this.isTame()) {
-                if (this.isFood(itemstack) && this.getHealth() < this.getMaxHealth()) {
+
+            if(this.isFood(itemstack)){
+                if(this.isTame()){
+                    if (this.getHealth() < this.getMaxHealth()) {
+                        if (!player.abilities.instabuild) {
+                            itemstack.shrink(1);
+                        }
+                        float scale = isFavouriteFood(item) * 0.5f;
+                        this.heal((float) item.getFoodProperties().getNutrition());
+                        return ActionResultType.SUCCESS;
+                    }
+                } else {
                     if (!player.abilities.instabuild) {
                         itemstack.shrink(1);
                     }
-                    float scale = isFavouriteFood(item) * 0.5f;
-                    this.heal((float) item.getFoodProperties().getNutrition());
-                    return ActionResultType.SUCCESS;
+                    boolean success = false;
+                    int tamechance = this.random.nextInt(10);
+                    if(getFoodLiked() == item){
+                        if(tamechance < 9)
+                            success = true;
+                    } else if(getFoodHated() == item){
+                        if(tamechance == 0)
+                            success = true;
+                    } else {
+                        if(tamechance % 2 == 0)
+                            success = true;
+                    }
+                    if(success && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player)){
+                        this.tame(player);
+                        this.navigation.stop();
+                        this.setTarget((LivingEntity)null);
+                        this.setOrderedToSit(true);
+                        this.level.broadcastEntityEvent(this, (byte)7);
+                    } else {
+                        this.level.broadcastEntityEvent(this, (byte)6);
+                    }
                 }
-
-                if(item == Items.SADDLE){
+            } else if(item == Items.SADDLE){
+                if(this.isTame()){
                     if(!isSaddled() && isSaddleable()){
                         if (!player.abilities.instabuild) {
                             itemstack.shrink(1);
@@ -436,21 +473,7 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
                         return ActionResultType.SUCCESS;
                     }
                 }
-
-                if (!(item instanceof DyeItem)) {
-                    ActionResultType actionresulttype = super.mobInteract(player, hand);
-                    if ((!actionresulttype.consumesAction() || this.isBaby()) && this.isOwnedBy(player)) {
-                        //this.setOrderedToSit(!this.isOrderedToSit());
-                        //this.jumping = false;
-                        //this.navigation.stop();
-                        //this.setTarget((LivingEntity) null);
-                        this.doPlayerRide(player);
-                        return ActionResultType.SUCCESS;
-                    }
-
-                    return actionresulttype;
-                }
-
+            } else if(item instanceof DyeItem){
                 DyeColor dyecolor = ((DyeItem) item).getDyeColor();
                 if(player.isCreative()){
                     if(player.isCrouching()){
@@ -468,80 +491,23 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
                         return ActionResultType.SUCCESS;
                     }
                 }
-
-            } else if(isFood(itemstack) && !this.isAngry()){
-                if (!player.abilities.instabuild) {
-                    itemstack.shrink(1);
+            } else if(player.isCrouching()){
+                this.setOrderedToSit(!this.isOrderedToSit());
+                this.jumping = false;
+                this.navigation.stop();
+                this.setTarget((LivingEntity) null);
+            } else {
+                ActionResultType actionresulttype = super.mobInteract(player, hand);
+                if (!this.isBaby() && !actionresulttype.consumesAction() && this.isOwnedBy(player)) {
+                    this.doPlayerRide(player);
+                    return ActionResultType.SUCCESS;
                 }
-                boolean success = false;
-                int tamechance = this.random.nextInt(10);
-                if(getFoodLiked() == item){
-                    if(tamechance < 9)
-                        success = true;
-                } else if(getFoodHated() == item){
-                    if(tamechance == 0)
-                        success = true;
-                } else {
-                    if(tamechance % 2 == 0)
-                        success = true;
-                }
-                if(success && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player)){
-                    this.tame(player);
-                    this.navigation.stop();
-                    this.setTarget((LivingEntity)null);
-                    //this.setOrderedToSit(true);
-                    this.level.broadcastEntityEvent(this, (byte)7);
-                } else {
-                    this.level.broadcastEntityEvent(this, (byte)6);
-                }
+                return actionresulttype;
             }
-
-
         }
-
-
-        //if (!this.isBaby()) {
-        //    //if (this.isTamed() && player.isSecondaryUseActive()) {
-        //    //    this.openInventory(player);
-        //    //    return ActionResultType.sidedSuccess(this.level.isClientSide);
-        //    //}
-//
-        //    if (this.isVehicle()) {
-        //        return super.mobInteract(player, hand);
-        //    }
-        //}
-
-        //if (!itemstack.isEmpty()) {
-        //    if (this.isFood(itemstack)) {
-        //        return this.fedFood(player, itemstack);
-        //    }
-//
-        //    ActionResultType actionresulttype = itemstack.interactLivingEntity(player, this, hand);
-        //    if (actionresulttype.consumesAction()) {
-        //        return actionresulttype;
-        //    }
-//
-        //    if (!this.isTamed()) {
-        //        this.makeMad();
-        //        return ActionResultType.sidedSuccess(this.level.isClientSide);
-        //    }
-//
-        //    boolean flag = !this.isBaby() && !this.isSaddled() && itemstack.getItem() == Items.SADDLE;
-        //    if (this.isArmor(itemstack) || flag) {
-        //        this.openInventory(player);
-        //        return ActionResultType.sidedSuccess(this.level.isClientSide);
-        //    }
-        //}
-
-       // if (this.isBaby()) {
-       //     return super.mobInteract(player, hand);
-       // } else {
-       //     this.doPlayerRide(player);
-       //     return ActionResultType.sidedSuccess(this.level.isClientSide);
-       // }
-
         return super.mobInteract(player, hand);
     }
+
 
 
 
@@ -561,7 +527,6 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
         compound.putBoolean("Tame", this.isTamed());
         if (this.getOwnerUUID() != null) { compound.putUUID("Owner", this.getOwnerUUID()); }
         if (!this.inventory.getItem(0).isEmpty()) { compound.put("SaddleItem", this.inventory.getItem(0).save(new CompoundNBT())); }
-
     }
 
     public void readAdditionalSaveData(CompoundNBT compound) {
@@ -591,11 +556,9 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
             String s = compound.getString("Owner");
             uuid = PreYggdrasilConverter.convertMobOwnerIfNecessary(this.getServer(), s);
         }
-
         if (uuid != null) {
             this.setOwnerUUID(uuid);
         }
-
         if (compound.contains("SaddleItem", 10)) {
             ItemStack itemstack = ItemStack.of(compound.getCompound("SaddleItem"));
             if (itemstack.getItem() == Items.SADDLE) {
@@ -608,7 +571,8 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
 
 
 
-    //----------------------------------------ANIMATION_HELPER----------------------------------------//
+
+    //----------------------------------------ANIMATION_EXTRA----------------------------------------//
 
     @OnlyIn(Dist.CLIENT)
     public float getHeadEatPositionScale(float p_70894_1_) {
@@ -649,7 +613,6 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
         } else if (f > 1.0F) {
             f = 1.0F;
         }
-
         return MathHelper.sin(f * (float)Math.PI) * MathHelper.sin(f * (float)Math.PI * 11.0F) * 0.15F * (float)Math.PI;
     }
 
@@ -670,6 +633,8 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
     public int getMaxHeadXRot() {
         return this.isInSittingPose() ? 20 : super.getMaxHeadXRot();
     }
+
+
 
 
 
@@ -700,12 +665,9 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
             if (blockstate.is(Blocks.SNOW)) {
                 soundtype = blockstate.getSoundType(level, pos, this);
             }
-
             if (this.isVehicle() && this.canGallop) {
                 ++this.gallopSoundCounter;
-                if (this.gallopSoundCounter > 5 && this.gallopSoundCounter % 3 == 0) {
-                    this.playGallopSound(soundtype);
-                } else if (this.gallopSoundCounter <= 5) {
+                if (this.gallopSoundCounter <= 5) {
                     this.playSound(ShopKeeper.SOUND_CHOCOBO_STEP.get(), soundtype.getVolume() * 0.15F, soundtype.getPitch());
                 }
             } else if (soundtype == SoundType.WOOD) {
@@ -713,19 +675,7 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
             } else {
                 this.playSound(ShopKeeper.SOUND_CHOCOBO_STEP.get(), soundtype.getVolume() * 0.15F, soundtype.getPitch());
             }
-
         }
-    }
-
-    protected void playGallopSound(SoundType sound) {
-        //this.playSound(SoundEvents.HORSE_GALLOP, p_190680_1_.getVolume() * 0.15F, p_190680_1_.getPitch());
-        ////---------------------
-        //super.playGallopSound(p_190680_1_);
-        //if (this.random.nextInt(10) == 0) {
-        //    this.playSound(SoundEvents.HORSE_BREATHE, p_190680_1_.getVolume() * 0.6F, p_190680_1_.getPitch());
-        //}
-        //ItemStack stack = this.inventory.getItem(1);
-        //if (isArmor(stack)) stack.onHorseArmorTick(level, this);
     }
 
     protected SoundEvent getEatingSound() {
@@ -748,6 +698,10 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
     protected void playJumpSound() {
         this.playSound(SoundEvents.HORSE_JUMP, 0.4F, 1.0F);
     }
+
+
+
+
 
     //----------------------------------------INVENTORY----------------------------------------//
 
@@ -785,7 +739,6 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
 
     protected void updateContainerEquipment() {
         if (!this.level.isClientSide) {
-            //super.updateContainerEquipment();
             this.setArmorEquipment(this.inventory.getItem(1));
             this.setDropChance(EquipmentSlotType.CHEST, 0.0F);
             this.setFlag(4, !this.inventory.getItem(0).isEmpty());
@@ -803,7 +756,6 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
                 }
             }
         }
-
     }
 
     public void containerChanged(IInventory p_76316_1_) {
@@ -813,12 +765,10 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
             this.playSound(SoundEvents.HORSE_SADDLE, 0.5F, 1.0F);
         }
         ItemStack itemstack = this.getArmor();
-        //super.containerChanged(p_76316_1_);
         ItemStack itemstack1 = this.getArmor();
         if (this.tickCount > 20 && this.isArmor(itemstack1) && itemstack != itemstack1) {
             this.playSound(SoundEvents.HORSE_ARMOR, 0.5F, 1.0F);
         }
-
     }
 
     public boolean canWearArmor() {
@@ -838,7 +788,6 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
         if (p_230266_1_ != null) {
             this.level.playSound((PlayerEntity)null, this, SoundEvents.HORSE_SADDLE, p_230266_1_, 0.5F, 1.0F);
         }
-
     }
 
     protected int getInventorySize() {
@@ -851,7 +800,6 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
         if (inventory != null) {
             inventory.removeListener(this);
             int i = Math.min(inventory.getContainerSize(), this.inventory.getContainerSize());
-
             for(int j = 0; j < i; ++j) {
                 ItemStack itemstack = inventory.getItem(j);
                 if (!itemstack.isEmpty()) {
@@ -859,25 +807,9 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
                 }
             }
         }
-
         this.inventory.addListener(this);
         this.updateContainerEquipment();
         this.itemHandler = net.minecraftforge.common.util.LazyOptional.of(() -> new net.minecraftforge.items.wrapper.InvWrapper(this.inventory));
-    }
-
-
-
-
-
-
-
-
-
-    public void openInventory(PlayerEntity p_110199_1_) {
-        if (!this.level.isClientSide && (!this.isVehicle() || this.hasPassenger(p_110199_1_)) && this.isTamed()) {
-            //p_110199_1_.openHorseInventory(this, this.inventory);
-        }
-
     }
 
     protected void dropEquipment() {
@@ -889,9 +821,12 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
                     this.spawnAtLocation(itemstack);
                 }
             }
-
         }
     }
+
+
+
+
 
     //----------------------------------------TAMING----------------------------------------//
 
@@ -903,10 +838,8 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
         } else {
             this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(8.0D);
         }
-
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(4.0D);
     }
-
 
 
 
@@ -972,33 +905,32 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
         this.entityData.set(DATA_COLOR_COLLAR, dyeColor.getId());
     }
 
-    private DyeColor getOffspringColor(AnimalEntity Choco1, AnimalEntity Choco2, Random random) {
-        //DyeColor dyecolor1 = ((EntityChocobo)Choco1).getColorFeather();
-        //DyeColor dyecolor2 = ((EntityChocobo)Choco2).getColorFeather();
-        //if(dyecolor1 == dyecolor2) return dyecolor1;
-        //int r = random.nextInt(10);
-        //if(r < 4) return dyecolor1;
-        //if(r < 8) return dyecolor2;
-        //if(isColor(dyecolor1, dyecolor2, DyeColor.YELLOW) && isColor(dyecolor1, dyecolor2, DyeColor.RED))  return DyeColor.ORANGE;
-        //if(isColor(dyecolor1, dyecolor2, DyeColor.YELLOW) && isColor(dyecolor1, dyecolor2, DyeColor.BLUE)) return DyeColor.GREEN;
-        //if(isColor(dyecolor1, dyecolor2, DyeColor.BLUE) && isColor(dyecolor1, dyecolor2, DyeColor.RED))    return DyeColor.PURPLE;
-        //return random.nextBoolean() ? dyecolor1 : dyecolor2;
-        return DyeColor.GRAY;
+    private int getOffspringColor(int color1, int color2, Random random) {
+        return getMixedColor(color1, color2);
     }
 
-    private boolean isColor(DyeColor value1, DyeColor value2, DyeColor test){
-        return value1 == test || value2 == test;
-    }
+
+
 
 
     //----------------------------------------OFFSPRING----------------------------------------//
 
     public EntityChocobo getBreedOffspring(ServerWorld world, AgeableEntity entity) {
-
-        Random random = new Random();
         EntityChocobo parent = (EntityChocobo)entity;
         EntityChocobo child = ShopKeeper.ENTITY_CHOCOBO.get().create(world);
-        child.setColorFeather(this.getOffspringColor(this, parent, random).getColorValue());
+        child.setColorFeather(this.getOffspringColor(this.getColorFeatherData(), parent.getColorFeatherData(), getRandom()));
+        child.setNature(random.nextInt(25));
+        UUID uuid = this.getOwnerUUID();
+        if (uuid != null) {
+            child.setOwnerUUID(uuid);
+            child.setTame(true);
+        }
+        return child;
+    }
+
+    public EntityChocobo getBreedOffspring(ServerWorld world, int colorA, int colorB) {
+        EntityChocobo child = ShopKeeper.ENTITY_CHOCOBO.get().create(world);
+        child.setColorFeather(this.getOffspringColor(colorA, colorB, getRandom()));
         child.setNature(random.nextInt(25));
         UUID uuid = this.getOwnerUUID();
         if (uuid != null) {
@@ -1020,16 +952,59 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
         }
     }
 
-    protected boolean canParent() {
-        return !this.isVehicle() && !this.isPassenger() && this.isTamed() && !this.isBaby() && this.getHealth() >= this.getMaxHealth() && this.isInLove();
-    }
-    public void setIsInterested(boolean p_70918_1_) {
-        this.entityData.set(DATA_INTERESTED_ID, p_70918_1_);
-    }
-
     public boolean isInterested() {
         return this.entityData.get(DATA_INTERESTED_ID);
     }
+
+
+
+
+
+    //----------------------------------------FLAG----------------------------------------//
+
+    protected boolean getFlag(int p_110233_1_) {
+        return (this.entityData.get(DATA_ID_FLAGS) & p_110233_1_) != 0;
+    }
+
+    protected void setFlag(int p_110208_1_, boolean p_110208_2_) {
+        byte b0 = this.entityData.get(DATA_ID_FLAGS);
+        if (p_110208_2_) {
+            this.entityData.set(DATA_ID_FLAGS, (byte)(b0 | p_110208_1_));
+        } else {
+            this.entityData.set(DATA_ID_FLAGS, (byte)(b0 & ~p_110208_1_));
+        }
+    }
+
+    public void setTamed(boolean p_110234_1_) {
+        this.setFlag(2, p_110234_1_);
+    }
+
+    public boolean isTamed() {
+        return this.getFlag(2);
+    }
+
+    public boolean isEating() {
+        return this.getFlag(16);
+    }
+
+    public boolean isStanding() {
+        return this.getFlag(32);
+    }
+
+    public boolean isBred() {
+        return this.getFlag(8);
+    }
+
+    public void setBred(boolean p_110242_1_) {
+        this.setFlag(8, p_110242_1_);
+    }
+
+    public boolean isSaddled() {
+        return this.getFlag(4);
+    }
+
+
+
 
 
     //----------------------------------------SUPPORT----------------------------------------//
@@ -1038,20 +1013,18 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
     public void handleEntityEvent(byte p_70103_1_) {
         if (p_70103_1_ == 10) {
             this.eatAnimationTick = 40;
+        } else if(p_70103_1_ == 11){
+            this.isRunning = true;
+        } else if(p_70103_1_ == 12){
+            this.isRunning = false;
         } else {
             super.handleEntityEvent(p_70103_1_);
         }
-
-
-        if (p_70103_1_ == 7) {
-            this.spawnTamingParticles(true);
-        } else if (p_70103_1_ == 6) {
+        if (p_70103_1_ == 6) {
             this.spawnTamingParticles(false);
         } else {
             super.handleEntityEvent(p_70103_1_);
         }
-
-
         if (p_70103_1_ == 8) {
             this.isShaking = true;
             this.shakeAnim = 0.0F;
@@ -1061,15 +1034,12 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
         } else {
             super.handleEntityEvent(p_70103_1_);
         }
-
     }
 
     public void ate() {
-        //this.setSheared(false);
         if (this.isBaby()) {
             this.ageUp(60);
         }
-
     }
 
     private void cancelShake() {
@@ -1095,7 +1065,6 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
             if (entity != null && !(entity instanceof PlayerEntity) && !(entity instanceof AbstractArrowEntity)) {
                 p_70097_2_ = (p_70097_2_ + 1.0F) / 2.0F;
             }
-
             return super.hurt(p_70097_1_, p_70097_2_);
         }
     }
@@ -1105,56 +1074,8 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
         if (flag) {
             this.doEnchantDamageEffects(this, p_70652_1_);
         }
-
         return flag;
     }
-
-
-
-    //----------------------------------------FLAG----------------------------------------//
-    protected boolean getFlag(int p_110233_1_) {
-        return (this.entityData.get(DATA_ID_FLAGS) & p_110233_1_) != 0;
-    }
-
-    protected void setFlag(int p_110208_1_, boolean p_110208_2_) {
-        byte b0 = this.entityData.get(DATA_ID_FLAGS);
-        if (p_110208_2_) {
-            this.entityData.set(DATA_ID_FLAGS, (byte)(b0 | p_110208_1_));
-        } else {
-            this.entityData.set(DATA_ID_FLAGS, (byte)(b0 & ~p_110208_1_));
-        }
-
-    }
-    public void setTamed(boolean p_110234_1_) {
-        this.setFlag(2, p_110234_1_);
-    }
-    public boolean isTamed() {
-        return this.getFlag(2);
-    }
-
-
-
-    public boolean isEating() {
-        return this.getFlag(16);
-    }
-
-    public boolean isStanding() {
-        return this.getFlag(32);
-    }
-
-    public boolean isBred() {
-        return this.getFlag(8);
-    }
-
-    public void setBred(boolean p_110242_1_) {
-        this.setFlag(8, p_110242_1_);
-    }
-    public boolean isSaddled() {
-        return this.getFlag(4);
-    }
-
-
-    //----------------------------------------GETTER/SETTER----------------------------------------//
 
     protected float getStandingEyeHeight(Pose pose, EntitySize size) {
         return size.height * 0.95F;
@@ -1162,58 +1083,7 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
 
     public boolean causeFallDamage(float p_225503_1_, float p_225503_2_) {
         return false;
-        //if (p_225503_1_ > 1.0F) {
-        //    this.playSound(SoundEvents.HORSE_LAND, 0.4F, 1.0F);
-        //}
-        //int i = this.calculateFallDamage(p_225503_1_, p_225503_2_);
-        //if (i <= 0) {
-        //    return false;
-        //} else {
-        //    this.hurt(DamageSource.FALL, (float)i);
-        //    if (this.isVehicle()) {
-        //        for(Entity entity : this.getIndirectPassengers()) {
-        //            entity.hurt(DamageSource.FALL, (float)i);
-        //        }
-        //    }
-        //    this.playBlockFallSound();
-        //    return true;
-        //}
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public boolean isFood(ItemStack stack) {
         return FOOD_ITEMS.test(stack);
@@ -1244,8 +1114,6 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
         this.persistentAngerTarget = p_230259_1_;
     }
 
-
-
     public boolean wantsToAttack(LivingEntity p_142018_1_, LivingEntity p_142018_2_) {
         if (!(p_142018_1_ instanceof CreeperEntity) && !(p_142018_1_ instanceof GhastEntity)) {
             if (p_142018_1_ instanceof WolfEntity) {
@@ -1272,53 +1140,6 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
         return new Vector3d(0.0D, (double)(0.6F * this.getEyeHeight()), (double)(this.getBbWidth() * 0.4F));
     }
 
-    class AvoidEntityGoal<T extends LivingEntity> extends net.minecraft.entity.ai.goal.AvoidEntityGoal<T> {
-        private final EntityChocobo wolf;
-
-        public AvoidEntityGoal(EntityChocobo p_i47251_2_, Class<T> p_i47251_3_, float p_i47251_4_, double p_i47251_5_, double p_i47251_7_) {
-            super(p_i47251_2_, p_i47251_3_, p_i47251_4_, p_i47251_5_, p_i47251_7_);
-            this.wolf = p_i47251_2_;
-        }
-
-        public boolean canUse() {
-            if (super.canUse() && this.toAvoid instanceof LlamaEntity) {
-                return !this.wolf.isTame() && this.avoidLlama((LlamaEntity)this.toAvoid);
-            } else {
-                return false;
-            }
-        }
-
-        private boolean avoidLlama(LlamaEntity p_190854_1_) {
-            return p_190854_1_.getStrength() >= EntityChocobo.this.random.nextInt(5);
-        }
-
-        public void start() {
-            EntityChocobo.this.setTarget((LivingEntity)null);
-            super.start();
-        }
-
-        public void tick() {
-            EntityChocobo.this.setTarget((LivingEntity)null);
-            super.tick();
-        }
-    }
-
-
-
-
-
-
-
-
-
-    // Horse Entity
-
-
-
-
-
-
-
     private void setNature(int id) {
         this.entityData.set(DATA_ID_NATURE, id);
     }
@@ -1326,42 +1147,6 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
     private int getNature() {
         return this.entityData.get(DATA_ID_NATURE);
     }
-
-    public CoatColors getVariant() {
-        return CoatColors.byId(this.getNature() & 255);
-    }
-
-    public CoatTypes getMarkings() {
-        return CoatTypes.byId((this.getNature() & '\uff00') >> 8);
-    }
-
-
-
-
-
-    public static class HorseData extends AgeableEntity.AgeableData {
-        public final CoatColors variant;
-
-        public HorseData(CoatColors p_i231557_1_) {
-            super(true);
-            this.variant = p_i231557_1_;
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     @Nullable
     public UUID getOwnerUUID() {
@@ -1384,12 +1169,7 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
         if (p_142017_1_ > 6.0F && this.isEating()) {
             this.setEating(false);
         }
-
     }
-
-
-
-
 
     public int getTemper() {
         return this.temper;
@@ -1417,16 +1197,11 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
                 this.level.playSound((PlayerEntity)null, this.getX(), this.getY(), this.getZ(), soundevent, this.getSoundSource(), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
             }
         }
-
     }
-
-
 
     protected int calculateFallDamage(float p_225508_1_, float p_225508_2_) {
         return MathHelper.ceil((p_225508_1_ * 0.5F - 3.0F) * p_225508_2_);
     }
-
-
 
     public double getCustomJump() {
         return this.getAttributeValue(Attributes.JUMP_STRENGTH);
@@ -1441,7 +1216,6 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
         if (!p_241395_1_.abilities.instabuild) {
             p_241395_2_.shrink(1);
         }
-
         if (this.level.isClientSide) {
             return ActionResultType.CONSUME;
         } else {
@@ -1487,32 +1261,26 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
                 this.setInLove(p_190678_1_);
             }
         }
-
         if (this.getHealth() < this.getMaxHealth() && f > 0.0F) {
             this.heal(f);
             flag = true;
         }
-
         if (this.isBaby() && i > 0) {
             this.level.addParticle(ParticleTypes.HAPPY_VILLAGER, this.getRandomX(1.0D), this.getRandomY() + 0.5D, this.getRandomZ(1.0D), 0.0D, 0.0D, 0.0D);
             if (!this.level.isClientSide) {
                 this.ageUp(i);
             }
-
             flag = true;
         }
-
         if (j > 0 && (flag || !this.isTamed()) && this.getTemper() < this.getMaxTemper()) {
             flag = true;
             if (!this.level.isClientSide) {
                 this.modifyTemper(j);
             }
         }
-
         if (flag) {
             this.eating();
         }
-
         return flag;
     }
 
@@ -1524,22 +1292,15 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
             p_110237_1_.xRot = this.xRot;
             p_110237_1_.startRiding(this);
         }
-
     }
 
     protected boolean isImmobile() {
         return super.isImmobile() && this.isVehicle() && this.isSaddled() || this.isEating() || this.isStanding();
     }
 
-
-
     private void moveWings() {
         this.wingCounter = 1;
     }
-
-
-
-
 
     protected void followMommy() {
         if (this.isBred() && this.isBaby() && !this.isEating()) {
@@ -1548,21 +1309,17 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
                 this.navigation.createPath(livingentity, 0);
             }
         }
-
     }
 
     public boolean canEatGrass() {
         return true;
     }
 
-
-
     private void openMouth() {
         if (!this.level.isClientSide) {
             this.mouthCounter = 1;
             this.setFlag(64, true);
         }
-
     }
 
     public void setEating(boolean p_110227_1_) {
@@ -1573,7 +1330,6 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
         if (p_110219_1_) {
             this.setEating(false);
         }
-
         this.setFlag(32, p_110219_1_);
     }
 
@@ -1582,29 +1338,6 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
             this.standCounter = 1;
             this.setStanding(true);
         }
-
-    }
-
-    public void makeMad() {
-        if (!this.isStanding()) {
-            this.stand();
-            SoundEvent soundevent = this.getAngrySound();
-            if (soundevent != null) {
-                this.playSound(soundevent, this.getSoundVolume(), this.getVoicePitch());
-            }
-        }
-
-    }
-
-    public boolean tameWithName(PlayerEntity p_110263_1_) {
-        this.setOwnerUUID(p_110263_1_.getUUID());
-        this.setTamed(true);
-        if (p_110263_1_ instanceof ServerPlayerEntity) {
-            CriteriaTriggers.TAME_ANIMAL.trigger((ServerPlayerEntity)p_110263_1_, this);
-        }
-
-        this.level.broadcastEntityEvent(this, (byte)7);
-        return true;
     }
 
     public void travel(Vector3d p_213352_1_) {
@@ -1673,33 +1406,8 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
         }
     }
 
-
-
-
-
-
-
-
-
-
-
     public boolean canBeControlledByRider() {
         return this.getControllingPassenger() instanceof LivingEntity;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public float getEatAnim(float p_110258_1_) {
-        return MathHelper.lerp(p_110258_1_, this.eatAnimO, this.eatAnim);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public float getStandAnim(float p_110223_1_) {
-        return MathHelper.lerp(p_110223_1_, this.standAnimO, this.standAnim);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public float getMouthAnim(float p_110201_1_) {
-        return MathHelper.lerp(p_110201_1_, this.mouthAnimO, this.mouthAnim);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -1711,13 +1419,11 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
                 this.allowStandSliding = true;
                 this.stand();
             }
-
             if (p_110206_1_ >= 90) {
                 this.playerJumpPendingScale = 1.0F;
             } else {
                 this.playerJumpPendingScale = 0.4F + 0.4F * (float)p_110206_1_ / 90.0F;
             }
-
         }
     }
 
@@ -1737,41 +1443,17 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
     @OnlyIn(Dist.CLIENT)
     protected void spawnTamingParticles(boolean p_110216_1_) {
         IParticleData iparticledata = p_110216_1_ ? ParticleTypes.HEART : ParticleTypes.SMOKE;
-
         for(int i = 0; i < 7; ++i) {
             double d0 = this.random.nextGaussian() * 0.02D;
             double d1 = this.random.nextGaussian() * 0.02D;
             double d2 = this.random.nextGaussian() * 0.02D;
             this.level.addParticle(iparticledata, this.getRandomX(1.0D), this.getRandomY() + 0.5D, this.getRandomZ(1.0D), d0, d1, d2);
         }
-
     }
-
-
 
     public void positionRider(Entity p_184232_1_) {
         super.positionRider(p_184232_1_);
-        if (p_184232_1_ instanceof MobEntity) {
-            MobEntity mobentity = (MobEntity)p_184232_1_;
-            this.yBodyRot = mobentity.yBodyRot;
-        }
-
-        if (this.standAnimO > 0.0F) {
-            float f3 = MathHelper.sin(this.yBodyRot * ((float)Math.PI / 180F));
-            float f = MathHelper.cos(this.yBodyRot * ((float)Math.PI / 180F));
-            float f1 = 0.7F * this.standAnimO;
-            float f2 = 0.15F * this.standAnimO;
-            p_184232_1_.setPos(this.getX() + (double)(f1 * f3), this.getY() + this.getPassengersRidingOffset() + -4d + (double)f2, this.getZ() - (double)(f1 * f));
-            if (p_184232_1_ instanceof LivingEntity) {
-                ((LivingEntity)p_184232_1_).yBodyRot = this.yBodyRot;
-            }
-        }
-
     }
-
-
-
-
 
     public boolean onClimbable() {
         return false;
@@ -1780,10 +1462,6 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
     public boolean isWearingArmor() {
         return !this.getItemBySlot(EquipmentSlotType.CHEST).isEmpty();
     }
-
-
-
-
 
     @Nullable
     public Entity getControllingPassenger() {
@@ -1796,17 +1474,14 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
         double d1 = this.getBoundingBox().minY;
         double d2 = this.getZ() + p_234236_1_.z;
         BlockPos.Mutable blockpos$mutable = new BlockPos.Mutable();
-
         for(Pose pose : p_234236_2_.getDismountPoses()) {
             blockpos$mutable.set(d0, d1, d2);
             double d3 = this.getBoundingBox().maxY + 0.75D;
-
             while(true) {
                 double d4 = this.level.getBlockFloorHeight(blockpos$mutable);
                 if ((double)blockpos$mutable.getY() + d4 > d3) {
                     break;
                 }
-
                 if (TransportationHelper.isBlockFloorValid(d4)) {
                     AxisAlignedBB axisalignedbb = p_234236_2_.getLocalBoundsForPose(pose);
                     Vector3d vector3d = new Vector3d(d0, (double)blockpos$mutable.getY() + d4, d2);
@@ -1815,14 +1490,12 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
                         return vector3d;
                     }
                 }
-
                 blockpos$mutable.move(Direction.UP);
                 if (!((double)blockpos$mutable.getY() < d3)) {
                     break;
                 }
             }
         }
-
         return null;
     }
 
@@ -1837,8 +1510,6 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
             return vector3d3 != null ? vector3d3 : this.position();
         }
     }
-
-
 
     private net.minecraftforge.common.util.LazyOptional<?> itemHandler = null;
 
@@ -1858,10 +1529,6 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
             oldHandler.invalidate();
         }
     }
-
-
-
-    //-------------------------------------------NEW_STUFF------------------------------------------------------
 
     private float isFavouriteFood(Item food){
         float effect = 2;
@@ -1893,4 +1560,55 @@ public class EntityChocobo extends TameableEntity implements IAngerable, IInvent
         if(nat / 5 == 4) return ShopKeeper.FOOD_TANTAL.get();
         return Items.BEETROOT;
     }
+
+    public double getPassengersRidingOffset() {
+        return 1.25D;
+    }
+
+    public boolean AnimSaddle(){
+        return isSaddled();
+    }
+
+    public boolean AnimFemale(){
+        return false;
+    }
+
+    public boolean AnimYoung(){
+        return isBaby();
+    }
+
+    public boolean AnimPick(){
+        return eatAnimationTick > 0;
+    }
+
+    public boolean AnimTame(){
+        return isTame();
+    }
+
+    public boolean AnimFly(){
+        return isFlying;
+    }
+
+    public boolean AnimWalk(){
+        return false;
+    }
+
+    public boolean AnimKweh(){
+        return false;
+    }
+
+    public boolean AnimRide(){
+        return getControllingPassenger() != null;
+    }
+
+    public boolean AnimSit(){
+        return isInSittingPose() && getControllingPassenger() == null;
+    }
+
+    public boolean AnimRun(){
+        return isRunning && isMoving;
+    }
+
+
+
 }

@@ -11,6 +11,12 @@ public class IvalicePacketHandler {
 
     private static final String PROTOCOL_VERSION = Integer.toString(1);
 
+
+
+
+
+    //----------------------------------------INSTANCE----------------------------------------//
+
     public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
             new ResourceLocation("ivalice", "main"),
             () -> PROTOCOL_VERSION,
@@ -18,9 +24,21 @@ public class IvalicePacketHandler {
             PROTOCOL_VERSION::equals
     );
 
+
+
+
+
+    //----------------------------------------REGISTER----------------------------------------//
+
     public static void register(){
         int disc = 0;
     }
+
+
+
+
+
+    //----------------------------------------SEND----------------------------------------//
 
     public static <MSG> void send(PacketDistributor.PacketTarget target, MSG message){
         INSTANCE.send(target, message);
@@ -41,5 +59,7 @@ public class IvalicePacketHandler {
     public static <MSG> void sendToAll(MSG msg) {
         INSTANCE.send(PacketDistributor.ALL.noArg(), msg);
     }
+
+
 
 }

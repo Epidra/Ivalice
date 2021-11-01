@@ -4,7 +4,7 @@ license="All rights reserved"
 issueTrackerURL="https://github.com/Epidra/Ivalice/issues"
 [[mods]]
 modId="ivalice"
-version="v01"
+version="v03"
 displayName="Ivalice"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/ivalice"
 logoFile="logo.png"

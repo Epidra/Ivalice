@@ -10,7 +10,6 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import mod.ivalice.entity.EntityChocobo;
 import net.minecraft.client.renderer.entity.model.AgeableModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -33,6 +32,7 @@ public class ModelChick<T extends EntityChocobo>  extends AgeableModel<T> {
     private final ModelRenderer HeadPart;
 
     private float headXRot;
+
 
 
 
@@ -109,7 +109,6 @@ public class ModelChick<T extends EntityChocobo>  extends AgeableModel<T> {
         UpperPart = new ModelRenderer(this);
         UpperPart.setPos(0.0F, 17.5F, -2.5F);
 
-
         HeadPart = new ModelRenderer(this);
         HeadPart.setPos(0.0F, 0.0F, -0.5F);
         UpperPart.addChild(HeadPart);
@@ -120,16 +119,12 @@ public class ModelChick<T extends EntityChocobo>  extends AgeableModel<T> {
 
 
 
+
     //----------------------------------------ANIMATION----------------------------------------//
 
     @Override
     public void setupAnim(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        //this.Head.xRot = this.headXRot;
-        //this.Head.yRot = netHeadYaw * ((float)Math.PI / 180F);
-        //this.LegBackRight.xRot  = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-        //this.LegBackLeft.xRot   = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
-        this.RightFootPart.xRot = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
-        this.LeftFootPart.xRot  = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+
     }
 
     public void prepareMobModel(T entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
@@ -140,17 +135,19 @@ public class ModelChick<T extends EntityChocobo>  extends AgeableModel<T> {
 
 
 
+
     //----------------------------------------RENDER----------------------------------------//
 
     @Override
     public void renderToBuffer(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
-        Body.render(matrixStack, buffer, packedLight, packedOverlay);
-        LeftFootPart.render(matrixStack, buffer, packedLight, packedOverlay);
-        RightFootPart.render(matrixStack, buffer, packedLight, packedOverlay);
-        WingLeft.render(matrixStack, buffer, packedLight, packedOverlay);
-        WingRight.render(matrixStack, buffer, packedLight, packedOverlay);
-        UpperPart.render(matrixStack, buffer, packedLight, packedOverlay);
+        Body.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        LeftFootPart.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        RightFootPart.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        WingLeft.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        WingRight.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        UpperPart.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
+
 
 
 
@@ -172,5 +169,7 @@ public class ModelChick<T extends EntityChocobo>  extends AgeableModel<T> {
     protected Iterable<ModelRenderer> bodyParts() {
         return ImmutableList.of(this.Body, this.WingLeft, this.WingRight, this.RightFootPart, this.LeftFootPart);
     }
+
+
 
 }
