@@ -6,36 +6,23 @@ import mod.ivalice.entity.EntityChocobo;
 import mod.lucky77.tileentities.TileBase;
 import mod.lucky77.util.LogicBase;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.*;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
-import org.apache.logging.log4j.core.jmx.Server;
-
-import java.util.Optional;
 
 public class TileEntityNest extends TileBase<LogicBase> {
 
     public int colorA = 0;
     public int colorB = 0;
-
     boolean isHatching = false;
-
     public int age = 0;
     public int ageMAX = 400;
+
 
 
 
@@ -54,12 +41,12 @@ public class TileEntityNest extends TileBase<LogicBase> {
 
 
 
+
     //----------------------------------------UPDATE----------------------------------------//
 
     @Override
     public void tick(){
         boolean isDirty = false;
-
         if(isHatching && age < ageMAX){
             age++;
             if(age >= ageMAX){
@@ -67,11 +54,11 @@ public class TileEntityNest extends TileBase<LogicBase> {
                 isDirty = true;
             }
         }
-
         if (isDirty){
             this.setChanged();
         }
     }
+
 
 
 
@@ -83,29 +70,27 @@ public class TileEntityNest extends TileBase<LogicBase> {
 
 
 
+
     //----------------------------------------SAVE/LOAD----------------------------------------//
 
     public void load(BlockState state, CompoundNBT nbt){
         super.load(state, nbt);
-
         colorA = nbt.getInt("ColorA");
         colorB = nbt.getInt("ColorB");
         age = nbt.getInt("Age");
-
         this.inventory = NonNullList.withSize(1, ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(nbt, this.inventory);
     }
 
     public CompoundNBT save(CompoundNBT compound){
         super.save(compound);
-
         compound.putInt("ColorA", colorA);
         compound.putInt("ColorB", colorB);
         compound.putInt("Age", age);
-
         ItemStackHelper.saveAllItems(compound, this.inventory);
         return compound;
     }
+
 
 
 
@@ -130,18 +115,17 @@ public class TileEntityNest extends TileBase<LogicBase> {
             } else {
                 child = ShopKeeper.ENTITY_CHOCOBO.get().create(level);
             }
-
             if (child != null) {
                 child.setBaby(true);
                 child.moveTo(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 0.0F, 0.0F);
                 SW.addFreshEntityWithPassengers(child);
-
                 isHatching = false;
                 age = 0;
                 level.setBlockAndUpdate(getBlockPos(), level.getBlockState(getBlockPos()).setValue(BlockNest.AGE, 3));
             }
         }
     }
+
 
 
 
@@ -163,13 +147,13 @@ public class TileEntityNest extends TileBase<LogicBase> {
     }
 
     public void setItem(int p_70299_1_, ItemStack p_70299_2_) {
-        //this.unpackLootTable((PlayerEntity)null);
         this.getItems().set(p_70299_1_, p_70299_2_);
         if (p_70299_2_.getCount() > this.getMaxStackSize()) {
             p_70299_2_.setCount(this.getMaxStackSize());
         }
-
         this.setChanged();
     }
+
+
 
 }

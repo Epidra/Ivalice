@@ -14,17 +14,27 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ModifierAddItem extends LootModifier
-{
+public class ModifierAddItem extends LootModifier {
+
     private final Item addedItem;
 
-    /**
-     * This loot modifier adds an item to the loot table, given the conditions specified.
-     */
+
+
+
+
+    //----------------------------------------CONSTRUCTOR----------------------------------------//
+
+    /** This loot modifier adds an item to the loot table, given the conditions specified. */
     public ModifierAddItem(ILootCondition[] conditionsIn, Item addedItemIn) {
         super(conditionsIn);
         this.addedItem = addedItemIn;
     }
+
+
+
+
+
+    //----------------------------------------SUPPORT----------------------------------------//
 
     @Nonnull
     @Override
@@ -33,8 +43,13 @@ public class ModifierAddItem extends LootModifier
         return generatedLoot;
     }
 
-    public static class Serializer extends GlobalLootModifierSerializer<ModifierAddItem>
-    {
+
+
+
+
+    //----------------------------------------SERIALIZER----------------------------------------//
+
+    public static class Serializer extends GlobalLootModifierSerializer<ModifierAddItem> {
         @Override
         public ModifierAddItem read(ResourceLocation location, JsonObject object, ILootCondition[] ailootcondition) {
             Item addedItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation((JSONUtils.getAsString(object, "item"))));
@@ -46,4 +61,7 @@ public class ModifierAddItem extends LootModifier
             return new JsonObject();
         }
     }
+
+
+
 }

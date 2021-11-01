@@ -58,13 +58,17 @@ import static mod.ivalice.Ivalice.MODID;
 @SuppressWarnings({"unused", "deprecation"})
 public class ShopKeeper {
 
-    private static final DeferredRegister<Block> BLOCKS     = DeferredRegister.create(ForgeRegistries.BLOCKS,             MODID);
+    private static final DeferredRegister<Block>                BLOCKS     = DeferredRegister.create(ForgeRegistries.BLOCKS,             MODID);
     private static final DeferredRegister<Item>                 ITEMS      = DeferredRegister.create(ForgeRegistries.ITEMS,              MODID);
     private static final DeferredRegister<ContainerType<?>>     CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS,         MODID);
     private static final DeferredRegister<TileEntityType<?>>    TILES      = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES,      MODID);
     private static final DeferredRegister<SoundEvent>           SOUNDS     = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS,       MODID);
     private static final DeferredRegister<EntityType<?>>        ENTITIES   = DeferredRegister.create(ForgeRegistries.ENTITIES,           MODID);
     private static final DeferredRegister<IRecipeSerializer<?>> RECIPES    = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, MODID);
+
+
+
+
 
     // Stuff
     public static final RegistryObject<Item> STUFF_FEATHER = register("stuff_feather", new ItemItem(ItemGroup.TAB_MISC));
@@ -107,11 +111,15 @@ public class ShopKeeper {
     public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_STEP        = register("ivalice.chocobo.step",       new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.step")));
 
     // Entities
-    public static final RegistryObject<EntityType<EntityChocobo>>   ENTITY_CHOCOBO   = ENTITIES.register("chocobo",   () -> EntityType.Builder.of(EntityChocobo::new, EntityClassification.CREATURE).sized(0.9F, 2.5F).setTrackingRange(10).build(new ResourceLocation(MODID, "chocobo").toString()));
+    public static final RegistryObject<EntityType<EntityChocobo>> ENTITY_CHOCOBO = ENTITIES.register("chocobo", () -> EntityType.Builder.of(EntityChocobo::new, EntityClassification.CREATURE).sized(0.9F, 2.5F).setTrackingRange(10).build(new ResourceLocation(MODID, "chocobo").toString()));
+
     // Spawn Eggs
     public static final RegistryObject<ItemSpawnEgg> SPAWNEGG_CHOCOBO = ITEMS.register("spawnegg_chocobo", () -> new ItemSpawnEgg(() -> ENTITY_CHOCOBO.get(), 16766720, 6908265, new Item.Properties().tab(ItemGroup.TAB_MISC)));
 
+    // Tile Entities
     public static  final RegistryObject<TileEntityType<TileEntityNest>> TILE_NEST = TILES.register("nest", () -> TileEntityType.Builder.of(TileEntityNest::new, BLOCK_NEST.get() ).build(null));
+
+
 
 
 
@@ -127,8 +135,7 @@ public class ShopKeeper {
         RECIPES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    static <T extends IRecipe<?>> IRecipeType<T> register(final String key)
-    {
+    static <T extends IRecipe<?>> IRecipeType<T> register(final String key) {
         return Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(key), new IRecipeType<T>()
         {
             @Override
@@ -140,9 +147,7 @@ public class ShopKeeper {
     }
 
     public static void registerEntity(BiomeLoadingEvent event, Set<BiomeDictionary.Type> types) {
-        //if (event.getCategory() == Biome.Category.PLAINS) {
-            event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(ENTITY_CHOCOBO.get(), Config.CHOCOBO.weight.get(), Config.CHOCOBO.min.get(), Config.CHOCOBO.max.get()));
-        //}
+        event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(ENTITY_CHOCOBO.get(), Config.CHOCOBO.weight.get(), Config.CHOCOBO.min.get(), Config.CHOCOBO.max.get()));
     }
 
     public static void registerEntities() {
@@ -178,8 +183,8 @@ public class ShopKeeper {
                 .chance(spawnRate);
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(Ivalice.MODID, name), feature  );
         return feature;
-
     }
+
 
 
 
@@ -200,5 +205,7 @@ public class ShopKeeper {
 
         RenderingRegistry.registerEntityRenderingHandler(ENTITY_CHOCOBO.get(), RenderChocobo::new);
     }
+
+
 
 }

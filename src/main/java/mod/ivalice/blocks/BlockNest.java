@@ -7,19 +7,14 @@ import mod.lucky77.tileentities.TileBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.CropsBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.IItemProvider;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -27,13 +22,8 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 
 public class BlockNest extends BlockBase {
 
@@ -46,10 +36,6 @@ public class BlockNest extends BlockBase {
 
 
 
-
-
-
-
     //----------------------------------------CONSTRUCTOR----------------------------------------//
 
     /** Contructor with predefined BlockProperty */
@@ -57,6 +43,7 @@ public class BlockNest extends BlockBase {
         super(Properties.copy(Blocks.WHEAT));
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0));
     }
+
 
 
 
@@ -76,8 +63,8 @@ public class BlockNest extends BlockBase {
         if(world.getBlockState(blockPos).getValue(AGE) == 3){
             world.setBlockAndUpdate(blockPos, world.getBlockState(blockPos).setValue(AGE, 0));
         }
-        // Take Egg
     }
+
 
 
 
@@ -110,4 +97,7 @@ public class BlockNest extends BlockBase {
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new TileEntityNest(ShopKeeper.TILE_NEST.get());
     }
+
+
+
 }

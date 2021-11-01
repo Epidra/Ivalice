@@ -18,6 +18,7 @@ public class RenderChocobo extends MobRenderer<EntityChocobo, ModelChocobo<Entit
 
 
 
+
     //----------------------------------------CONSTRUCTOR----------------------------------------//
 
     public RenderChocobo(EntityRendererManager renderManager) {
@@ -30,11 +31,14 @@ public class RenderChocobo extends MobRenderer<EntityChocobo, ModelChocobo<Entit
 
 
 
+
     //----------------------------------------SUPPORT----------------------------------------//
 
     @Override
     public ResourceLocation getTextureLocation(EntityChocobo entity) {
         return entity.AnimYoung() ? TEXTURE2 : TEXTURE1;
     }
+
+
 
 }

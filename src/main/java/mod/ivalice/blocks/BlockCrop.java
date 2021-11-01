@@ -4,12 +4,11 @@ import mod.ivalice.ShopKeeper;
 import net.minecraft.block.Block;
 import net.minecraft.block.CropsBlock;
 import net.minecraft.util.IItemProvider;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BlockCrop extends CropsBlock {
 
     private final String id;
+
 
 
 
@@ -25,7 +24,8 @@ public class BlockCrop extends CropsBlock {
 
 
 
-    //----------------------------------------HELPER----------------------------------------//
+
+    //----------------------------------------SUPPORT----------------------------------------//
 
     protected IItemProvider getBaseSeedId() {
         if(id.matches("gysahl")) return ShopKeeper.SEEDS_GYSAHL.get();
@@ -35,4 +35,7 @@ public class BlockCrop extends CropsBlock {
         if(id.matches("tantal")) return ShopKeeper.SEEDS_TANTAL.get();
         return ShopKeeper.SEEDS_GYSAHL.get();
     }
+
+
+
 }

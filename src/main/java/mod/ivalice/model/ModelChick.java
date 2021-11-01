@@ -10,7 +10,6 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import mod.ivalice.entity.EntityChocobo;
 import net.minecraft.client.renderer.entity.model.AgeableModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -33,6 +32,7 @@ public class ModelChick<T extends EntityChocobo>  extends AgeableModel<T> {
     private final ModelRenderer HeadPart;
 
     private float headXRot;
+
 
 
 
@@ -109,13 +109,13 @@ public class ModelChick<T extends EntityChocobo>  extends AgeableModel<T> {
         UpperPart = new ModelRenderer(this);
         UpperPart.setPos(0.0F, 17.5F, -2.5F);
 
-
         HeadPart = new ModelRenderer(this);
         HeadPart.setPos(0.0F, 0.0F, -0.5F);
         UpperPart.addChild(HeadPart);
         HeadPart.texOffs(0, 12).addBox(-1.5F, -2.5F, -2.25F, 3.0F, 3.0F, 3.0F, 0.0F, false);
         HeadPart.texOffs(7, 19).addBox(-1.0F, -1.75F, -3.0F, 2.0F, 2.0F, 1.0F, 0.0F, false);
     }
+
 
 
 
@@ -135,6 +135,7 @@ public class ModelChick<T extends EntityChocobo>  extends AgeableModel<T> {
 
 
 
+
     //----------------------------------------RENDER----------------------------------------//
 
     @Override
@@ -146,6 +147,7 @@ public class ModelChick<T extends EntityChocobo>  extends AgeableModel<T> {
         WingRight.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
         UpperPart.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
+
 
 
 
@@ -167,5 +169,7 @@ public class ModelChick<T extends EntityChocobo>  extends AgeableModel<T> {
     protected Iterable<ModelRenderer> bodyParts() {
         return ImmutableList.of(this.Body, this.WingLeft, this.WingRight, this.RightFootPart, this.LeftFootPart);
     }
+
+
 
 }

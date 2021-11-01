@@ -17,7 +17,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
-    
+
+    // ----- Chocobo ----- //
     private final ModelRenderer BoneBase;
     private final ModelRenderer BoneBody;
     private final ModelRenderer BoneFront;
@@ -71,8 +72,7 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
     private final ModelRenderer BoneFalonLeft3;
     private final ModelRenderer BoneSaddle;
 
-    // --- Chicken ---
-
+    // ----- Chicken ----- //
     private final ModelRenderer ChickBody;
     private final ModelRenderer ChickFront_r1;
     private final ModelRenderer ChickLeftFootPart;
@@ -88,24 +88,31 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
     private final ModelRenderer ChickUpperPart;
     private final ModelRenderer ChickHeadPart;
 
-    // --- Variable ---
-
+    // ----- Variable ----- //
     private float headXRot;
     private float talonXRot = 0.0436F * 6;
     private float beakXrot = 0.0436F * 4;
     private float headFeatherZPos = 0.5f;
     private float backFeatherZPos = 0.5f;
     private float ROT = 0.0436F;
-    private boolean baby = false;
+    private boolean baby = false; // ???
+
+
+
+
+
+    //----------------------------------------CONSTRUCTOR----------------------------------------//
 
     public ModelChocobo() {
-        
+
         texWidth = 64;
         texHeight = 64;
 
+
+        // ----- Chocobo ----- //
+
         BoneBase = new ModelRenderer(this);
         BoneBase.setPos(0.0F, 6.5F, 1.0F);
-
 
         BoneBody = new ModelRenderer(this);
         BoneBody.setPos(0.0F, 3.0F, 0.0F);
@@ -144,7 +151,6 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
         BoneHeadFeather = new ModelRenderer(this);
         BoneHeadFeather.setPos(0.0F, 0.0F, 2.5F);
         BoneHead.addChild(BoneHeadFeather);
-
 
         BoneHeadFeather1 = new ModelRenderer(this);
         BoneHeadFeather1.setPos(2.0F, -3.5F, 0.5F);
@@ -334,7 +340,6 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
         BoneTalonRight.setPos(0.0F, 6.25F, 0.0F);
         BoneFootRight.addChild(BoneTalonRight);
 
-
         BoneFalonRight1 = new ModelRenderer(this);
         BoneFalonRight1.setPos(0.0F, 0.0F, 0.0F);
         BoneTalonRight.addChild(BoneFalonRight1);
@@ -367,7 +372,6 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
         BoneTalonLeft.setPos(0.0F, 6.25F, 0.0F);
         BoneFootLeft.addChild(BoneTalonLeft);
 
-
         BoneFalonLeft1 = new ModelRenderer(this);
         BoneFalonLeft1.setPos(0.0F, 0.0F, 0.0F);
         BoneTalonLeft.addChild(BoneFalonLeft1);
@@ -392,7 +396,7 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
         BoneSaddle.texOffs(0, 19).addBox(-4.5F, -9.75F, -3.0F, 9.0F, 1.0F, 8.0F, 0.0F, false);
 
 
-        // --- Chicken ---
+        // ----- Chicken ----- //
 
         ChickBody = new ModelRenderer(this);
         ChickBody.setPos(0.0F, 18.75F, 0.0F);
@@ -459,7 +463,6 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
         ChickUpperPart = new ModelRenderer(this);
         ChickUpperPart.setPos(0.0F, 17.5F, -2.5F);
 
-
         ChickHeadPart = new ModelRenderer(this);
         ChickHeadPart.setPos(0.0F, 0.0F, -0.5F);
         ChickUpperPart.addChild(ChickHeadPart);
@@ -467,11 +470,14 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
         ChickHeadPart.texOffs(7, 19).addBox(-1.0F, -1.75F, -3.0F, 2.0F, 2.0F, 1.0F, 0.0F, false);
     }
 
+
+
+
+
     //----------------------------------------ANIMATION----------------------------------------//
 
     @Override
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-
         ResetRotations();
         this.BoneHead.xRot = this.headXRot;
         this.BoneHead.yRot = netHeadYaw * ((float)Math.PI / 180F);
@@ -487,16 +493,13 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
             this.ChickRightFootPart.xRot  += MathHelper.cos(limbSwing * 0.6662F) * 0.05F * limbSwingAmount;
         }
         BoneBeak2.xRot = entity.AnimKweh() ? 3 * beakXrot : beakXrot;
-
         BoneFalonLeft1.xRot  = entity.AnimFly() ? 4 *  talonXRot :  talonXRot;
         BoneFalonLeft2.xRot  = entity.AnimFly() ? 4 *  talonXRot :  talonXRot;
         BoneFalonLeft3.xRot  = entity.AnimFly() ? 4 * -talonXRot : -talonXRot;
         BoneFalonRight1.xRot = entity.AnimFly() ? 4 *  talonXRot :  talonXRot;
         BoneFalonRight2.xRot = entity.AnimFly() ? 4 *  talonXRot :  talonXRot;
         BoneFalonRight3.xRot = entity.AnimFly() ? 4 * -talonXRot : -talonXRot;
-
         if(entity.AnimFly() || entity.AnimRun()){
-
             if(!entity.AnimRun()){
                 BoneWingLeft1.zRot = -32*ROT + rotSIN*20;
                 BoneWingRight1.zRot = 32*ROT - rotSIN*20;
@@ -512,7 +515,6 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
             BoneWingRight2.yRot = 0 - rotCOS;
             BoneWingRight3.yRot = 0 - rotSIN;
             BoneWingRight4.yRot = 0 + rotCOS;
-
             if( (entity.AnimFly() && entity.AnimRun()) || entity.AnimRun()){
                 BoneNeck.xRot = 20*ROT;
                 BoneHead.xRot = -18*ROT;
@@ -536,20 +538,14 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
                 BoneWingRight3.xRot = -ROT;
                 BoneWingRight4.xRot = -ROT;
             }
-
             if(entity.AnimFly() && (entity.AnimRide() || entity.AnimRun()) ){
-
                 BoneLegLeft.xRot = 26*ROT;
                 BoneLegRight.xRot = 26*ROT;
                 BoneFootLeft.xRot = 0;
                 BoneFootRight.xRot = 0;
-
-
             }
         }
-
         BoneSaddle.visible = entity.AnimSaddle();
-
         BoneBackFeather1.z = backFeatherZPos - ( entity.AnimFemale() ? 5 : 0 );
         BoneBackFeather2.z = backFeatherZPos - ( entity.AnimFemale() ? 5 : 0 );
         BoneBackFeather3.z = backFeatherZPos - ( entity.AnimFemale() ? 5 : 0 );
@@ -572,7 +568,6 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
         BoneHeadFeather9.z = headFeatherZPos - ( entity.AnimFemale() ? 1 : 0 );
         BoneHeadFeather10.z = headFeatherZPos - ( entity.AnimFemale() ? 1 : 0 );
         BoneHeadFeather11.z = headFeatherZPos - ( entity.AnimFemale() ? 1 : 0 );
-
         if(entity.AnimPick()){
             BoneBase.y = 7;
             BoneBase.xRot =  ROT * 10;
@@ -587,14 +582,13 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
             BoneTalonRight.xRot = 12.5f*ROT;
             BoneWingRight1.xRot = 10*ROT;
         }
-
     }
 
     public void prepareMobModel(T entity, float limbSwing, float limbSwingAmount, float partialTick) {
         super.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTick);
-        //this.headXRot = entity.getHeadEatAngleScale(partialTick);
         baby = entity.AnimYoung();
     }
+
 
 
 
@@ -605,23 +599,16 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
     public void renderToBuffer(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
         if(baby){
             ChickBody.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-            //ChickFront_r1.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
             ChickLeftFootPart.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-            //ChickTalonLeftBack_r1.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-            //ChickTalonLeftLeft_r1.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-            //ChickTalonLeftRight_r1.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
             ChickRightFootPart.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-            //ChickTalonRightBack_r1.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-            //ChickTalonRightLeft_r1.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-            //ChickTalonRightRight_r1.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
             ChickWingLeft.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
             ChickWingRight.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
             ChickUpperPart.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-            //ChickHeadPart.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
         } else {
             BoneBase.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
         }
     }
+
 
 
 
@@ -681,17 +668,11 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
         float height = 4;
         float rot = 2 * ROT;
         int mod = 0;
-
         if(entity.AnimSit()){
             mod = 16;
-        //} else if(entity.AnimSaddle()){
-        //    mod = 8;
-        //} else if(entity.AnimRide()){
-        //    mod = 10;
         } else {
             mod = 4;
         }
-
         float baseHeight = 0.75f;
         BoneLegLeft.xRot = rot * mod;
         BoneFootLeft.xRot = - (rot * 2) * mod;
@@ -700,8 +681,6 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
         BoneFootRight.xRot = - (rot * 2) * mod;
         BoneTalonRight.xRot = rot * mod;
         BoneBase.y = height + (baseHeight * mod);
-
-
     }
 
     public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
@@ -719,4 +698,7 @@ public class ModelChocobo<T extends EntityChocobo>  extends AgeableModel<T> {
     protected Iterable<ModelRenderer> bodyParts() {
         return ImmutableList.of(this.BoneBody);
     }
+
+
+
 }

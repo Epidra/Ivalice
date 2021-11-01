@@ -10,6 +10,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class GoalRunAround extends Goal {
+
     private final EntityChocobo horse;
     private final double speedModifier;
     private double posX;
@@ -19,12 +20,24 @@ public class GoalRunAround extends Goal {
     private final World level;
     private int cooldown = 0;
 
-    public GoalRunAround(EntityChocobo p_i1653_1_, double p_i1653_2_) {
-        this.horse = p_i1653_1_;
-        this.level = p_i1653_1_.level;
-        this.speedModifier = p_i1653_2_;
+
+
+
+
+    //----------------------------------------CONSTRUCTOR----------------------------------------//
+
+    public GoalRunAround(EntityChocobo entity, double speed) {
+        this.horse = entity;
+        this.level = entity.level;
+        this.speedModifier = speed;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE));
     }
+
+
+
+
+
+    //----------------------------------------USAGE----------------------------------------//
 
     public boolean canUse() {
         if (!this.horse.isTamed() && !this.horse.AnimYoung() && --cooldown <= 0) {
@@ -41,6 +54,12 @@ public class GoalRunAround extends Goal {
             return false;
         }
     }
+
+
+
+
+
+    //----------------------------------------START/STOP----------------------------------------//
 
     public void start() {
         this.horse.getNavigation().moveTo(this.posX, this.posY, this.posZ, this.speedModifier);
@@ -62,28 +81,24 @@ public class GoalRunAround extends Goal {
         return !this.horse.isTamed() && !this.horse.getNavigation().isDone();
     }
 
+
+
+
+
+    //----------------------------------------TICK----------------------------------------//
+
     public void tick() {
-        if (!this.horse.isTamed() && this.horse.getRandom().nextInt(50) == 0) {
-            //Entity entity = this.horse.getPassengers().get(0);
-            //if (entity == null) {
-            //    return;
-            //}
-//
-            //if (entity instanceof PlayerEntity) {
-            //    int i = this.horse.getTemper();
-            //    int j = this.horse.getMaxTemper();
-            //    if (j > 0 && this.horse.getRandom().nextInt(j) < i && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(horse, (PlayerEntity)entity)) {
-            //        this.horse.tameWithName((PlayerEntity)entity);
-            //        return;
-            //    }
-//
-            //    this.horse.modifyTemper(5);
-            //}
-//
-            //this.horse.ejectPassengers();
-            //this.horse.makeMad();
-            //this.horse.level.broadcastEntityEvent(this.horse, (byte)6);
-        }
 
     }
+
+
+
+
+
+    //----------------------------------------SUPPORT----------------------------------------//
+
+    // ...
+
+
+
 }

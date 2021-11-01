@@ -21,9 +21,21 @@ public class RenderChocoboEyes extends LayerRenderer<EntityChocobo, ModelChocobo
     private static final ResourceLocation TEXTURE1 = new ResourceLocation(Ivalice.MODID, "textures/entity/eyes.png");
     private static final ResourceLocation TEXTURE2 = new ResourceLocation(Ivalice.MODID, "textures/entity/chick_eyes.png");
 
+
+
+
+
+    //----------------------------------------CONSTRUCTOR----------------------------------------//
+
     public RenderChocoboEyes(IEntityRenderer<EntityChocobo, ModelChocobo<EntityChocobo>> p_i232476_1_) {
         super(p_i232476_1_);
     }
+
+
+
+
+
+    //----------------------------------------RENDER----------------------------------------//
 
     public void render(MatrixStack p_225628_1_, IRenderTypeBuffer p_225628_2_, int p_225628_3_, EntityChocobo p_225628_4_, float p_225628_5_, float p_225628_6_, float p_225628_7_, float p_225628_8_, float p_225628_9_, float p_225628_10_) {
         if (!p_225628_4_.isInvisible()) {
@@ -32,7 +44,16 @@ public class RenderChocoboEyes extends LayerRenderer<EntityChocobo, ModelChocobo
         }
     }
 
+
+
+
+
+    //----------------------------------------SUPPORT----------------------------------------//
+
     public ResourceLocation getTexture(EntityChocobo entity) {
         return entity.AnimYoung() ? TEXTURE2 : TEXTURE1;
     }
+
+
+
 }
