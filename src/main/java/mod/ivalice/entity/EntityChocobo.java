@@ -1323,7 +1323,7 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
     }
 
     @Override
-    protected void invalidateCaps() {
+    public void invalidateCaps() {
         super.invalidateCaps();
         if (itemHandler != null) {
             net.minecraftforge.common.util.LazyOptional<?> oldHandler = itemHandler;

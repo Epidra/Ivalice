@@ -25,10 +25,10 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Arrays;
 import java.util.List;
@@ -94,25 +94,25 @@ public class Subscriber {
             ev.getRegistry().register(new ModifierAddItem.Serializer().setRegistryName(Ivalice.MODID, "add_item"));
         }
 
-        @SubscribeEvent(priority = EventPriority.HIGH)
-        public static void addSpawn(BiomeLoadingEvent event) {
-            if (event.getName() != null) {
-                Biome biome = ForgeRegistries.BIOMES.getValue(event.getName());
-                if (biome != null) {
-                    ResourceKey<Biome> resourceKey = ResourceKey.create(ForgeRegistries.Keys.BIOMES, event.getName());
-                    List<BiomeDictionary.Type> includeList = Arrays.asList(BiomeDictionaryHelper.toBiomeTypeArray(Config.CHOCOBO.include.get()));
-                    List<BiomeDictionary.Type> excludeList = Arrays.asList(BiomeDictionaryHelper.toBiomeTypeArray(Config.CHOCOBO.exclude.get()));
-                    if (!includeList.isEmpty()) {
-                        Set<BiomeDictionary.Type> biomeTypes = BiomeDictionary.getTypes(resourceKey);
-                        if (biomeTypes.stream().noneMatch(excludeList::contains) && biomeTypes.stream().anyMatch(includeList::contains)) {
-                            event.getSpawns().getSpawner(MobCategory.CREATURE).add(new MobSpawnSettings.SpawnerData(ShopKeeper.ENTITY_CHOCOBO.get(), Config.CHOCOBO.weight.get(), Config.CHOCOBO.min.get(), Config.CHOCOBO.max.get()));
-                        }
-                    } else {
-                        throw new IllegalArgumentException("Do not leave the BiomeDictionary type inclusion list empty. If you wish to disable spawning of an entity, set the weight to 0 instead.");
-                    }
-                }
-            }
-        }
+        //@SubscribeEvent(priority = EventPriority.HIGH)
+        //public static void addSpawn(BiomeLoadingEvent event) {
+        //    if (event.getName() != null) {
+        //        Biome biome = ForgeRegistries.BIOMES.getValue(event.getName());
+        //        if (biome != null) {
+        //            ResourceKey<Biome> resourceKey = ResourceKey.create(ForgeRegistries.Keys.BIOMES, event.getName());
+        //            List<BiomeDictionary.Type> includeList = Arrays.asList(BiomeDictionaryHelper.toBiomeTypeArray(Config.CHOCOBO.include.get()));
+        //            List<BiomeDictionary.Type> excludeList = Arrays.asList(BiomeDictionaryHelper.toBiomeTypeArray(Config.CHOCOBO.exclude.get()));
+        //            if (!includeList.isEmpty()) {
+        //                Set<BiomeDictionary.Type> biomeTypes = BiomeDictionary.getTypes(resourceKey);
+        //                if (biomeTypes.stream().noneMatch(excludeList::contains) && biomeTypes.stream().anyMatch(includeList::contains)) {
+        //                    event.getSpawns().getSpawner(MobCategory.CREATURE).add(new MobSpawnSettings.SpawnerData(ShopKeeper.ENTITY_CHOCOBO.get(), Config.CHOCOBO.weight.get(), Config.CHOCOBO.min.get(), Config.CHOCOBO.max.get()));
+        //                }
+        //            } else {
+        //                throw new IllegalArgumentException("Do not leave the BiomeDictionary type inclusion list empty. If you wish to disable spawning of an entity, set the weight to 0 instead.");
+        //            }
+        //        }
+        //    }
+        //}
     }
 
 
