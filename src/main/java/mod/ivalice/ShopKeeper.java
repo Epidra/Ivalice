@@ -29,6 +29,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -58,50 +59,50 @@ public class ShopKeeper {
 
 
     // Stuff
-    public static final RegistryObject<Item> STUFF_FEATHER = register("stuff_feather", new ItemItem(CreativeModeTab.TAB_MISC));
+    public static final RegistryObject<Item> STUFF_FEATHER = ITEMS.register("stuff_feather", () -> new ItemItem(CreativeModeTab.TAB_MISC));
 
     // Food
-    public static final RegistryObject<Item> FOOD_GYSAHL = register("food_gysahl", new ItemFood(1, 1, false));
-    public static final RegistryObject<Item> FOOD_KRAKKA = register("food_krakka", new ItemFood(1, 1, false));
-    public static final RegistryObject<Item> FOOD_MIMETT = register("food_mimett", new ItemFood(1, 1, false));
-    public static final RegistryObject<Item> FOOD_SYLKIS = register("food_sylkis", new ItemFood(1, 1, false));
-    public static final RegistryObject<Item> FOOD_TANTAL = register("food_tantal", new ItemFood(1, 1, false));
+    public static final RegistryObject<Item> FOOD_GYSAHL = ITEMS.register("food_gysahl", () -> new ItemFood(1, 1, false));
+    public static final RegistryObject<Item> FOOD_KRAKKA = ITEMS.register("food_krakka", () -> new ItemFood(1, 1, false));
+    public static final RegistryObject<Item> FOOD_MIMETT = ITEMS.register("food_mimett", () -> new ItemFood(1, 1, false));
+    public static final RegistryObject<Item> FOOD_SYLKIS = ITEMS.register("food_sylkis", () -> new ItemFood(1, 1, false));
+    public static final RegistryObject<Item> FOOD_TANTAL = ITEMS.register("food_tantal", () -> new ItemFood(1, 1, false));
 
-    public static final RegistryObject<Item> FOOD_CHOCOBO_RAW    = register("food_chocobo_raw",    new ItemFood(1, 1, false));
-    public static final RegistryObject<Item> FOOD_CHOCOBO_COOKED = register("food_chocobo_cooked", new ItemFood(1, 1, false));
+    public static final RegistryObject<Item> FOOD_CHOCOBO_RAW    = ITEMS.register("food_chocobo_raw",    () -> new ItemFood(1, 1, false));
+    public static final RegistryObject<Item> FOOD_CHOCOBO_COOKED = ITEMS.register("food_chocobo_cooked", () -> new ItemFood(1, 1, false));
 
     // Straw
-    public static final RegistryObject<Block> BLOCK_STRAW = register("block_straw", new BlockStraw(), CreativeModeTab.TAB_DECORATIONS);
-    public static final RegistryObject<Block> BLOCK_NEST  = register("block_nest",  new BlockNest(), CreativeModeTab.TAB_DECORATIONS);
+    public static final RegistryObject<Block> BLOCK_STRAW = BLOCKS.register("block_straw", () -> new BlockStraw());     static final RegistryObject<Item> I_BLOCK_STRAW = fromBlock(BLOCK_STRAW, CreativeModeTab.TAB_DECORATIONS);
+    public static final RegistryObject<Block> BLOCK_NEST  = BLOCKS.register("block_nest",  () -> new BlockNest() );     static final RegistryObject<Item> I_BLOCK_NEST  = fromBlock(BLOCK_NEST,  CreativeModeTab.TAB_DECORATIONS);
 
     // Crop
-    public static final RegistryObject<Block> CROP_GYSAHL = register("crop_gysahl", new BlockCrop("gysahl", Blocks.WHEAT));
-    public static final RegistryObject<Block> CROP_KRAKKA = register("crop_krakka", new BlockCrop("krakka", Blocks.WHEAT));
-    public static final RegistryObject<Block> CROP_MIMETT = register("crop_mimett", new BlockCrop("mimett", Blocks.WHEAT));
-    public static final RegistryObject<Block> CROP_SYLKIS = register("crop_sylkis", new BlockCrop("sylkis", Blocks.WHEAT));
-    public static final RegistryObject<Block> CROP_TANTAL = register("crop_tantal", new BlockCrop("tantal", Blocks.WHEAT));
+    public static final RegistryObject<Block> CROP_GYSAHL = BLOCKS.register("crop_gysahl", () -> new BlockCrop("gysahl", Blocks.WHEAT));     static final RegistryObject<Item> I_CROP_GYSAHL = fromBlock(CROP_GYSAHL);
+    public static final RegistryObject<Block> CROP_KRAKKA = BLOCKS.register("crop_krakka", () -> new BlockCrop("krakka", Blocks.WHEAT));     static final RegistryObject<Item> I_CROP_KRAKKA = fromBlock(CROP_KRAKKA);
+    public static final RegistryObject<Block> CROP_MIMETT = BLOCKS.register("crop_mimett", () -> new BlockCrop("mimett", Blocks.WHEAT));     static final RegistryObject<Item> I_CROP_MIMETT = fromBlock(CROP_MIMETT);
+    public static final RegistryObject<Block> CROP_SYLKIS = BLOCKS.register("crop_sylkis", () -> new BlockCrop("sylkis", Blocks.WHEAT));     static final RegistryObject<Item> I_CROP_SYLKIS = fromBlock(CROP_SYLKIS);
+    public static final RegistryObject<Block> CROP_TANTAL = BLOCKS.register("crop_tantal", () -> new BlockCrop("tantal", Blocks.WHEAT));     static final RegistryObject<Item> I_CROP_TANTAL = fromBlock(CROP_TANTAL);
 
     // Seeds
-    public static final RegistryObject<Item> SEEDS_GYSAHL = register("seeds_gysahl", new ItemSeed("gysahl"));
-    public static final RegistryObject<Item> SEEDS_KRAKKA = register("seeds_krakka", new ItemSeed("krakka"));
-    public static final RegistryObject<Item> SEEDS_MIMETT = register("seeds_mimett", new ItemSeed("mimett"));
-    public static final RegistryObject<Item> SEEDS_SYLKIS = register("seeds_sylkis", new ItemSeed("sylkis"));
-    public static final RegistryObject<Item> SEEDS_TANTAL = register("seeds_tantal", new ItemSeed("tantal"));
+    public static final RegistryObject<Item> SEEDS_GYSAHL = ITEMS.register("seeds_gysahl", () -> new ItemSeed("gysahl"));
+    public static final RegistryObject<Item> SEEDS_KRAKKA = ITEMS.register("seeds_krakka", () -> new ItemSeed("krakka"));
+    public static final RegistryObject<Item> SEEDS_MIMETT = ITEMS.register("seeds_mimett", () -> new ItemSeed("mimett"));
+    public static final RegistryObject<Item> SEEDS_SYLKIS = ITEMS.register("seeds_sylkis", () -> new ItemSeed("sylkis"));
+    public static final RegistryObject<Item> SEEDS_TANTAL = ITEMS.register("seeds_tantal", () -> new ItemSeed("tantal"));
 
     // Sounds
-    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_AMBIENT     = register("ivalice.chocobo.ambient",    new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.ambient")));
-    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_HURT        = register("ivalice.chocobo.hurt",       new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.hurt")));
-    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_DEATH       = register("ivalice.chocobo.death",      new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.death")));
-    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_ANGRY       = register("ivalice.chocobo.angry",      new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.angry")));
-    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_HEALTH_LOW  = register("ivalice.chocobo.healthlow",  new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.healthlow")));
-    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_HEALTH_HIGH = register("ivalice.chocobo.healthhigh", new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.healthhigh")));
-    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_STEP        = register("ivalice.chocobo.step",       new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.step")));
+    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_AMBIENT     = SOUNDS.register("ivalice.chocobo.ambient",    () -> new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.ambient")));
+    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_HURT        = SOUNDS.register("ivalice.chocobo.hurt",       () -> new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.hurt")));
+    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_DEATH       = SOUNDS.register("ivalice.chocobo.death",      () -> new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.death")));
+    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_ANGRY       = SOUNDS.register("ivalice.chocobo.angry",      () -> new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.angry")));
+    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_HEALTH_LOW  = SOUNDS.register("ivalice.chocobo.healthlow",  () -> new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.healthlow")));
+    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_HEALTH_HIGH = SOUNDS.register("ivalice.chocobo.healthhigh", () -> new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.healthhigh")));
+    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_STEP        = SOUNDS.register("ivalice.chocobo.step",       () -> new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.step")));
 
     // Entities
     public static final RegistryObject<EntityType<EntityChocobo>>   ENTITY_CHOCOBO   = ENTITIES.register("chocobo",   () -> EntityType.Builder.of(EntityChocobo::new, CREATURE).sized(0.9F, 2.5F).setTrackingRange(10).build(new ResourceLocation(MODID, "chocobo").toString()));
 
     // Spawn Eggs
-    public static final RegistryObject<ItemSpawnEgg> SPAWNEGG_CHOCOBO = ITEMS.register("spawnegg_chocobo", () -> new ItemSpawnEgg(() -> ENTITY_CHOCOBO.get(), 16766720, 6908265, new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
+    public static final RegistryObject<Item> SPAWNEGG_CHOCOBO = ITEMS.register("spawnegg_chocobo", () -> new ForgeSpawnEggItem(ENTITY_CHOCOBO, 16766720, 6908265, new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
 
     // Block Entities
     public static  final RegistryObject<BlockEntityType<BlockEntityNest>> TILE_NEST = TILES.register("nest", () -> BlockEntityType.Builder.of(BlockEntityNest::new, BLOCK_NEST.get() ).build(null));
@@ -120,6 +121,21 @@ public class ShopKeeper {
         SOUNDS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
         RECIPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+    }
+
+    // Conveniance function: Take a RegistryObject<Block> and make a corresponding RegistryObject<Item> from it
+    public static <B extends Block> RegistryObject<Item> fromBlock(RegistryObject<B> block) {
+        return ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties()));
+    }
+
+    // Conveniance function: Take a RegistryObject<Block> and make a corresponding RegistryObject<Item> from it
+    public static <B extends Block> RegistryObject<Item> fromBlock(RegistryObject<B> block, Item.Properties prop) {
+        return ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), prop));
+    }
+
+    // Conveniance function: Take a RegistryObject<Block> and make a corresponding RegistryObject<Item> from it
+    public static <B extends Block> RegistryObject<Item> fromBlock(RegistryObject<B> block, CreativeModeTab CreativeModeTab) {
+        return ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), (new Item.Properties()).tab(CreativeModeTab) ));
     }
 
     static <T extends Recipe<?>> RecipeType<T> register(final String key) {

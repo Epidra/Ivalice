@@ -3,7 +3,6 @@ package mod.ivalice;
 import com.google.common.collect.Lists;
 import mod.ivalice.crafting.ModifierAddItem;
 import mod.ivalice.entity.EntityChocobo;
-import mod.lucky77.util.BiomeDictionaryHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -15,7 +14,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
@@ -30,7 +28,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ObjectHolder;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 

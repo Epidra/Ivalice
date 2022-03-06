@@ -2,15 +2,10 @@ package mod.ivalice.render;
 
 import mod.ivalice.Ivalice;
 import mod.ivalice.ModelHandler;
-import mod.ivalice.Subscriber;
 import mod.ivalice.entity.EntityChocobo;
 import mod.ivalice.model.ModelChocobo;
-import net.minecraft.client.model.SheepModel;
-import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.SheepRenderer;
-import net.minecraft.client.renderer.entity.layers.SheepFurLayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

@@ -4,7 +4,7 @@ import mod.ivalice.ShopKeeper;
 import mod.ivalice.block.BlockNest;
 import mod.ivalice.entity.EntityChocobo;
 import mod.lucky77.blockentity.BlockEntityBase;
-import mod.lucky77.logic.LogicBase;
+import mod.lucky77.util.Dummy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -17,7 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class BlockEntityNest extends BlockEntityBase<LogicBase> {
+public class BlockEntityNest extends BlockEntityBase<Dummy> {
 
     public int colorA = 0;
     public int colorB = 0;
@@ -37,7 +37,7 @@ public class BlockEntityNest extends BlockEntityBase<LogicBase> {
 
     /** 0 - KEY, 1 - MODULE, 2 - TOKEN, 3 - STORAGE-TOKEN, 4 - STORAGE_PRIZE **/
     public BlockEntityNest(BlockEntityType<?> tileEntityTypeIn, BlockPos blockpos, BlockState blockstate) {
-        super(tileEntityTypeIn, blockpos, blockstate, 1, new LogicBase());
+        super(tileEntityTypeIn, blockpos, blockstate, 1, new Dummy());
     }
 
 
@@ -83,13 +83,12 @@ public class BlockEntityNest extends BlockEntityBase<LogicBase> {
         ContainerHelper.loadAllItems(nbt, this.inventory);
     }
 
-    public CompoundTag save(CompoundTag compound){
-        super.save(compound);
+    public void saveAdditional(CompoundTag compound){
+        super.saveAdditional(compound);
         compound.putInt("ColorA", colorA);
         compound.putInt("ColorB", colorB);
         compound.putInt("Age", age);
         ContainerHelper.saveAllItems(compound, this.inventory);
-        return compound;
     }
 
 

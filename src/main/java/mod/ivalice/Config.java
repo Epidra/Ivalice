@@ -1,6 +1,6 @@
 package mod.ivalice;
 
-import mod.lucky77.util.BiomeDictionaryHelper;
+import mod.lucky77.system.SystemBiomes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.BiomeDictionary;
@@ -41,8 +41,8 @@ public class Config {
             builder.pop();
             builder.push("spawnable biomes " + id);
             spawnBlocks = builder.defineList("spawn blocks", Collections.singletonList(Blocks.GRASS_BLOCK.getRegistryName().toString()), o -> o instanceof String && ForgeRegistries.BLOCKS.getKeys().contains(new ResourceLocation(o.toString())));
-            include = builder.defineList("include", Collections.singletonList(PLAINS.toString()), o -> o instanceof String && (o.equals("") || BiomeDictionary.Type.getAll().contains(BiomeDictionaryHelper.getType(o.toString()))));
-            exclude = builder.defineList("exclude", Arrays.asList(FOREST.toString(), MOUNTAIN.toString(), OCEAN.toString(), NETHER.toString()), o -> o instanceof String && (o.equals("") || BiomeDictionary.Type.getAll().contains(BiomeDictionaryHelper.getType(o.toString()))));
+            include = builder.defineList("include", Collections.singletonList(PLAINS.toString()), o -> o instanceof String && (o.equals("") || BiomeDictionary.Type.getAll().contains(SystemBiomes.getType(o.toString()))));
+            exclude = builder.defineList("exclude", Arrays.asList(FOREST.toString(), MOUNTAIN.toString(), OCEAN.toString(), NETHER.toString()), o -> o instanceof String && (o.equals("") || BiomeDictionary.Type.getAll().contains(SystemBiomes.getType(o.toString()))));
             builder.pop();
         }
     }
