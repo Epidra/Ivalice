@@ -8,7 +8,6 @@ import mod.lucky77.util.Dummy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.inventory.ContainerData;
@@ -152,10 +151,10 @@ public class BlockEntityNest extends BlockEntityBase<Dummy> {
         };
     }
 
-    @Override
-    public TextComponent getName() {
-        return new TextComponent("nest");
-    }
+    // @Override
+    // public TextComponent getName() {
+    //     return new TextComponent("nest");
+    // }
 
     protected NonNullList<ItemStack> getItems() {
         return this.inventory;

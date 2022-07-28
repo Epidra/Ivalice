@@ -1,5 +1,6 @@
 {
     "parent": "ivalice:template/crop",
+    "render_type": "cutout",
     "textures": {
         "crop": "ivalice:block/crop_tantal_6"
     }

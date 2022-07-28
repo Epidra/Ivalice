@@ -3,7 +3,6 @@ package mod.ivalice;
 import mod.lucky77.system.SystemBiomes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -11,7 +10,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static net.minecraftforge.common.BiomeDictionary.Type.*;
+import static net.minecraft.world.level.biome.Biomes.FOREST;
+import static net.minecraft.world.level.biome.Biomes.PLAINS;
 
 public class Config {
 
@@ -28,9 +28,9 @@ public class Config {
         public final ForgeConfigSpec.IntValue min;
         public final ForgeConfigSpec.IntValue max;
         public final ForgeConfigSpec.IntValue weight;
-        public final ForgeConfigSpec.ConfigValue<List<? extends String>> include;
-        public final ForgeConfigSpec.ConfigValue<List<? extends String>> exclude;
-        public final ForgeConfigSpec.ConfigValue<List<? extends String>> spawnBlocks;
+        //public final ForgeConfigSpec.ConfigValue<List<? extends String>> include;
+        //public final ForgeConfigSpec.ConfigValue<List<? extends String>> exclude;
+        //public final ForgeConfigSpec.ConfigValue<List<? extends String>> spawnBlocks;
 
         ConfigMob(ForgeConfigSpec.Builder builder, String id, int _min, int _max, int _weight) {
             builder.push("spawn chances " + id);
@@ -40,9 +40,9 @@ public class Config {
             weight = builder.defineInRange("weight", _weight, 0, 100);
             builder.pop();
             builder.push("spawnable biomes " + id);
-            spawnBlocks = builder.defineList("spawn blocks", Collections.singletonList(Blocks.GRASS_BLOCK.getRegistryName().toString()), o -> o instanceof String && ForgeRegistries.BLOCKS.getKeys().contains(new ResourceLocation(o.toString())));
-            include = builder.defineList("include", Collections.singletonList(PLAINS.toString()), o -> o instanceof String && (o.equals("") || BiomeDictionary.Type.getAll().contains(SystemBiomes.getType(o.toString()))));
-            exclude = builder.defineList("exclude", Arrays.asList(FOREST.toString(), MOUNTAIN.toString(), OCEAN.toString(), NETHER.toString()), o -> o instanceof String && (o.equals("") || BiomeDictionary.Type.getAll().contains(SystemBiomes.getType(o.toString()))));
+            //spawnBlocks = builder.defineList("spawn blocks", Collections.singletonList(Blocks.GRASS_BLOCK.getName().toString()), o -> o instanceof String && ForgeRegistries.BLOCKS.getKeys().contains(new ResourceLocation(o.toString())));
+            //include = builder.defineList("include", Collections.singletonList(PLAINS.toString()), o -> o instanceof String && (o.equals("")));
+            //exclude = builder.defineList("exclude", Arrays.asList(FOREST.toString()), o -> o instanceof String && (o.equals("")));
             builder.pop();
         }
     }

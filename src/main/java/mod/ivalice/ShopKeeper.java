@@ -28,9 +28,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.ForgeSpawnEggItem;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -48,10 +46,10 @@ public class ShopKeeper {
 
     private static final DeferredRegister<Block>               BLOCKS     = DeferredRegister.create(ForgeRegistries.BLOCKS,             MODID);
     private static final DeferredRegister<Item>                ITEMS      = DeferredRegister.create(ForgeRegistries.ITEMS,              MODID);
-    private static final DeferredRegister<MenuType<?>>         CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS,         MODID);
-    private static final DeferredRegister<BlockEntityType<?>>  TILES      = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES,     MODID);
+    private static final DeferredRegister<MenuType<?>>         CONTAINERS = DeferredRegister.create(ForgeRegistries.MENU_TYPES,         MODID);
+    private static final DeferredRegister<BlockEntityType<?>>  TILES      = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MODID);
     private static final DeferredRegister<SoundEvent>          SOUNDS     = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS,       MODID);
-    private static final DeferredRegister<EntityType<?>>       ENTITIES   = DeferredRegister.create(ForgeRegistries.ENTITIES,           MODID);
+    private static final DeferredRegister<EntityType<?>>       ENTITIES   = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES,       MODID);
     private static final DeferredRegister<RecipeSerializer<?>> RECIPES    = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, MODID);
 
 
@@ -149,9 +147,9 @@ public class ShopKeeper {
         });
     }
 
-    public static void registerEntity(BiomeLoadingEvent event, Set<BiomeDictionary.Type> types) {
-        event.getSpawns().getSpawner(CREATURE).add(new MobSpawnSettings.SpawnerData(ENTITY_CHOCOBO.get(), Config.CHOCOBO.weight.get(), Config.CHOCOBO.min.get(), Config.CHOCOBO.max.get()));
-    }
+    // public static void registerEntity(BiomeLoadingEvent event, Set<BiomeDictionary.Type> types) {
+    //     event.getSpawns().getSpawner(CREATURE).add(new MobSpawnSettings.SpawnerData(ENTITY_CHOCOBO.get(), Config.CHOCOBO.weight.get(), Config.CHOCOBO.min.get(), Config.CHOCOBO.max.get()));
+    // }
 
     private static RegistryObject<Block> register(String name, Block block){
         return register(name, block, null);
@@ -186,11 +184,11 @@ public class ShopKeeper {
 
     @OnlyIn(Dist.CLIENT)
     static void setup(FMLClientSetupEvent event){
-        ItemBlockRenderTypes.setRenderLayer(CROP_GYSAHL.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(CROP_KRAKKA.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(CROP_MIMETT.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(CROP_SYLKIS.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(CROP_TANTAL.get(), RenderType.cutout());
+        //ItemBlockRenderTypes.setRenderLayer(CROP_GYSAHL.get(), RenderType.cutout());
+        //ItemBlockRenderTypes.setRenderLayer(CROP_KRAKKA.get(), RenderType.cutout());
+        //ItemBlockRenderTypes.setRenderLayer(CROP_MIMETT.get(), RenderType.cutout());
+        //ItemBlockRenderTypes.setRenderLayer(CROP_SYLKIS.get(), RenderType.cutout());
+        //ItemBlockRenderTypes.setRenderLayer(CROP_TANTAL.get(), RenderType.cutout());
     }
 
 

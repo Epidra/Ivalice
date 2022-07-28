@@ -16,6 +16,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.*;
@@ -756,7 +757,7 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         this.entityData.set(DATA_COLOR_FEATHER, i);
     }
 
-    public static DyeColor getColorRandomized(Random random) {
+    public static DyeColor getColorRandomized(RandomSource random) {
         int i = random.nextInt(100);
         if(i <   5) return DyeColor.BLACK;
         if(i <  10) return DyeColor.WHITE;
@@ -798,7 +799,7 @@ public class EntityChocobo extends TamableAnimal implements NeutralMob, Containe
         this.entityData.set(DATA_COLOR_COLLAR, dyeColor.getId());
     }
 
-    private int getOffspringColor(int color1, int color2, Random random) {
+    private int getOffspringColor(int color1, int color2, RandomSource random) {
         return getMixedColor(color1, color2);
     }
 
