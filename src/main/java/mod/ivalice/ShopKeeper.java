@@ -57,7 +57,7 @@ public class ShopKeeper {
 
 
     // Stuff
-    public static final RegistryObject<Item> STUFF_FEATHER = ITEMS.register("stuff_feather", () -> new ItemItem(CreativeModeTab.TAB_MISC));
+    public static final RegistryObject<Item> STUFF_FEATHER = ITEMS.register("stuff_feather", () -> new ItemItem(null));
 
     // Food
     public static final RegistryObject<Item> FOOD_GYSAHL = ITEMS.register("food_gysahl", () -> new ItemFood(1, 1, false));
@@ -70,8 +70,8 @@ public class ShopKeeper {
     public static final RegistryObject<Item> FOOD_CHOCOBO_COOKED = ITEMS.register("food_chocobo_cooked", () -> new ItemFood(1, 1, false));
 
     // Straw
-    public static final RegistryObject<Block> BLOCK_STRAW = BLOCKS.register("block_straw", () -> new BlockStraw());     static final RegistryObject<Item> I_BLOCK_STRAW = fromBlock(BLOCK_STRAW, CreativeModeTab.TAB_DECORATIONS);
-    public static final RegistryObject<Block> BLOCK_NEST  = BLOCKS.register("block_nest",  () -> new BlockNest() );     static final RegistryObject<Item> I_BLOCK_NEST  = fromBlock(BLOCK_NEST,  CreativeModeTab.TAB_DECORATIONS);
+    public static final RegistryObject<Block> BLOCK_STRAW = BLOCKS.register("block_straw", () -> new BlockStraw());     static final RegistryObject<Item> I_BLOCK_STRAW = fromBlock(BLOCK_STRAW);
+    public static final RegistryObject<Block> BLOCK_NEST  = BLOCKS.register("block_nest",  () -> new BlockNest() );     static final RegistryObject<Item> I_BLOCK_NEST  = fromBlock(BLOCK_NEST);
 
     // Crop
     public static final RegistryObject<Block> CROP_GYSAHL = BLOCKS.register("crop_gysahl", () -> new BlockCrop("gysahl", Blocks.WHEAT));     static final RegistryObject<Item> I_CROP_GYSAHL = fromBlock(CROP_GYSAHL);
@@ -88,19 +88,19 @@ public class ShopKeeper {
     public static final RegistryObject<Item> SEEDS_TANTAL = ITEMS.register("seeds_tantal", () -> new ItemSeed("tantal"));
 
     // Sounds
-    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_AMBIENT     = SOUNDS.register("ivalice.chocobo.ambient",    () -> new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.ambient")));
-    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_HURT        = SOUNDS.register("ivalice.chocobo.hurt",       () -> new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.hurt")));
-    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_DEATH       = SOUNDS.register("ivalice.chocobo.death",      () -> new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.death")));
-    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_ANGRY       = SOUNDS.register("ivalice.chocobo.angry",      () -> new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.angry")));
-    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_HEALTH_LOW  = SOUNDS.register("ivalice.chocobo.healthlow",  () -> new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.healthlow")));
-    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_HEALTH_HIGH = SOUNDS.register("ivalice.chocobo.healthhigh", () -> new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.healthhigh")));
-    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_STEP        = SOUNDS.register("ivalice.chocobo.step",       () -> new SoundEvent(new ResourceLocation(MODID, "ivalice.chocobo.step")));
+    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_AMBIENT     = SOUNDS.register("ivalice.chocobo.ambient",    () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MODID, "ivalice.chocobo.ambient")));
+    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_HURT        = SOUNDS.register("ivalice.chocobo.hurt",       () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MODID, "ivalice.chocobo.hurt")));
+    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_DEATH       = SOUNDS.register("ivalice.chocobo.death",      () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MODID, "ivalice.chocobo.death")));
+    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_ANGRY       = SOUNDS.register("ivalice.chocobo.angry",      () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MODID, "ivalice.chocobo.angry")));
+    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_HEALTH_LOW  = SOUNDS.register("ivalice.chocobo.healthlow",  () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MODID, "ivalice.chocobo.healthlow")));
+    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_HEALTH_HIGH = SOUNDS.register("ivalice.chocobo.healthhigh", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MODID, "ivalice.chocobo.healthhigh")));
+    public static final RegistryObject<SoundEvent> SOUND_CHOCOBO_STEP        = SOUNDS.register("ivalice.chocobo.step",       () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MODID, "ivalice.chocobo.step")));
 
     // Entities
     public static final RegistryObject<EntityType<EntityChocobo>>   ENTITY_CHOCOBO   = ENTITIES.register("chocobo",   () -> EntityType.Builder.of(EntityChocobo::new, CREATURE).sized(0.9F, 2.5F).setTrackingRange(10).build(new ResourceLocation(MODID, "chocobo").toString()));
 
     // Spawn Eggs
-    public static final RegistryObject<Item> SPAWNEGG_CHOCOBO = ITEMS.register("spawnegg_chocobo", () -> new ForgeSpawnEggItem(ENTITY_CHOCOBO, 16766720, 6908265, new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
+    public static final RegistryObject<Item> SPAWNEGG_CHOCOBO = ITEMS.register("spawnegg_chocobo", () -> new ForgeSpawnEggItem(ENTITY_CHOCOBO, 16766720, 6908265, new Item.Properties()));
 
     // Block Entities
     public static  final RegistryObject<BlockEntityType<BlockEntityNest>> TILE_NEST = TILES.register("nest", () -> BlockEntityType.Builder.of(BlockEntityNest::new, BLOCK_NEST.get() ).build(null));
@@ -133,30 +133,30 @@ public class ShopKeeper {
 
     // Conveniance function: Take a RegistryObject<Block> and make a corresponding RegistryObject<Item> from it
     public static <B extends Block> RegistryObject<Item> fromBlock(RegistryObject<B> block, CreativeModeTab CreativeModeTab) {
-        return ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), (new Item.Properties()).tab(CreativeModeTab) ));
+        return ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), (new Item.Properties()) ));
     }
 
-    static <T extends Recipe<?>> RecipeType<T> register(final String key) {
-        return Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(key), new RecipeType<T>()
-        {
-            @Override
-            public String toString()
-            {
-                return key;
-            }
-        });
-    }
+    // static <T extends Recipe<?>> RecipeType<T> register(final String key) {
+    //     return Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(key), new RecipeType<T>()
+    //     {
+    //         @Override
+    //         public String toString()
+    //         {
+    //             return key;
+    //         }
+    //     });
+    // }
 
     // public static void registerEntity(BiomeLoadingEvent event, Set<BiomeDictionary.Type> types) {
     //     event.getSpawns().getSpawner(CREATURE).add(new MobSpawnSettings.SpawnerData(ENTITY_CHOCOBO.get(), Config.CHOCOBO.weight.get(), Config.CHOCOBO.min.get(), Config.CHOCOBO.max.get()));
     // }
 
     private static RegistryObject<Block> register(String name, Block block){
-        return register(name, block, null);
+        return register(name, block, false);
     }
 
-    private static RegistryObject<Block> register(String name, Block block, CreativeModeTab itemGroup){
-        if(itemGroup != null){ ITEMS.register(name, () -> new BlockItem(block, (new Item.Properties()).tab(itemGroup))); }
+    private static RegistryObject<Block> register(String name, Block block, boolean b){
+        if(b){ ITEMS.register(name, () -> new BlockItem(block, (new Item.Properties()))); }
         return BLOCKS.register(name, () -> block);
     }
 

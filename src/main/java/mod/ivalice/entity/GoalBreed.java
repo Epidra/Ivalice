@@ -34,7 +34,7 @@ public class GoalBreed extends Goal {
 
     public GoalBreed(Animal p_i47306_1_, double p_i47306_2_, Class<? extends Animal> p_i47306_4_) {
         this.animal = p_i47306_1_;
-        this.level = p_i47306_1_.level;
+        this.level = p_i47306_1_.level();
         this.partnerClass = p_i47306_4_;
         this.speedModifier = p_i47306_2_;
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));

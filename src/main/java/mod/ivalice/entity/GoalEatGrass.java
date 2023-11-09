@@ -26,7 +26,7 @@ public class GoalEatGrass extends Goal {
 
     public GoalEatGrass(Mob p_i45314_1_) {
         this.mob = p_i45314_1_;
-        this.level = p_i45314_1_.level;
+        this.level = p_i45314_1_.level();
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.JUMP));
     }
 

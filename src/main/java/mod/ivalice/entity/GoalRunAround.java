@@ -26,7 +26,7 @@ public class GoalRunAround extends Goal {
 
     public GoalRunAround(EntityChocobo p_i1653_1_, double p_i1653_2_) {
         this.horse = p_i1653_1_;
-        this.level = p_i1653_1_.level;
+        this.level = p_i1653_1_.level();
         this.speedModifier = p_i1653_2_;
         this.setFlags(EnumSet.of(Flag.MOVE));
     }

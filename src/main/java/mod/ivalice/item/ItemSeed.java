@@ -39,7 +39,7 @@ public class ItemSeed extends Item {
 
     /** Default Constructor */
     public ItemSeed(String id) {
-        super(new Properties().tab(CreativeModeTab.TAB_MISC));
+        super(new Properties());
         this.id = id;
     }
 
