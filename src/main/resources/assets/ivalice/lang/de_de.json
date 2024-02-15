@@ -1,7 +1,4 @@
 {
-  "item.ivalice.stuff_feather": "Chocobofeder",
-
-
   "item.ivalice.food_gysahl": "Gysahl Greens",
   "item.ivalice.food_krakka": "Krakka Root",
   "item.ivalice.food_mimett": "Mimett Gourd",
@@ -10,7 +7,6 @@
   "item.ivalice.food_chocobo_raw": "rohes Chocobo",
   "item.ivalice.food_chocobo_cooked": "gekochtes Chocobo",
 
-  "block.ivalice.block_straw": "Strohmatte",
   "block.ivalice.block_nest":  "Nest",
 
   "block.ivalice.crop_gysahl": "Gysahlpflanze",

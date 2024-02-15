@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "ivalice:block_nest"
+          "name": "minecraft:hay_block"
         }
       ],
       "conditions": [
