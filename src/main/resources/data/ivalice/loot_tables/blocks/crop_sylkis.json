@@ -22,7 +22,7 @@
             },
             {
               "type": "minecraft:item",
-              "name": "ivalice:seeds_sylkis"
+              "name": "ivalice:seed_sylkis"
             }
           ]
         }
@@ -44,7 +44,7 @@
               }
             }
           ],
-          "name": "ivalice:seeds_sylkis"
+          "name": "ivalice:seed_sylkis"
         }
       ],
       "conditions": [

@@ -14,8 +14,7 @@ import static mod.ivalice.Ivalice.MODID;
 @OnlyIn(Dist.CLIENT)
 public class RenderCactuar extends MobRenderer<EntityCactuar, ModelCactuar<EntityCactuar>> {
 	
-	private static final ResourceLocation TEXTURE1 = new ResourceLocation(MODID, "textures/entity/cactuar_texture.png");
-	// private static final ResourceLocation TEXTURE2 = new ResourceLocation(MODID, "textures/entity/chick.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(MODID, "textures/entity/cactuar.png");
 	
 	
 	
@@ -25,9 +24,6 @@ public class RenderCactuar extends MobRenderer<EntityCactuar, ModelCactuar<Entit
 	
 	public RenderCactuar(EntityRendererProvider.Context renderManager) {
 		super(renderManager, new ModelCactuar<>(renderManager.bakeLayer(RegisterClient.CACTUAR_MODEL)), 0.5F);
-		// this.addLayer(new RenderChocoboFeather(this));
-		// this.addLayer(new RenderChocoboEyes(this));
-		// this.addLayer(new RenderChocoboCollar(this));
 	}
 	
 	
@@ -38,7 +34,7 @@ public class RenderCactuar extends MobRenderer<EntityCactuar, ModelCactuar<Entit
 	
 	@Override
 	public ResourceLocation getTextureLocation(EntityCactuar entity) {
-		return TEXTURE1; // entity.AnimYoung() ? TEXTURE2 : TEXTURE1;
+		return TEXTURE;
 	}
 	
 	

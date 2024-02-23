@@ -7,7 +7,7 @@ import net.minecraft.world.entity.animal.horse.Llama;
 
 class GoalAvoidEntity<T extends LivingEntity> extends AvoidEntityGoal<T> {
 	
-	private final EntityChocobo wolf;
+	private final EntityChocobo chocobo;
 	
 	
 	
@@ -15,9 +15,9 @@ class GoalAvoidEntity<T extends LivingEntity> extends AvoidEntityGoal<T> {
 	
 	// ---------- ---------- ---------- ----------  CONSTRUCTOR  ---------- ---------- ---------- ---------- //
 	
-	public GoalAvoidEntity(EntityChocobo p_i47251_2_, Class<T> p_i47251_3_, float p_i47251_4_, double p_i47251_5_, double p_i47251_7_) {
-		super(p_i47251_2_, p_i47251_3_, p_i47251_4_, p_i47251_5_, p_i47251_7_);
-		this.wolf = p_i47251_2_;
+	public GoalAvoidEntity(EntityChocobo entity, Class<T> avoidClass, float maxDistance, double walkSpeedModifier, double sprintSpeedModifier) {
+		super(entity, avoidClass, maxDistance, walkSpeedModifier, sprintSpeedModifier);
+		this.chocobo = entity;
 	}
 	
 	
@@ -28,7 +28,7 @@ class GoalAvoidEntity<T extends LivingEntity> extends AvoidEntityGoal<T> {
 	
 	public boolean canUse() {
 		if (super.canUse() && this.toAvoid instanceof Llama) {
-			return !this.wolf.isTame() && this.avoidLlama((Llama)this.toAvoid);
+			return !this.chocobo.isTame() && this.avoidLlama((Llama)this.toAvoid);
 		} else {
 			return false;
 		}
@@ -41,7 +41,7 @@ class GoalAvoidEntity<T extends LivingEntity> extends AvoidEntityGoal<T> {
 	// ---------- ---------- ---------- ----------  START / STOP  ---------- ---------- ---------- ---------- //
 	
 	public void start() {
-		wolf.setTarget((LivingEntity)null);
+		chocobo.setTarget((LivingEntity)null);
 		super.start();
 	}
 	
@@ -52,7 +52,7 @@ class GoalAvoidEntity<T extends LivingEntity> extends AvoidEntityGoal<T> {
 	// ---------- ---------- ---------- ----------  TICK  ---------- ---------- ---------- ---------- //
 	
 	public void tick() {
-		wolf.setTarget((LivingEntity)null);
+		chocobo.setTarget((LivingEntity)null);
 		super.tick();
 	}
 	
@@ -62,8 +62,8 @@ class GoalAvoidEntity<T extends LivingEntity> extends AvoidEntityGoal<T> {
 	
 	// ---------- ---------- ---------- ----------  SUPPORT  ---------- ---------- ---------- ---------- //
 	
-	private boolean avoidLlama(Llama p_190854_1_) {
-		return p_190854_1_.getStrength() >= wolf.getRandom().nextInt(5);
+	private boolean avoidLlama(Llama entity) {
+		return entity.getStrength() >= chocobo.getRandom().nextInt(5);
 	}
 	
 	

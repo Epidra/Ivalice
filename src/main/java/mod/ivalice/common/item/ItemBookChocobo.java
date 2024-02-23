@@ -28,13 +28,13 @@ public class ItemBookChocobo extends ItemBook {
 	
 	private void createPages(int id){
 		if(id == 1){ // Book 1
-			this.addPage("???", "", "", -1, MODID);
+			this.addPage("CHOCOBOS 1", "Explain here all the different stats about the chocobos and how they interact.", "", -1, MODID);
+			this.addPage("CHOCOBOS 2", "Explain breeding and transmitting colors.", "", -1, MODID);
+			this.addPage("CHOCOBOS 3", "Explain catching and favourite food.", "", -1, MODID);
 		}
 		if(id == 2){ // Book 2
-			this.addPage("???", "", "", -1, MODID);
-		}
-		if(id == 3){ // Book 3
-			this.addPage("???", "", "", -1, MODID);
+			this.addPage("Plants 1", "Explain all the different crops and where to find them.", "", -1, MODID);
+			this.addPage("Plants 2", "Explain what how to use crops to catch chocobos", "", -1, MODID);
 		}
 	}
 	

@@ -30,15 +30,15 @@ public class GoalBreed extends Goal {
 	
 	// ---------- ---------- ---------- ----------  CONSTRUCTOR  ---------- ---------- ---------- ---------- //
 	
-	public GoalBreed(Animal p_i1619_1_, double p_i1619_2_) {
-		this(p_i1619_1_, p_i1619_2_, p_i1619_1_.getClass());
+	public GoalBreed(Animal animal, double speedModifier) {
+		this(animal, speedModifier, animal.getClass());
 	}
 	
-	public GoalBreed(Animal p_i47306_1_, double p_i47306_2_, Class<? extends Animal> p_i47306_4_) {
-		this.animal = p_i47306_1_;
-		this.level = p_i47306_1_.level();
-		this.partnerClass = p_i47306_4_;
-		this.speedModifier = p_i47306_2_;
+	public GoalBreed(Animal animal, double speedModifier, Class<? extends Animal> partner) {
+		this.animal = animal;
+		this.level = animal.level();
+		this.partnerClass = partner;
+		this.speedModifier = speedModifier;
 		this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
 	}
 	

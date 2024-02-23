@@ -1,9 +1,9 @@
 {
-  "item.ivalice.food_gysahl": "Gysahl Greens",
-  "item.ivalice.food_krakka": "Krakka Root",
-  "item.ivalice.food_mimett": "Mimett Gourd",
-  "item.ivalice.food_sylkis": "Sylkis Bud",
-  "item.ivalice.food_tantal": "Tantal Fruit",
+  "item.ivalice.food_gysahl": "Gysahlgrüns",
+  "item.ivalice.food_krakka": "Krakkawurzel ",
+  "item.ivalice.food_mimett": "Mimettkürbis",
+  "item.ivalice.food_sylkis": "Sylkisknospe",
+  "item.ivalice.food_tantal": "Tantalfrucht",
   "item.ivalice.food_chocobo_raw": "rohes Chocobo",
   "item.ivalice.food_chocobo_cooked": "gekochtes Chocobo",
 
@@ -15,19 +15,23 @@
   "block.ivalice.crop_sylkis": "Sylkispflanze",
   "block.ivalice.crop_tantal": "Tantalpflanze",
 
-  "item.ivalice.seeds_gysahl": "Gysahlsamen",
-  "item.ivalice.seeds_krakka": "Krakkasamen",
-  "item.ivalice.seeds_mimett": "Mimettsamen",
-  "item.ivalice.seeds_sylkis": "Sylkissamen",
-  "item.ivalice.seeds_tantal": "Tantalsamen",
+  "item.ivalice.seed_gysahl": "Gysahlsamen",
+  "item.ivalice.seed_krakka": "Krakkasamen",
+  "item.ivalice.seed_mimett": "Mimettsamen",
+  "item.ivalice.seed_sylkis": "Sylkissamen",
+  "item.ivalice.seed_tantal": "Tantalsamen",
+
+  "item.ivalice.book_taming": "Chocobos und Du",
+  "item.ivalice.book_gysahl": "Grüns und wo sie zu finden sind",
 
   "item.ivalice.spawnegg_chocobo": "Chocobo Spawn Egg",
+  "item.ivalice.spawnegg_cactuar": "Cactuar Spawn Egg",
 
-  "ivalice:subtitles.chocobo.ambient": "Chocobo chirps",
-  "ivalice:subtitles.chocobo.hurt":    "Chocobo hurts",
-  "ivalice:subtitles.chocobo.death":   "Chocobo dies",
-  "ivalice:subtitles.chocobo.angry":   "Chocobo chirps",
-  "ivalice:subtitles.chocobo.healthlow":  "Chocobo chirps",
-  "ivalice:subtitles.chocobo.healthhigh": "Chocobo chirps",
-  "ivalice:subtitles.chocobo.step": "Chocobo walks"
+  "ivalice:subtitles.chocobo.ambient": "Chocobo zwitchert",
+  "ivalice:subtitles.chocobo.hurt":    "Chocobo verletzt sich",
+  "ivalice:subtitles.chocobo.death":   "Chocobo stirbt",
+  "ivalice:subtitles.chocobo.angry":   "Chocobo zwitchert",
+  "ivalice:subtitles.chocobo.healthlow":  "Chocobo zwitchert",
+  "ivalice:subtitles.chocobo.healthhigh": "Chocobo zwitchert",
+  "ivalice:subtitles.chocobo.step": "Chocobo läuft"
 }

@@ -21,6 +21,14 @@ public class ModelCactuar<T extends EntityCactuar> extends EntityModel<T> {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(MODID, "cactuar"), "main");
 	private final ModelPart BoneBase;
+	private final ModelPart BoneAfro;
+	private final ModelPart BoneFlower;
+	private final ModelPart BoneHair;
+	private final ModelPart BoneArmLeft;
+	private final ModelPart BoneArmRight;
+	private final ModelPart BoneLegLeft;
+	private final ModelPart BoneLegRight;
+	private final float baseHeight;
 	
 	
 	
@@ -29,7 +37,15 @@ public class ModelCactuar<T extends EntityCactuar> extends EntityModel<T> {
 	// ---------- ---------- ---------- ----------  CONSTRUCTOR  ---------- ---------- ---------- ---------- //
 	
 	public ModelCactuar(ModelPart root) {
-		this.BoneBase = root.getChild("BoneBase");
+		this.BoneBase     = root.getChild("BoneBase");
+		this.BoneAfro     = root.getChild("BoneBase").getChild("BoneAfro");
+		this.BoneHair     = root.getChild("BoneBase").getChild("BoneHair");
+		this.BoneFlower   = root.getChild("BoneBase").getChild("BoneFlower");
+		this.BoneArmLeft  = root.getChild("BoneBase").getChild("BoneArmLeft");
+		this.BoneArmRight = root.getChild("BoneBase").getChild("BoneArmRight");
+		this.BoneLegLeft  = root.getChild("BoneBase").getChild("BoneLegLeft");
+		this.BoneLegRight = root.getChild("BoneBase").getChild("BoneLegRight");
+		baseHeight = BoneBase.y;
 	}
 	
 	
@@ -82,7 +98,19 @@ public class ModelCactuar<T extends EntityCactuar> extends EntityModel<T> {
 	
 	@Override
 	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-	
+		BoneAfro.visible = false;
+		BoneHair.visible = true;
+		BoneFlower.visible = false;
+		
+		float xRot   = ageInTicks % 16 < 8 ? 180 : 0;
+		float zRot   = ageInTicks % 16 < 8 ? -15 : 0;
+		float height = ageInTicks % 16 < 8 ?   1 : 0;
+		
+		BoneArmLeft.xRot = xRot * ((float)Math.PI / 180F);;
+		BoneArmRight.xRot = xRot * ((float)Math.PI / 180F);;
+		BoneLegLeft.zRot = zRot * ((float)Math.PI / 180F);;
+		BoneLegRight.zRot = zRot * ((float)Math.PI / 180F);;
+		BoneBase.y = baseHeight + height;
 	}
 	
 	

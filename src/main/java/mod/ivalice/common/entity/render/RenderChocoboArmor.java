@@ -19,11 +19,10 @@ import static mod.ivalice.Ivalice.MODID;
 @OnlyIn(Dist.CLIENT)
 public class RenderChocoboArmor extends RenderLayer<EntityChocobo, ModelChocobo<EntityChocobo>> {
 	
-	private static final ResourceLocation TEXTURE1 = new ResourceLocation(MODID, "textures/entity/chocobo_armor_1.png");
-	private static final ResourceLocation TEXTURE2 = new ResourceLocation(MODID, "textures/entity/chocobo_armor_2.png");
-	private static final ResourceLocation TEXTURE3 = new ResourceLocation(MODID, "textures/entity/chocobo_armor_3.png");
-	private static final ResourceLocation TEXTURE4 = new ResourceLocation(MODID, "textures/entity/chocobo_armor_4.png");
-	// private static final ResourceLocation TEXTURE2 = new ResourceLocation(MODID, "textures/entity/chocochick_overlay.png");
+	private static final ResourceLocation TEXTURE1 = new ResourceLocation(MODID, "textures/entity/armor_1.png");
+	private static final ResourceLocation TEXTURE2 = new ResourceLocation(MODID, "textures/entity/armor_2.png");
+	private static final ResourceLocation TEXTURE3 = new ResourceLocation(MODID, "textures/entity/armor_3.png");
+	private static final ResourceLocation TEXTURE4 = new ResourceLocation(MODID, "textures/entity/armor_4.png");
 	
 	
 	
@@ -42,7 +41,7 @@ public class RenderChocoboArmor extends RenderLayer<EntityChocobo, ModelChocobo<
 	// ---------- ---------- ---------- ----------  RENDER  ---------- ---------- ---------- ---------- //
 	
 	public void render(PoseStack p_225628_1_, MultiBufferSource p_225628_2_, int p_225628_3_, EntityChocobo p_225628_4_, float p_225628_5_, float p_225628_6_, float p_225628_7_, float p_225628_8_, float p_225628_9_, float p_225628_10_) {
-		if (!p_225628_4_.isInvisible() && !p_225628_4_.AnimYoung() && !p_225628_4_.AnimArmor().isEmpty()) {
+		if (!p_225628_4_.isInvisible() && !p_225628_4_.isBred() && p_225628_4_.isArmored()) {
 			VertexConsumer ivertexbuilder = p_225628_2_.getBuffer(RenderType.entityTranslucent(getTexture(p_225628_4_)));
 			this.getParentModel().renderToBuffer(p_225628_1_, ivertexbuilder, p_225628_3_, LivingEntityRenderer.getOverlayCoords(p_225628_4_, 0.0F), 1.0F, 1.0F, 1.0F, 1.0F);
 		}
@@ -55,10 +54,10 @@ public class RenderChocoboArmor extends RenderLayer<EntityChocobo, ModelChocobo<
 	// ---------- ---------- ---------- ----------  SUPPORT  ---------- ---------- ---------- ---------- //
 	
 	public ResourceLocation getTexture(EntityChocobo entity) {
-		return entity.AnimArmor().getItem() == Items.DIAMOND_HORSE_ARMOR ? TEXTURE4
-				: entity.AnimArmor().getItem() == Items.GOLDEN_HORSE_ARMOR ? TEXTURE3
-				: entity.AnimArmor().getItem() == Items.IRON_HORSE_ARMOR ? TEXTURE2
-				: TEXTURE1;
+		return entity.getArmor().getItem() == Items.DIAMOND_HORSE_ARMOR ? TEXTURE4
+			:  entity.getArmor().getItem() == Items.GOLDEN_HORSE_ARMOR  ? TEXTURE3
+			:  entity.getArmor().getItem() == Items.IRON_HORSE_ARMOR    ? TEXTURE2
+			:                                                             TEXTURE1;
 	}
 	
 	

@@ -18,8 +18,7 @@ import static mod.ivalice.Ivalice.MODID;
 @OnlyIn(Dist.CLIENT)
 public class RenderChocoboEyes extends RenderLayer<EntityChocobo, ModelChocobo<EntityChocobo>> {
 	
-	private static final ResourceLocation TEXTURE1 = new ResourceLocation(MODID, "textures/entity/chocobo_overlay.png");
-	private static final ResourceLocation TEXTURE2 = new ResourceLocation(MODID, "textures/entity/chocochick_overlay.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(MODID, "textures/entity/overlay.png");
 	
 	
 	
@@ -51,7 +50,7 @@ public class RenderChocoboEyes extends RenderLayer<EntityChocobo, ModelChocobo<E
 	// ---------- ---------- ---------- ----------  SUPPORT  ---------- ---------- ---------- ---------- //
 	
 	public ResourceLocation getTexture(EntityChocobo entity) {
-		return entity.AnimYoung() ? TEXTURE2 : TEXTURE1;
+		return TEXTURE;
 	}
 	
 	

@@ -12,7 +12,15 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.animal.Turtle;
+import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -43,7 +51,11 @@ public class EntityCactuar extends Monster implements NeutralMob {
 	// ---------- ---------- ---------- ----------  SETUP  ---------- ---------- ---------- ---------- //
 	
 	protected void registerGoals() {
-	
+		this.goalSelector.addGoal(0, new AvoidEntityGoal<>(this, Player.class, 6.0F, 1.0D, 1.2D));
+		this.goalSelector.addGoal(1, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+		this.goalSelector.addGoal(2, new LookAtPlayerGoal(this, Player.class, 8.0F));
+		this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
+		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
 	}
 	
 	protected void customServerAiStep() {
@@ -55,7 +67,7 @@ public class EntityCactuar extends Monster implements NeutralMob {
 	}
 	
 	public static AttributeSupplier.Builder createAttributes() {
-		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 8.0D).add(Attributes.MOVEMENT_SPEED, 0.23F);
+		return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 40.0D).add(Attributes.MOVEMENT_SPEED, (double)0.6F).add(Attributes.ATTACK_DAMAGE, 7.0D).add(Attributes.FOLLOW_RANGE, 64.0D);
 	}
 	
 	protected void defineSynchedData() {
@@ -109,7 +121,7 @@ public class EntityCactuar extends Monster implements NeutralMob {
 	// ---------- ---------- ---------- ----------  SUPPORT  ---------- ---------- ---------- ---------- //
 	
 	public static boolean canCactuarSpawn(EntityType<? extends EntityCactuar> animal, ServerLevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
-		return level.getBlockState(pos.below()).is(Blocks.GRASS_BLOCK) && level.getRawBrightness(pos, 0) > 8 && level.canSeeSky(pos);
+		return level.getBlockState(pos.below()).is(Blocks.SAND) && /*level.getRawBrightness(pos, 0) > 8 &&*/ level.canSeeSky(pos);
 	}
 	
 	@javax.annotation.Nullable

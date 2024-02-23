@@ -26,15 +26,15 @@ public class GoalBuildNest extends Goal {
 	
 	// ---------- ---------- ---------- ----------  CONSTRUCTOR  ---------- ---------- ---------- ---------- //
 	
-	public GoalBuildNest(Animal p_i1619_1_, double p_i1619_2_) {
-		this(p_i1619_1_, p_i1619_2_, p_i1619_1_.getClass());
+	public GoalBuildNest(Animal animal, double speedModifier) {
+		this(animal, speedModifier, animal.getClass());
 	}
 	
-	public GoalBuildNest(Animal p_i47306_1_, double p_i47306_2_, Class<? extends Animal> p_i47306_4_) {
-		this.animal = p_i47306_1_;
-		this.level = p_i47306_1_.level();
-		this.partnerClass = p_i47306_4_;
-		this.speedModifier = p_i47306_2_;
+	public GoalBuildNest(Animal animal, double speedModifier, Class<? extends Animal> partner) {
+		this.animal = animal;
+		this.level = animal.level();
+		this.partnerClass = partner;
+		this.speedModifier = speedModifier;
 		this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
 	}
 	

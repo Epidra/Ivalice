@@ -1,5 +1,5 @@
 {
-  "item.ivalice.food_gysahl": "Gysahl Greens",
+  "item.ivalice.food_gysahl": "Gysahl Green",
   "item.ivalice.food_krakka": "Krakka Root",
   "item.ivalice.food_mimett": "Mimett Gourd",
   "item.ivalice.food_sylkis": "Sylkis Bud",
@@ -21,7 +21,11 @@
   "item.ivalice.seeds_sylkis": "Sylkis Seeds",
   "item.ivalice.seeds_tantal": "Tantal Seeds",
 
+  "item.ivalice.book_taming": "Chocobos and You",
+  "item.ivalice.book_gysahl": "Greens and where to find them",
+
   "item.ivalice.spawnegg_chocobo": "Chocobo Spawn Egg",
+  "item.ivalice.spawnegg_cactuar": "Cactuar Spawn Egg",
 
   "ivalice:subtitles.chocobo.ambient": "Chocobo chirps",
   "ivalice:subtitles.chocobo.hurt":    "Chocobo hurts",

@@ -4,7 +4,7 @@ license="All rights reserved"
 issueTrackerURL="https://github.com/Epidra/Ivalice/issues"
 [[mods]]
 modId="ivalice"
-version="3.0"
+version="4.0"
 displayName="Ivalice"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/ivalice"
 logoFile="logo.png"
@@ -22,6 +22,6 @@ Adds Chocobos to the game
 [[dependencies.ivalice]]
     modId="lucky77"
     mandatory=true
-    versionRange="[2.0,)"
+    versionRange="[3.0,)"
     ordering="NONE"
     side="BOTH"

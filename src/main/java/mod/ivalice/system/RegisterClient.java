@@ -6,7 +6,6 @@ import mod.ivalice.common.entity.model.ModelChocobo;
 import mod.ivalice.common.entity.render.RenderCactuar;
 import mod.ivalice.common.entity.render.RenderChocobo;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;

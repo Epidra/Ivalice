@@ -42,7 +42,7 @@ public class RegisterCommon {
 	@SubscribeEvent
 	public static void entityAttributes(EntityAttributeCreationEvent event){
 		event.put(Register.ENTITY_CHOCOBO.get(), EntityChocobo.createAttributes().build());
-		event.put(Register.ENTITY_CACTUAR.get(), EntityChocobo.createAttributes().build());
+		event.put(Register.ENTITY_CACTUAR.get(), EntityCactuar.createAttributes().build());
 	}
 
 	@SubscribeEvent

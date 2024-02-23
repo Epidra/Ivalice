@@ -22,7 +22,7 @@
             },
             {
               "type": "minecraft:item",
-              "name": "ivalice:seeds_mimett"
+              "name": "ivalice:seed_mimett"
             }
           ]
         }
@@ -44,7 +44,7 @@
               }
             }
           ],
-          "name": "ivalice:seeds_mimett"
+          "name": "ivalice:seed_mimett"
         }
       ],
       "conditions": [

@@ -22,7 +22,7 @@
             },
             {
               "type": "minecraft:item",
-              "name": "ivalice:seeds_tantal"
+              "name": "ivalice:seed_tantal"
             }
           ]
         }
@@ -44,7 +44,7 @@
               }
             }
           ],
-          "name": "ivalice:seeds_tantal"
+          "name": "ivalice:seed_tantal"
         }
       ],
       "conditions": [

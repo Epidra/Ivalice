@@ -8,6 +8,7 @@ import mod.ivalice.common.block.BlockNest;
 import mod.ivalice.common.block.entity.BlockEntityNest;
 import mod.ivalice.common.entity.EntityCactuar;
 import mod.ivalice.common.entity.EntityChocobo;
+import mod.ivalice.common.item.ItemBookChocobo;
 import mod.lucky77.block.BlockCropSingle;
 import mod.lucky77.item.ItemFood;
 import mod.lucky77.item.ItemSeed;
@@ -89,9 +90,8 @@ public class Register {
 	public static final RegistryObject<Item> SEED_TANTAL = registerItem("seed_tantal", () -> new ItemSeed("tantal"));
 	
 	// ----- Books ----- //
-	// public static final RegistryObject<Item> BOOK_CHOCOBO_1 = registerItem("book_chocobo_1", () -> new ItemBookChocobo(5, 0));
-	// public static final RegistryObject<Item> BOOK_CHOCOBO_2 = registerItem("book_chocobo_2", () -> new ItemBookChocobo(5, 1));
-	// public static final RegistryObject<Item> BOOK_CHOCOBO_3 = registerItem("book_chocobo_3", () -> new ItemBookChocobo(5, 2));
+	public static final RegistryObject<Item> BOOK_TAMING = registerItem("book_taming", () -> new ItemBookChocobo(3, 1));
+	public static final RegistryObject<Item> BOOK_GYSAHL = registerItem("book_gysahl", () -> new ItemBookChocobo(4, 2));
 	
 	
 	
@@ -204,9 +204,8 @@ public class Register {
 			event.accept(Register.SEED_MIMETT);
 			event.accept(Register.SEED_SYLKIS);
 			event.accept(Register.SEED_TANTAL);
-			// event.accept(Register.BOOK_CHOCOBO_1);
-			// event.accept(Register.BOOK_CHOCOBO_2);
-			// event.accept(Register.BOOK_CHOCOBO_3);
+			event.accept(Register.BOOK_TAMING);
+			event.accept(Register.BOOK_GYSAHL);
 		}
 		if (event.getTabKey().equals(CreativeModeTabs.SPAWN_EGGS)) {
 			event.accept(Register.SPAWNEGG_CHOCOBO);

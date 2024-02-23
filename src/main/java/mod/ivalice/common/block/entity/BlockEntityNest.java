@@ -20,6 +20,8 @@ public class BlockEntityNest extends BlockEntityBase<Dummy> {
 	
 	public int colorA = 0;
 	public int colorB = 0;
+	public int statsA = 0;
+	public int statsB = 0;
 	boolean isHatching = false;
 	public int age = 0;
 	public int ageMAX = 400;
@@ -70,6 +72,8 @@ public class BlockEntityNest extends BlockEntityBase<Dummy> {
 		super.load(nbt);
 		colorA = nbt.getInt("ColorA");
 		colorB = nbt.getInt("ColorB");
+		statsA = nbt.getInt("StatsA");
+		statsB = nbt.getInt("StatsB");
 		age = nbt.getInt("Age");
 		this.inventory = NonNullList.withSize(1, ItemStack.EMPTY);
 		ContainerHelper.loadAllItems(nbt, this.inventory);
@@ -79,6 +83,8 @@ public class BlockEntityNest extends BlockEntityBase<Dummy> {
 		super.saveAdditional(compound);
 		compound.putInt("ColorA", colorA);
 		compound.putInt("ColorB", colorB);
+		compound.putInt("StatsA", statsA);
+		compound.putInt("StatsB", statsB);
 		compound.putInt("Age", age);
 		ContainerHelper.saveAllItems(compound, this.inventory);
 	}
@@ -98,12 +104,11 @@ public class BlockEntityNest extends BlockEntityBase<Dummy> {
 	// ---------- ---------- ---------- ----------  SUPPORT  ---------- ---------- ---------- ---------- //
 	
 	public void createEgg(EntityChocobo parentA, EntityChocobo parentB){
-		byte[] a1 = parentA.getMatingColor();
-		byte[] b1 = parentB.getMatingColor();
-		colorA = SystemColor.convert(parentA.getMatingColor());
-		colorB = SystemColor.convert(parentB.getMatingColor());
-		byte[] a2 = SystemColor.convert(colorA);
-		byte[] b2 = SystemColor.convert(colorB);
+		colorA = SystemColor.convert(parentA.getFeatherColor());
+		colorB = SystemColor.convert(parentB.getFeatherColor());
+		statsA = parentA.getDataAll();
+		statsB = parentB.getDataAll();
+		
 		isHatching = true;
 		age = 0;
 		level.setBlockAndUpdate(getBlockPos(), level.getBlockState(getBlockPos()).setValue(BlockNest.AGE, 1));
@@ -111,12 +116,13 @@ public class BlockEntityNest extends BlockEntityBase<Dummy> {
 	
 	public void hatch(){
 		if(!level.isClientSide){
-			EntityChocobo parent = (EntityChocobo) Register.ENTITY_CHOCOBO.get().create(level);
+			// EntityChocobo parent = (EntityChocobo) Register.ENTITY_CHOCOBO.get().create(level);
 			// EntityChocobo child;
 			ServerLevel SW = (ServerLevel) this.getLevel();
 			
 			EntityChocobo child = Register.ENTITY_CHOCOBO.get().create(level);
-			child.setFeatherColor(child.mixColors(SystemColor.convert(colorA), SystemColor.convert(colorB)));
+			child.generateAttributesOffspring(statsA, statsB, colorA, colorB);
+			
 			
 			// if (parent != null) {
 			// 	child = (EntityChocobo) parent.getBreedOffspring(SW, colorA, colorB);
